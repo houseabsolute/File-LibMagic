@@ -14,7 +14,7 @@ WriteMakefile(
     'VERSION_FROM'  => 'LibMagic.pm',
     'ABSTRACT_FROM' => 'LibMagic.pm',
     'AUTHOR'        => 'Andreas Fitzner <andreas.fitzner@fv-berlin.de>',
-    'LIBS'          => ['-lmagic -lz'],
+    'LIBS'          => ['-lmagic'],
     'DEFINE'        => '',
     'INC'           => '-I.'
 );
