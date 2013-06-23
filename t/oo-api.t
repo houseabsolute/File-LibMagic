@@ -20,7 +20,7 @@ my %custom = (
     'foo.foo' => [ 'A foo file', 'text/plain; charset=us-ascii' ],
     'foo.c'   => [
         [ 'ASCII text', 'ASCII C program text', 'C source, ASCII text' ],
-        qr{text/(?:x-)?c; charset=us-ascii}
+        qr{text/(?:plain|(?:x-)?c); charset=us-ascii}
     ],
 );
 
@@ -35,13 +35,22 @@ for my $file ( sort keys %standard ) {
     # the original file utility uses text/plain;...  so does gentoo, debian,
     # etc ..., but OpenSUSE returns text/plain... (no semicolon)
     $mime =~ s/;/;?/g;
-    like( $flm->checktype_filename($file), qr/$mime/, "MIME $file" );
+    like(
+        $flm->checktype_filename($file), qr/$mime/,
+        "MIME $file - standard magic file"
+    );
 
     if ( ref $descr ) {
-        is_any_of( $flm->describe_filename($file), $descr, "Describe $file" );
+        is_any_of(
+            $flm->describe_filename($file), $descr,
+            "Describe $file - standard magic file"
+        );
     }
     else {
-        is( $flm->describe_filename($file), $descr, "Describe $file" );
+        is(
+            $flm->describe_filename($file), $descr,
+            "Describe $file - standard magic file"
+        );
     }
 
     my $data = do {
@@ -50,16 +59,22 @@ for my $file ( sort keys %standard ) {
         <$fh>;
     };
 
-    like( $flm->checktype_contents($data), qr/$mime/, "MIME data $file" );
+    like(
+        $flm->checktype_contents($data), qr/$mime/,
+        "MIME data $file - standard magic file"
+    );
 
     if ( ref $descr ) {
         is_any_of(
             $flm->describe_contents($data), $descr,
-            "Describe data $file"
+            "Describe data $file - standard magic file"
         );
     }
     else {
-        is( $flm->describe_contents($data), $descr, "Describe data $file" );
+        is(
+            $flm->describe_contents($data), $descr,
+            "Describe data $file - standard magic file"
+        );
     }
 }
 
@@ -77,14 +92,20 @@ for my $file ( sort keys %custom ) {
     # text/x-foo to keep netbsd and older solaris installations happy
     like(
         $flm->checktype_filename($file), qr{$mime|text/x-foo},
-        "MIME $file"
+        "MIME $file - custom magic file"
     );
 
     if ( ref $descr ) {
-        is_any_of( $flm->describe_filename($file), $descr, "Describe $file" );
+        is_any_of(
+            $flm->describe_filename($file), $descr,
+            "Describe $file - custom magic file"
+        );
     }
     else {
-        is( $flm->describe_filename($file), $descr, "Describe $file" );
+        is(
+            $flm->describe_filename($file), $descr,
+            "Describe $file - custom magic file"
+        );
     }
     my $data = do {
         local $/;
@@ -95,17 +116,20 @@ for my $file ( sort keys %custom ) {
     # text/x-foo to keep netbsd and older solaris installations happy
     like(
         $flm->checktype_contents($data), qr{$mime|text/x-foo},
-        "MIME data $file"
+        "MIME data $file - custom magic file"
     );
 
     if ( ref $descr ) {
         is_any_of(
             $flm->describe_contents($data), $descr,
-            "Describe data $file"
+            "Describe data $file - custom magic file"
         );
     }
     else {
-        is( $flm->describe_contents($data), $descr, "Describe data $file" );
+        is(
+            $flm->describe_contents($data), $descr,
+            "Describe data $file - custom magic file"
+        );
     }
 }
 
