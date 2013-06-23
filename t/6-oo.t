@@ -1,34 +1,35 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More 0.88;
+
 use File::LibMagic;
 
 my %standard = (
     'foo.foo' => [ 'ASCII text',           'text/plain; charset=us-ascii' ],
-    'foo.c'   => [ 'C source, ASCII text', 'text/x-c; charset=us-ascii'   ],
+    'foo.c'   => [ 'C source, ASCII text', 'text/x-c; charset=us-ascii' ],
 );
 
 my %custom = (
-    'foo.foo' => [ 'A foo file',           'text/plain; charset=us-ascii' ],
-    'foo.c'   => [ 'ASCII text',           'text/plain; charset=us-ascii'   ],
+    'foo.foo' => [ 'A foo file', 'text/plain; charset=us-ascii' ],
+    'foo.c'   => [ 'ASCII text', 'text/plain; charset=us-ascii' ],
 );
 
-plan tests => 4 + 4*(keys %standard) + 4*(keys %custom);
+plan tests => 4 + 4 * ( keys %standard ) + 4 * ( keys %custom );
 
 # try using a the standard magic database
 my $flm = File::LibMagic->new();
-isa_ok($flm, 'File::LibMagic');
+isa_ok( $flm, 'File::LibMagic' );
 
-while ( my ($file, $expect) = each %standard ) {
-    my ($descr, $mime) = @$expect;
+while ( my ( $file, $expect ) = each %standard ) {
+    my ( $descr, $mime ) = @$expect;
     $file = "t/samples/$file";
 
     # the original file utility uses text/plain;...  so does gentoo, debian,
     # etc ..., but OpenSUSE returns text/plain... (no semicolon)
-    $mime=~s/;/;?/g;
-    like( $flm->checktype_filename($file), qr#$mime#,  "MIME $file" );
-    is  ( $flm->describe_filename($file),  $descr, "Describe $file" );
+    $mime =~ s/;/;?/g;
+    like( $flm->checktype_filename($file), qr#$mime#, "MIME $file" );
+    is( $flm->describe_filename($file), $descr, "Describe $file" );
 
     my $data = do {
         local $/;
@@ -36,23 +37,27 @@ while ( my ($file, $expect) = each %standard ) {
         <$fh>;
     };
 
-    like( $flm->checktype_contents($data), qr#$mime#,  "MIME data $file" );
-    is  ( $flm->describe_contents($data),  $descr, "Describe data $file" );
+    like( $flm->checktype_contents($data), qr#$mime#, "MIME data $file" );
+    is( $flm->describe_contents($data), $descr, "Describe data $file" );
 }
 
 # try using a custom magic database
 $flm = File::LibMagic->new('t/samples/magic');
-isa_ok($flm, 'File::LibMagic');
+isa_ok( $flm, 'File::LibMagic' );
 
-while ( my ($file, $expect) = each %custom ) {
-    my ($descr, $mime) = @$expect;
+while ( my ( $file, $expect ) = each %custom ) {
+    my ( $descr, $mime ) = @$expect;
     $file = "t/samples/$file";
 
     # OpenSUSE fix
-    $mime=~s/;/;?/g;
+    $mime =~ s/;/;?/g;
+
     # text/x-foo to keep netbsd and older solaris installations happy
-    like( $flm->checktype_filename($file), qr#(?:$mime|text/x-foo)#,  "MIME $file" );
-    is(   $flm->describe_filename($file),  $descr, "Describe $file" );
+    like(
+        $flm->checktype_filename($file), qr#(?:$mime|text/x-foo)#,
+        "MIME $file"
+    );
+    is( $flm->describe_filename($file), $descr, "Describe $file" );
 
     my $data = do {
         local $/;
@@ -61,13 +66,19 @@ while ( my ($file, $expect) = each %custom ) {
     };
 
     # text/x-foo to keep netbsd and older solaris installations happy
-    like( $flm->checktype_contents($data), qr#(?:$mime|text/x-foo)#,  "MIME data $file" );
-    is(   $flm->describe_contents($data),  $descr, "Describe data $file" );
+    like(
+        $flm->checktype_contents($data), qr#(?:$mime|text/x-foo)#,
+        "MIME data $file"
+    );
+    is( $flm->describe_contents($data), $descr, "Describe data $file" );
 }
 
 my $subclass = My::Magic::Subclass->new();
 isa_ok( $subclass, 'My::Magic::Subclass', 'subclass' );
-is( $subclass->checktype_filename('t/samples/missing'), 'text/x-test-passes' );
+is(
+    $subclass->checktype_filename('t/samples/missing'),
+    'text/x-test-passes'
+);
 
 # define a subclass of File::LibMagic to test subclassing
 package My::Magic::Subclass;
