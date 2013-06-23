@@ -1,110 +1,134 @@
 package File::LibMagic;
 
 use 5.008;
+
 use strict;
 use warnings;
-use Carp;
 
-require Exporter;
-use AutoLoader;
+use Carp;
+use Exporter;
+
+BEGIN {
+    use XSLoader;
+    XSLoader::load(
+        __PACKAGE__,
+        exists $File::LibMagic::{VERSION} && ${ $File::LibMagic::{VERSION} }
+        ? ${ $File::LibMagic::{VERSION} }
+        : 0
+    );
+}
 
 our @ISA = qw(Exporter);
 
-# This allows declaration
-#              use File::LibMagic ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'easy'     => [ qw( MagicBuffer MagicFile ) ],
-		     'complete' => [ qw(magic_buffer magic_file magic_open magic_load
-		     			magic_close magic_buffer_offset
-		     			MAGIC_CHECK MAGIC_COMPRESS MAGIC_CONTINUE
-					MAGIC_DEBUG MAGIC_DEVICES MAGIC_ERROR MAGIC_MIME
-					MAGIC_NONE MAGIC_PRESERVE_ATIME MAGIC_RAW MAGIC_SYMLINK
-		                       ) ]
+our %EXPORT_TAGS = (
+    'easy'     => [qw( MagicBuffer MagicFile )],
+    'complete' => [
+        qw(
+            MAGIC_CHECK
+            MAGIC_COMPRESS
+            MAGIC_CONTINUE
+            MAGIC_DEBUG
+            MAGIC_DEVICES
+            MAGIC_ERROR
+            MAGIC_MIME
+            MAGIC_NONE
+            MAGIC_PRESERVE_ATIME
+            MAGIC_RAW
+            MAGIC_SYMLINK
+            magic_buffer
+            magic_buffer_offset
+            magic_close
+            magic_file
+            magic_load
+            magic_open
+            )
+    ]
 );
-# Attention @{$EXPORT_TAGS{"easy"}} != @$EXPORT_TAGS{"easy"}   
-# hm.
-$EXPORT_TAGS{"all"}=[ @{$EXPORT_TAGS{"easy"}}, @{$EXPORT_TAGS{"complete"}} ];
+
+$EXPORT_TAGS{"all"}
+    = [ @{ $EXPORT_TAGS{"easy"} }, @{ $EXPORT_TAGS{"complete"} } ];
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our @EXPORT = qw( );
-
-our $VERSION = '0.96';
-
+# This AUTOLOAD is used to 'autoload' constants from the constant() XS
+# function.
 sub AUTOLOAD {
-    # This AUTOLOAD is used to 'autoload' constants from the constant()
-    # XS function.
-
     my $constname;
     our $AUTOLOAD;
-    ($constname = $AUTOLOAD) =~ s/.*:://;
+    ( $constname = $AUTOLOAD ) =~ s/.*:://;
     croak "&File::LibMagic::constant not defined" if $constname eq 'constant';
-    my ($error, $val) = constant($constname);
+    my ( $error, $val ) = constant($constname);
     if ($error) { croak $error; }
     {
-	no strict 'refs';
+        no strict 'refs';
         *$AUTOLOAD = sub { $val };
     }
     goto &$AUTOLOAD;
 }
 
-require XSLoader;
-XSLoader::load('File::LibMagic', $VERSION);
-
-# Preloaded methods go here.
+use constant _MAGIC_FILE => 0;
+use constant _MIME_HANDLE => 1;
+use constant _DESCRIBE_HANDLE => 2;
 
 sub new {
-    my ($self, $magic_file) = @_;
-    my $pkg = ref $self || $self;
-    return bless [ $magic_file || q{} ], $pkg;
+    my ( $class, $magic_file ) = @_;
+
+    return bless [ $magic_file || q{} ], $class;
 }
 
 sub _mime_handle {
     my ($self) = @_;
+
     my $m = magic_open( MAGIC_MIME() );
-    magic_load( $m, $self->[0] );
+    magic_load( $m, $self->[_MAGIC_FILE] );
+
     return $m;
 }
 
 sub _descr_handle {
     my ($self) = @_;
+
     my $m = magic_open( MAGIC_NONE() );
-    magic_load( $m, $self->[0] );
+    magic_load( $m, $self->[_MAGIC_FILE] );
+
     return $m;
 }
 
 sub checktype_contents {
-    my ($self, $data) = @_;
+    my ( $self, $data ) = @_;
 
-    my $m = $self->[1] ||= $self->_mime_handle();
-    return magic_buffer($m, $data);
+    my $m = $self->[_MIME_HANDLE] ||= $self->_mime_handle();
+    return magic_buffer( $m, $data );
 }
 
 sub checktype_filename {
-    my ($self, $filename) = @_;
+    my ( $self, $filename ) = @_;
 
-    my $m = $self->[1] ||= $self->_mime_handle();
-    return magic_file($m, $filename);
+    my $m = $self->[_MIME_HANDLE] ||= $self->_mime_handle();
+
+    return magic_file( $m, $filename );
 }
 
 sub describe_contents {
-    my ($self, $data) = @_;
+    my ( $self, $data ) = @_;
 
-    my $m = $self->[2] ||= $self->_descr_handle();
-    return magic_buffer($m, $data);
+    my $m = $self->[_DESCRIBE_HANDLE] ||= $self->_descr_handle();
+
+    return magic_buffer( $m, $data );
 }
 
 sub describe_filename {
-    my ($self, $filename) = @_;
+    my ( $self, $filename ) = @_;
 
-    my $m = $self->[2] ||= $self->_descr_handle();
-    return magic_file($m, $filename);
+    my $m = $self->[_DESCRIBE_HANDLE] ||= $self->_descr_handle();
+
+    return magic_file( $m, $filename );
 }
 
 sub DESTROY {
     my ($self) = @_;
-    for ( 1, 2 ) {
+
+    for ( _MIME_HANDLE, _DESCRIBE_HANDLE ) {
         magic_close( $self->[$_] ) if $self->[$_];
     }
 }
