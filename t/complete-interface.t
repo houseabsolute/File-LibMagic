@@ -36,7 +36,10 @@ ok( $fail == 0, 'Constants' );
     is( magic_buffer( $handle, "Footastic\n" ),   'A foo file' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text' );
-    is( magic_file( $handle, 't/samples/foo.c' ),   'ASCII text' );
+    is_any_of(
+        magic_file( $handle, 't/samples/foo.c' ),
+        [ 'ASCII C program text', 'C source, ASCII text' ]
+    );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'A foo file' );
 
     magic_close($handle);
