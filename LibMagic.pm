@@ -120,220 +120,170 @@ File::LibMagic - Perlwrapper for libmagic (file-4.x or file-5.x)
 
 =head1 SYNOPSIS
 
-The easy way:
+  use File::LibMagic;
 
-	  use File::LibMagic ':easy';
+  my $flm = File::LibMagic->new();
 
-	  print MagicBuffer("Hello World\n"),"\n";
-	  # returns "ASCII text"
+  # determine a content description
+  print $flm->describe_filename('path/to/file');
+  print $flm->describe_contents('this is some data');
 
-	  print MagicFile("/bin/ls"),"\n";
-	  # returns "ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV)"
-	  # on my system
-
-To use all capabilities of libmagic use
- 
-	  use File::LibMagic ':complete';
-
-	  my $handle=magic_open(0);
-	  my $ret   =magic_load($handle,"");  # use default magic file
-	  # OR $ret =magic_load($handle, '/home/someone/.magic');
-
-	  print magic_buffer($handle,"Hello World\n"),"\n";
-	  print magic_file($handle,"/bin/ls"),"\n";
-
-	  magic_close($handle);
-
-Using the object-oriented interface:
-
-    use File::LibMagic;
-    
-    my $flm = File::LibMagic->new();
-    
-    # determine a content description
-    print $flm->describe_filename('path/to/file');
-    print $flm->describe_contents('this is some data');
-    
-    # determine the MIME type
-    print $flm->checktype_filename('path/to/file');
-    print $flm->checktype_contents('this is some data');
-
-Please have a look at the files in the example-directory.
-
-=head1 ABSTRACT
-
-The C<File::LibMagic> is a simple perl interface to libmagic from
-the file-4.x or file-5.x package from Christos Zoulas (ftp://ftp.astron.com/pub/file/).
+  # determine the MIME type
+  print $flm->checktype_filename('path/to/file');
+  print $flm->checktype_contents('this is some data');
 
 =head1 DESCRIPTION
 
-The C<File::LibMagic> is a simple perlinterface to libmagic from
-the file-4.x or file-5.x package from Christos Zoulas (ftp://ftp.astron.com/pub/file/).
+The C<File::LibMagic> is a simple perl interface to libmagic from
+the file package (version 4.x or 5.x).
 
-You can use the simple Interface like MagicBuffer() or MagicFile(), use the
-functions of libmagic(3) or use the OO-Interface.
+=head1 API
 
-=head2 Simple Interface
+=head2 File::LibMagic->new()
 
-=head3 MagicBuffer() 
-
-fixme
-
-=head3 MagicFile()
-
-fixme
-
-=head2 libmagic(3)
-
-magic_open, magic_close, magic_error, magic_file, magic_buffer, magic_setflags, magic_check, magic_compile,
-magic_load -- Magic number recognition library
-
-=head2 OO-Interface
-
-=head3 new
-
-Create a new File::LibMagic object to use for determining the type or MIME
-type of content.
+Creates a new File::LibMagic object.
 
 Using the object oriented interface provides an efficient way to repeatedly
-determine the magic of a file.  Using the object oriented interface provides
-significant performance improvements over using the C<:easy> interface when
-testing many files.  This performance improvement is because the loading of
-the magic database happens only once, during object creation.
+determine the magic of a file.
 
 Each File::LibMagic object loads the magic database independently of other
-File::LibMagic objects.
+File::LibMagic objects, so you may want to share a single object across many
+modules as a singleton.
 
-=head3 checktype_contents
+This method takes an optional argument containing a path to the magic file. If
+the file doesn't exist this will throw an exception (but only with libmagic
+4.17+).
+
+If you don't pass an argument, it will throw an exception if it can't find any
+magic files at all.
+
+=head2 $magic->checktype_contents($data)
 
 Returns the MIME type of the data given as the first argument.
 
-=head3 checktype_filename
+This is the same value as would be returned by the C<file> command with the
+C<-i> switch.
 
-Returns the MIME type of the given file.  This will be the same as returned by
-the C<file -i> command.
+=head2 $magic->checktype_filename($filename)
 
-=head3 describe_contents
+Returns the MIME type of the given file.
 
-Returns a description of the data given as the first argument.
+This is the same value as would be returned by the C<file> command with the
+C<-i> switch.
 
-=head3 describe_filename
+=head2 describe_contents
 
-Returns the MIME type of the given file.  This will be the same as returned by
-the C<file> command.
+Returns a description (as a string) of the data given as the first argument.
 
-=head2 EXPORT
+This is the same value as would be returned by the C<file> command with no
+switches.
 
-None by default.
+=head2 describe_filename
 
-=head1 DIAGNOSTICS
+Returns a description (as a string) of the given file.
 
-=head2 MagicBuffer requires defined content
+This is the same value as would be returned by the C<file> command with no
+switches.
 
-This exception is thrown if C<MagicBuffer> is called with an undefined argument.
+=head1 DEPRECATED APIS
 
-=head2 libmagic cannot open %s
+This module offers two different procedural APIS based on optional exports,
+the "easy" and "complete" interfaces. These APIS are now deprecated. I
+strongly recommend you use the OO interface (it's much simpler).
 
-If libmagic is unable to open the file for which you want to determine the
-type, this exception is thrown.  The exception can be thrown by C<MagicFile>
-or C<magic_file>.  '%s' contains details about why libmagic was unable to open
-the file.
+=head2 The "easy" interface
 
-This exception is only thrown when using libmagic version 4.17 or later.
+This interface is exported by:
 
-=head2 libmagic could not find any magic files
+  use File::LibMagic ':easy';
 
-If libmagic is unable to find a suitable database of magic definitions, this
-exception is thrown.  The exception can be thrown by C<MagicBuffer>,
-C<MagicFile> or C<magic_load>.
+This interface exports two subroutines:
 
-With C<magic_load>, you can specify the location of the magic database with
-the second argument.  Depending on your libmagic implementation, you can often
-set the MAGIC environment variable to tell libmagic where to find the correct
-magic database.
+=over 4
 
-=head2 libmagic out of memory
+=item * MagicBuffer($data)
 
-If libmagic is unable to allocate enough memory for its internal data
-structures, this exception is thrown.  The exception can be thrown by
-C<MagicBuffer>, C<MagicFile> or C<magic_open>.
+Returns the description of a chunk of data, just like the C<describe_contents>
+method.
 
-=head2 magic_file requires a filename
+=item * MagicFile($filename)
 
-If C<magic_file> is called with an undefined second argument, this exception
-is thrown.
-
-=head1 BUGS
-
-=over 1
-
-=item "normalisation"-problem:
-
-The results from libmagic are dependend on the (linux) distribution being used.
-A Gentoo-Linux might return "text/plain; charset=us-asci", an OpenSUSE 
-"text/plain charset=us-asci" (no semicolon!). Please check this if you run 
-your project on a different platform (and send me an mail if you see different 
-outputs/return-values).
-
-=item I'm still learning perlxs ...
-
-=item still no real error handling (printf is not enough)
+Returns the description of a file, just like the C<describe_filename> method.
 
 =back
 
+=head2 The "complete" interface
+
+This interface is exported by:
+
+  use File::LibMagic ':easy';
+
+This interface exports several subroutines:
+
+=item * magic_open($flags)
+
+This subroutine opens creates a magic handle. See the libmagic man page for a
+description of all the flags. These are exported by the C<:complete> import.
+
+  my $handle = magic_open(MAGIC_MIME);
+
+=item * magic_load($handle, $filename)
+
+This subroutine actually loads the magic file. The C<$filename> argument is
+optional. There should be a sane default compiled into your C<libmagic>
+library.
+
+=item * magic_buffer($handle, $data)
+
+This returns information about a chunk of data as a string. What it returns
+depends on the flags you passed to C<magic_open>, a description, a MIME type,
+etc.
+
+=item * magic_file($handle, $filename)
+
+This returns information about a file as a string. What it returns depends on
+the flags you passed to C<magic_open>, a description, a MIME type, etc.
+
+=item * magic_close($handle)
+
+Closes the magic handle.
+
+=back
+
+=head1 EXCEPTIONS
+
+This module can throw an exception if you system runs out of memory when
+trying to call C<magic_open> internally.
+
+=head1 SUPPORT
+
+Please submit bugs to the CPAN RT system at
+http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-LibMagic or via email at
+bug-file-libmagic@rt.cpan.org.
+
+=head1 BUGS
+
+This module is totally dependent on the version of file on your system. It's
+possible that the tests will fail because of this. Please report these
+failures so I can make the tests smarter. Please make sure to report the
+version of file on your system as well!
+
 =head1 DEPENDENCIES/PREREQUISITES
 
-This module requires these other modules and libraries:
-
-  o) file-4.x or file-5x and the associated libmagic 
-        (ftp://ftp.astron.com/pub/file/)
-  o) on some systems zlib is required.
+This module requires file 4.x or file 5x and the associated libmagic library
+and headers (http://darwinsys.com/file/).
 
 =head1 RELATED MODULES
 
-I created File::LibMagic because I wanted to use libmagic (from file-4.x) and 
-the otherwise great Module File::MMagic only works with file-3.x. In file-3.x 
-exists no libmagic but an ASCII file (/etc/magic) in which all data (magic
-numbers, etc.) is included. File::MMagic parsed this ASCII file at each request
-and is thus releativly slow. Also it can not use the new data from file-4.x
-or file-5.x.
+Andreas created File::LibMagic because he wanted to use libmagic (from
+file 4.x) L<File::MMagic> only worked with file 3.x.
 
-File::MimeInfo::Magic uses the magic file from freedesktop which is encoded 
-completely in XML, and thus not the fastest approach (
-  http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html
-).
+L<File::MimeInfo::Magic> uses the magic file from freedesktop which is encoded
+in XML, and is thus not the fastest approach
+(http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html).
 
 File::Type uses a relativly small magic file, which is directly hacked into
-the module code. Thus it is quite fast. It is also mod_perl save.
-It may be the right choice for you, but the databasis is quite small relative
-to the file-package.
-
-=head1 HISTORY
-
-April 2004 initial Release
-
-April 2005 version 0.81
-
-Thanks to James Olin Oden (joden@lee.k12.nc.us) for his help.
-Thanks to Nathan Hawkins <utsl@quic.net> for his port to 64-bit
-systems.
-
-June 2006 version 0.8x (x>1)
-Michael Hendricks started to put a lot of work into File::LibMagic.
-
-May 2009 latest relase.
-
-=head1 AUTHOR
-
-Andreas Fitzner E<lt>fitzner@informatik.hu-berlin.deE<gt>,
-Michael Hendricks E<lt>michael@ndrix.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 200[5-9] by Andreas Fitzner, Michael Hendricks
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+the module code. It is quite fast but the databasis is quite small relative to
+the file package.
 
 =cut
-
