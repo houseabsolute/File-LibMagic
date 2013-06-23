@@ -14,7 +14,7 @@ BEGIN {
         __PACKAGE__,
         exists $File::LibMagic::{VERSION} && ${ $File::LibMagic::{VERSION} }
         ? ${ $File::LibMagic::{VERSION} }
-        : 0
+        : 42
     );
 }
 
