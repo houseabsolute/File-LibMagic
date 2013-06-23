@@ -305,8 +305,9 @@ Andreas created File::LibMagic because he wanted to use libmagic (from
 file 4.x) L<File::MMagic> only worked with file 3.x.
 
 L<File::MimeInfo::Magic> uses the magic file from freedesktop.org which is
-encoded in XML, and is thus not the fastest approach
-(http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html).
+encoded in XML, and is thus not the fastest approach. See
+L<http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html>
+for a discussion of this issue.
 
 File::Type uses a relatively small magic file, which is directly hacked into
 the module code. It is quite fast but the database is quite small relative to
