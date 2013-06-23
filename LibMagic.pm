@@ -20,21 +20,40 @@ BEGIN {
 
 our @ISA = qw(Exporter);
 
+my @Constants;
+
+BEGIN {
+    @Constants = qw(
+        MAGIC_CHECK
+        MAGIC_COMPRESS
+        MAGIC_CONTINUE
+        MAGIC_DEBUG
+        MAGIC_DEVICES
+        MAGIC_ERROR
+        MAGIC_MIME
+        MAGIC_NONE
+        MAGIC_PRESERVE_ATIME
+        MAGIC_RAW
+        MAGIC_SYMLINK
+    );
+
+    for my $name (@Constants) {
+        my ( $error, $value ) = constant($name);
+
+        croak "WTF defining $name - $error"
+            if defined $error;
+
+        my $sub = sub { $value };
+
+        no strict 'refs';
+        *{$name} = $sub;
+    }
+}
 our %EXPORT_TAGS = (
     'easy'     => [qw( MagicBuffer MagicFile )],
     'complete' => [
+        @Constants,
         qw(
-            MAGIC_CHECK
-            MAGIC_COMPRESS
-            MAGIC_CONTINUE
-            MAGIC_DEBUG
-            MAGIC_DEVICES
-            MAGIC_ERROR
-            MAGIC_MIME
-            MAGIC_NONE
-            MAGIC_PRESERVE_ATIME
-            MAGIC_RAW
-            MAGIC_SYMLINK
             magic_buffer
             magic_buffer_offset
             magic_close
@@ -50,24 +69,8 @@ $EXPORT_TAGS{"all"}
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-# This AUTOLOAD is used to 'autoload' constants from the constant() XS
-# function.
-sub AUTOLOAD {
-    my $constname;
-    our $AUTOLOAD;
-    ( $constname = $AUTOLOAD ) =~ s/.*:://;
-    croak "&File::LibMagic::constant not defined" if $constname eq 'constant';
-    my ( $error, $val ) = constant($constname);
-    if ($error) { croak $error; }
-    {
-        no strict 'refs';
-        *$AUTOLOAD = sub { $val };
-    }
-    goto &$AUTOLOAD;
-}
-
-use constant _MAGIC_FILE => 0;
-use constant _MIME_HANDLE => 1;
+use constant _MAGIC_FILE      => 0;
+use constant _MIME_HANDLE     => 1;
 use constant _DESCRIBE_HANDLE => 2;
 
 sub new {
