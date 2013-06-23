@@ -13,77 +13,77 @@
 - Attempted to make the tests work with various versions of libmagic. Please
   report failures and your file/libmagic package versions.
 
-0.96 2009-05-23
+0.96     2009-05-23
      Upgraded Devel::CheckLib
      see bug 46044, 46295 in rt.cpan.org
 
-0.95 2009-05-18
+0.95     2009-05-18
       try to make test work in netbsd and solaris 9
 
-0.94 2009-05-13
+0.94     2009-05-13
       small error in t/6-oo.t
 
-0.93 2009-05-12
+0.93     2009-05-12
       using Devel::CheckLib as suggested in 
       http://wiki.cpantesters.org/wiki/CPANAuthorNotes
 
-0.92 2009-05-12
+0.92     2009-05-12
       "normalisation"-problem -> changed t/6-oo.t
 
-0.91 2009-05-12
+0.91     2009-05-12
       Changed t/6-oo.t in order to pass 'make test' for file-5.x
 
-0.90 2008-11-26
+0.90     2008-11-26
       removed some debugging code I accidently left in
 
-0.89 2008-08-06
+0.89     2008-08-06
       added -lz to Makefile.PL in order to compile under 
       FreeBSD
 
-0.88 2008-05-18
+0.88     2008-05-18
       more experiments
 
-0.87 2008-05-18
+0.87     2008-05-18
       experimenting with magic_buffer_offset
 
-0.86 2008-05-18
+0.86     2008-05-18
       'file' version 4.24 returns slightly different filetypes.
       this makes 'make test' fail. fixed it for the new 
       version. But I'm afraid this breaks the 'make test' for
       older versions of the package 'file'.
 
-0.85 2007-08-28
+0.85     2007-08-28
       Minor cleanup of the MANIFEST to avoid warnings (Michael Hendricks)
 
-0.84 2006-06-28
+0.84     2006-06-28
       (all implemented by Michael Hendricks)
       some XS-Code cleanup,
       import of constants like MAGIC_NONE from magic.h,
       much improved error handling.
       additional OO-Interface
 
-0.83 2006-06-14
+0.83     2006-06-14
       Small documentation update
 
-0.82 2005-04-24
+0.82     2005-04-24
       Found two bugs
 
-0.81 2005-04-24
+0.81     2005-04-24
       Port to AMD-64, thanks to Nathan Hawkins <utsl@quic.net>
 
-0.80 2004-07-21
+0.80     2004-07-21
       some improvements in colaboration with James Olin Oden <joden@lee.k12.nc.us> 
 
-0.10 2004-04-19
+0.10     2004-04-19
       some cleanup
 
-0.03 2004-03-23
+0.03     2004-03-23
       hacked magic_open & magic_load but it's not mature enough
 
-0.02 2004-03-23
+0.02     2004-03-23
       magic_file implemented
 
-0.01 2004-03-15
+0.01     2004-03-15
 	- original version; created by h2xs 1.22 with options
 		--skip-ppport File::LibMagic
 
