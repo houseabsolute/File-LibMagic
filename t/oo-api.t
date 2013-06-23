@@ -76,7 +76,7 @@ for my $file ( sort keys %custom ) {
 
     # text/x-foo to keep netbsd and older solaris installations happy
     like(
-        $flm->checktype_filename($file), qr{(?:$mime|text/x-foo)},
+        $flm->checktype_filename($file), qr{$mime|text/x-foo},
         "MIME $file"
     );
 
@@ -94,7 +94,7 @@ for my $file ( sort keys %custom ) {
 
     # text/x-foo to keep netbsd and older solaris installations happy
     like(
-        $flm->checktype_contents($data), qr{(?:$mime|text/x-foo)},
+        $flm->checktype_contents($data), qr{$mime|text/x-foo},
         "MIME data $file"
     );
 
