@@ -18,7 +18,10 @@ my %standard = (
 
 my %custom = (
     'foo.foo' => [ 'A foo file', 'text/plain; charset=us-ascii' ],
-    'foo.c'   => [ 'ASCII text', 'text/plain; charset=us-ascii' ],
+    'foo.c'   => [
+        [ 'ASCII text', 'ASCII C program text', 'C source, ASCII text' ],
+        qr{text/(?:x-)?c; charset=us-ascii}
+    ],
 );
 
 # try using a the standard magic database
@@ -50,7 +53,10 @@ for my $file ( sort keys %standard ) {
     like( $flm->checktype_contents($data), qr/$mime/, "MIME data $file" );
 
     if ( ref $descr ) {
-        is_any_of( $flm->describe_contents($data), $descr, "Describe data $file" );
+        is_any_of(
+            $flm->describe_contents($data), $descr,
+            "Describe data $file"
+        );
     }
     else {
         is( $flm->describe_contents($data), $descr, "Describe data $file" );
@@ -73,8 +79,13 @@ for my $file ( sort keys %custom ) {
         $flm->checktype_filename($file), qr{(?:$mime|text/x-foo)},
         "MIME $file"
     );
-    is( $flm->describe_filename($file), $descr, "Describe $file" );
 
+    if ( ref $descr ) {
+        is_any_of( $flm->describe_filename($file), $descr, "Describe $file" );
+    }
+    else {
+        is( $flm->describe_filename($file), $descr, "Describe $file" );
+    }
     my $data = do {
         local $/;
         open my $fh, '<', $file or die $!;
@@ -86,7 +97,16 @@ for my $file ( sort keys %custom ) {
         $flm->checktype_contents($data), qr{(?:$mime|text/x-foo)},
         "MIME data $file"
     );
-    is( $flm->describe_contents($data), $descr, "Describe data $file" );
+
+    if ( ref $descr ) {
+        is_any_of(
+            $flm->describe_contents($data), $descr,
+            "Describe data $file"
+        );
+    }
+    else {
+        is( $flm->describe_contents($data), $descr, "Describe data $file" );
+    }
 }
 
 my $subclass = My::Magic::Subclass->new();
