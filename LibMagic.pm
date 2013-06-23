@@ -151,11 +151,11 @@ File::LibMagic - Perlwrapper for libmagic (file-4.x or file-5.x)
 
   my $flm = File::LibMagic->new();
 
-  # determine a content description
+  # prints a description like "ASCII text"
   print $flm->describe_filename('path/to/file');
   print $flm->describe_contents('this is some data');
 
-  # determine the MIME type
+  # Prints a MIME type like "text/plain; charset=us-ascii"
   print $flm->checktype_filename('path/to/file');
   print $flm->checktype_contents('this is some data');
 
