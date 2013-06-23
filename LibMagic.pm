@@ -217,7 +217,8 @@ switches.
 
 This module offers two different procedural APIS based on optional exports,
 the "easy" and "complete" interfaces. These APIS are now deprecated. I
-strongly recommend you use the OO interface (it's much simpler).
+strongly recommend you use the OO interface. It's simpler than the complete
+interface and more efficient than the easy interface.
 
 =head2 The "easy" interface
 
@@ -247,6 +248,8 @@ This interface is exported by:
   use File::LibMagic ':easy';
 
 This interface exports several subroutines:
+
+=over 4
 
 =item * magic_open($flags)
 
