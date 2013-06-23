@@ -7,48 +7,43 @@ use warnings;
 
 use Carp;
 use Exporter;
+use XSLoader;
 
-BEGIN {
-    use XSLoader;
-    XSLoader::load(
-        __PACKAGE__,
-        exists $File::LibMagic::{VERSION} && ${ $File::LibMagic::{VERSION} }
-        ? ${ $File::LibMagic::{VERSION} }
-        : 42
-    );
-}
+XSLoader::load(
+    __PACKAGE__,
+    exists $File::LibMagic::{VERSION} && ${ $File::LibMagic::{VERSION} }
+    ? ${ $File::LibMagic::{VERSION} }
+    : 42
+);
 
 our @ISA = qw(Exporter);
 
-my @Constants;
+my @Constants = qw(
+    MAGIC_CHECK
+    MAGIC_COMPRESS
+    MAGIC_CONTINUE
+    MAGIC_DEBUG
+    MAGIC_DEVICES
+    MAGIC_ERROR
+    MAGIC_MIME
+    MAGIC_NONE
+    MAGIC_PRESERVE_ATIME
+    MAGIC_RAW
+    MAGIC_SYMLINK
+);
 
-BEGIN {
-    @Constants = qw(
-        MAGIC_CHECK
-        MAGIC_COMPRESS
-        MAGIC_CONTINUE
-        MAGIC_DEBUG
-        MAGIC_DEVICES
-        MAGIC_ERROR
-        MAGIC_MIME
-        MAGIC_NONE
-        MAGIC_PRESERVE_ATIME
-        MAGIC_RAW
-        MAGIC_SYMLINK
-    );
+for my $name (@Constants) {
+    my ( $error, $value ) = constant($name);
 
-    for my $name (@Constants) {
-        my ( $error, $value ) = constant($name);
+    croak "WTF defining $name - $error"
+        if defined $error;
 
-        croak "WTF defining $name - $error"
-            if defined $error;
+    my $sub = sub { $value };
 
-        my $sub = sub { $value };
-
-        no strict 'refs';
-        *{$name} = $sub;
-    }
+    no strict 'refs';
+    *{$name} = $sub;
 }
+
 our %EXPORT_TAGS = (
     'easy'     => [qw( MagicBuffer MagicFile )],
     'complete' => [
