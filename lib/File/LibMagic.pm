@@ -16,7 +16,7 @@ XSLoader::load(
     : 42
 );
 
-our @ISA = qw(Exporter);
+use base 'Exporter';
 
 my @Constants = qw(
     MAGIC_CHECK
