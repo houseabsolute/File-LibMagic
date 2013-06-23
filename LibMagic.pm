@@ -293,8 +293,8 @@ This module requires these other modules and libraries:
 
 I created File::LibMagic because I wanted to use libmagic (from file-4.x) and 
 the otherwise great Module File::MMagic only works with file-3.x. In file-3.x 
-exists no libmagic but an ascii file (/etc/magic) in which all data (magic
-numbers, etc.) is included. File::MMagic parsed this ascii file at each request
+exists no libmagic but an ASCII file (/etc/magic) in which all data (magic
+numbers, etc.) is included. File::MMagic parsed this ASCII file at each request
 and is thus releativly slow. Also it can not use the new data from file-4.x
 or file-5.x.
 
