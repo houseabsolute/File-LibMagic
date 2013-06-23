@@ -7,6 +7,9 @@
 - We no longer link against libz, since this module doesn't it. Reported by
   Ansgar Burchardt. RT #56479.
 
+- Fixed tests to work with the latest libmagic. Patch by Gregor Herrmann. RT
+  #75457.
+
 0.96 May 2009
      Upgraded Devel::CheckLib
      see bug 46044, 46295 in rt.cpan.org
