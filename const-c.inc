@@ -77,7 +77,7 @@ constant (pTHX_ const char *name, STRLEN len, IV *iv_return) {
      Regenerate these constant functions by feeding this entire source file to
      perl -x
 
-#!/usr/bin/perl5.8.8 -w
+#!/home/autarch/perl5/perlbrew/perls/perl-5.16.3/bin/perl -w
 use ExtUtils::Constant qw (constant_types C_constant XS_constant);
 
 my $types = {map {($_, 1)} qw(IV)};
@@ -85,11 +85,11 @@ my @names = (qw(MAGIC_CHECK MAGIC_COMPRESS MAGIC_CONTINUE MAGIC_DEBUG
 	       MAGIC_DEVICES MAGIC_ERROR MAGIC_MIME MAGIC_NONE
 	       MAGIC_PRESERVE_ATIME MAGIC_RAW MAGIC_SYMLINK));
 
-print constant_types(); # macro defs
+print constant_types(), "\n"; # macro defs
 foreach (C_constant ("File::LibMagic", 'constant', 'IV', $types, undef, 3, @names) ) {
     print $_, "\n"; # C constant subs
 }
-print "#### XS Section:\n";
+print "\n#### XS Section:\n";
 print XS_constant ("File::LibMagic", $types);
 __END__
    */
