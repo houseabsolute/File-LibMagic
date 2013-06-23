@@ -1,14 +1,19 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
+use Test::AnyOf;
 use Test::More 0.88;
 
 use File::LibMagic qw( :easy );
 
-is( MagicBuffer("Hello World\n"), 'ASCII text' );
-
+is( MagicBuffer("Hello World\n"),   'ASCII text' );
 is( MagicFile('t/samples/foo.txt'), 'ASCII text' );
-is( MagicFile('t/samples/foo.c'),   'C source, ASCII text' );
+is_any_of(
+    MagicFile('t/samples/foo.c'),
+    [ 'ASCII C program text', 'C source, ASCII text' ]
+);
 
 # check the error handling
 eval { MagicBuffer(undef) };

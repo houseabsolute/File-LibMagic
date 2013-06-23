@@ -1,6 +1,9 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
+use Test::AnyOf;
 use Test::More 0.88;
 
 use File::LibMagic qw( :complete );
@@ -46,7 +49,10 @@ ok( $fail == 0, 'Constants' );
     is( magic_buffer( $handle, "Hello World\n" ), 'ASCII text' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text' );
-    is( magic_file( $handle, 't/samples/foo.c' ),   'C source, ASCII text' );
+    is_any_of(
+        magic_file( $handle, 't/samples/foo.c' ),
+        [ 'ASCII C program text', 'C source, ASCII text' ]
+    );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'ASCII text' );
 
     magic_close($handle);
@@ -59,7 +65,10 @@ ok( $fail == 0, 'Constants' );
     is( magic_buffer( $handle, "Hello World\n" ), 'ASCII text' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text' );
-    is( magic_file( $handle, 't/samples/foo.c' ),   'C source, ASCII text' );
+    is_any_of(
+        magic_file( $handle, 't/samples/foo.c' ),
+        [ 'ASCII C program text', 'C source, ASCII text' ]
+    );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'ASCII text' );
 
     magic_close($handle);
