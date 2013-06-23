@@ -32,7 +32,7 @@ ok( $fail == 0 , 'Constants' );
     is( magic_buffer( $handle, "Footastic\n" ), 'A foo file' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text'           );
-    is( magic_file( $handle, 't/samples/foo.c'   ), 'ASCII C program text' );
+    is( magic_file( $handle, 't/samples/foo.c'   ), 'ASCII text' );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'A foo file' );
 
     magic_close($handle);
@@ -45,7 +45,7 @@ ok( $fail == 0 , 'Constants' );
     is( magic_buffer( $handle, "Hello World\n" ), 'ASCII text' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text'           );
-    is( magic_file( $handle, 't/samples/foo.c'   ), 'ASCII C program text' );
+    is( magic_file( $handle, 't/samples/foo.c'   ), 'C source, ASCII text' );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'ASCII text' );
 
     magic_close($handle);
@@ -58,7 +58,7 @@ ok( $fail == 0 , 'Constants' );
     is( magic_buffer( $handle, "Hello World\n" ), 'ASCII text' );
 
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text'           );
-    is( magic_file( $handle, 't/samples/foo.c'   ), 'ASCII C program text' );
+    is( magic_file( $handle, 't/samples/foo.c'   ), 'C source, ASCII text' );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'ASCII text' );
 
     magic_close($handle);

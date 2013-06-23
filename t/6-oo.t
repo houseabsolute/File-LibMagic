@@ -6,12 +6,12 @@ use File::LibMagic;
 
 my %standard = (
     'foo.foo' => [ 'ASCII text',           'text/plain; charset=us-ascii' ],
-    'foo.c'   => [ 'ASCII C program text', 'text/x-c; charset=us-ascii'   ],
+    'foo.c'   => [ 'C source, ASCII text', 'text/x-c; charset=us-ascii'   ],
 );
 
 my %custom = (
     'foo.foo' => [ 'A foo file',           'text/plain; charset=us-ascii' ],
-    'foo.c'   => [ 'ASCII C program text', 'text/x-c; charset=us-ascii'   ],
+    'foo.c'   => [ 'ASCII text',           'text/plain; charset=us-ascii'   ],
 );
 
 plan tests => 4 + 4*(keys %standard) + 4*(keys %custom);

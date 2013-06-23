@@ -7,7 +7,7 @@ use File::LibMagic qw( :easy );
 is( MagicBuffer("Hello World\n"),   'ASCII text'           );
 
 is( MagicFile('t/samples/foo.txt'), 'ASCII text'           );
-is( MagicFile('t/samples/foo.c'  ), 'ASCII C program text' );
+is( MagicFile('t/samples/foo.c'  ), 'C source, ASCII text' );
 
 # check the error handling
 eval { MagicBuffer(undef) };
