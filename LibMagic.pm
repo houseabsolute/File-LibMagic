@@ -313,7 +313,7 @@ L<File::MimeInfo::Magic> uses the magic file from freedesktop which is encoded
 in XML, and is thus not the fastest approach
 (http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html).
 
-File::Type uses a relativly small magic file, which is directly hacked into
+File::Type uses a relatively small magic file, which is directly hacked into
 the module code. It is quite fast but the databasis is quite small relative to
 the file package.
 
