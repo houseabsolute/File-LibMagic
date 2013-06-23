@@ -38,7 +38,7 @@ ok( $fail == 0, 'Constants' );
     is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text' );
     is_any_of(
         magic_file( $handle, 't/samples/foo.c' ),
-        [ 'ASCII C program text', 'C source, ASCII text' ]
+        [ 'ASCII text', 'ASCII C program text', 'C source, ASCII text' ]
     );
     is( magic_file( $handle, 't/samples/foo.foo' ), 'A foo file' );
 
