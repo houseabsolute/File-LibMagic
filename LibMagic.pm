@@ -148,15 +148,15 @@ __END__
 
   use File::LibMagic;
 
-  my $flm = File::LibMagic->new();
+  my $magic = File::LibMagic->new();
 
   # prints a description like "ASCII text"
-  print $flm->describe_filename('path/to/file');
-  print $flm->describe_contents('this is some data');
+  print $magic->describe_filename('path/to/file');
+  print $magic->describe_contents('this is some data');
 
   # Prints a MIME type like "text/plain; charset=us-ascii"
-  print $flm->checktype_filename('path/to/file');
-  print $flm->checktype_contents('this is some data');
+  print $magic->checktype_filename('path/to/file');
+  print $magic->checktype_contents('this is some data');
 
 =head1 DESCRIPTION
 
@@ -199,14 +199,14 @@ Returns the MIME type of the given file.
 This is the same value as would be returned by the C<file> command with the
 C<-i> switch.
 
-=head2 describe_contents
+=head2 $magic->describe_contents($data)
 
 Returns a description (as a string) of the data given as the first argument.
 
 This is the same value as would be returned by the C<file> command with no
 switches.
 
-=head2 describe_filename
+=head2 $magic->describe_filename($filename)
 
 Returns a description (as a string) of the given file.
 
