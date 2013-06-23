@@ -309,12 +309,12 @@ and headers (http://darwinsys.com/file/).
 Andreas created File::LibMagic because he wanted to use libmagic (from
 file 4.x) L<File::MMagic> only worked with file 3.x.
 
-L<File::MimeInfo::Magic> uses the magic file from freedesktop which is encoded
-in XML, and is thus not the fastest approach
+L<File::MimeInfo::Magic> uses the magic file from freedesktop.org which is
+encoded in XML, and is thus not the fastest approach
 (http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html).
 
 File::Type uses a relatively small magic file, which is directly hacked into
-the module code. It is quite fast but the databasis is quite small relative to
+the module code. It is quite fast but the database is quite small relative to
 the file package.
 
 =cut
