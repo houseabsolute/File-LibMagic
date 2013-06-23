@@ -136,14 +136,13 @@ sub DESTROY {
     }
 }
 
-# Autoload methods go after =cut, and are processed by the autosplit program.
-
 1;
+
+# ABSTRACT: Determine MIME types of data or files using libmagic
+
 __END__
 
-=head1 NAME
-
-File::LibMagic - Perlwrapper for libmagic (file-4.x or file-5.x)
+=pod
 
 =head1 SYNOPSIS
 
