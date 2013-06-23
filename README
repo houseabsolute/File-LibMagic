@@ -1,0 +1,56 @@
+File/LibMagic
+=============
+
+DESCRIPTION
+
+Interface to libmagic (from the file-4.x or file-5.x package from
+Christos Zoulas, ftp://ftp.astron.com/pub/file/).
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES/PREREQUISITES
+
+This module requires these other modules and libraries:
+
+  o) file-4.x or file-5x and the associated libmagic 
+        (ftp://ftp.astron.com/pub/file/)
+  o) on some systems zlib is required.
+
+  o) COMMON PROBLEM: magic.h is not correctly placed (e.g. in /usr/include/
+     or /usr/local/include/)
+
+RELATED MODULES
+
+I created File::LibMagic because I wanted to use libmagic (from file-4.x) and 
+the otherwise great Module File::MMagic only works with file-3.x. In file-3.x 
+exists no libmagic but an ascii file (/etc/magic) in which all data (magic
+numbers, etc.) is included. File::MMagic parsed this ascii file at each request
+and is thus releativly slow. Also it can not use the new data from file-4.x
+or file-5.x.
+
+File::MimeInfo::Magic uses the magic file from freedesktop which is encoded 
+completely in XML, and thus not the fastest approach (
+  http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html
+).
+
+File::Type uses a relativly small magic file, which is directly hacked into
+the module code. Thus it is quite fast. It is also mod_perl save.
+It may be the right choice for you, but the databasis is quite small relative
+to the file-package.
+
+COPYRIGHT AND LICENCE
+
+Author: Andreas Fitzner <fitzner@informatik.hu-berlin.de>, 
+        Michael Hendricks <michael@ndrix.org>
+May 2009
+
+This library is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+

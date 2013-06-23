@@ -1,0 +1,8 @@
+Nathan Hawkins ported File::LibMagic to AMD-64. There pointer are 
+64 bit wide 
+   long * p;
+on 32 bit system long is (hopefully) aliased to int (in sys/types.h).
+thus the change of all pointers in LibMagic.xs to (long *) should not
+affect 32 bit systems.
+
+A.

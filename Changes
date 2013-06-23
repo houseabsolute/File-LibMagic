@@ -1,3 +1,76 @@
+Revision history for Perl extension File::LibMagic.
 
+0.96 May 2009
+     Upgraded Devel::CheckLib
+     see bug 46044, 46295 in rt.cpan.org
 
-- First release upon an unsuspecting world.
+0.95 May 2009
+      try to make test work in netbsd and solaris 9
+
+0.94 May 2009
+      small error in t/6-oo.t
+
+0.93 May 2009
+      using Devel::CheckLib as suggested in 
+      http://wiki.cpantesters.org/wiki/CPANAuthorNotes
+
+0.92 May 2009
+      "normalisation"-problem -> changed t/6-oo.t
+
+0.91 Feb 2009
+      Changed t/6-oo.t in order to pass 'make test' for file-5.x
+
+0.90 Nov 2008
+      removed some debugging code I accidently left in
+
+0.89 Aug 2008
+      added -lz to Makefile.PL in order to compile under 
+      FreeBSD
+
+0.88 May 2008
+      more experiments
+
+0.87 May 2008
+      experimenting with magic_buffer_offset
+
+0.86 May 2008
+      'file' version 4.24 returns slightly different filetypes.
+      this makes 'make test' fail. fixed it for the new 
+      version. But I'm afraid this breaks the 'make test' for
+      older versions of the package 'file'.
+
+0.85 June 2006
+      Minor cleanup of the MANIFEST to avoid warnings (Michael Hendricks)
+
+0.84 June 2006
+      (all implemented by Michael Hendricks)
+      some XS-Code cleanup,
+      import of constants like MAGIC_NONE from magic.h,
+      much improved error handling.
+      additional OO-Interface
+
+0.83 June 2006
+      Small documentation update
+
+0.82 April 2005
+      Found two bugs
+
+0.81 April 2005
+      Port to AMD-64, thanks to Nathan Hawkins <utsl@quic.net>
+
+0.80 July 2004
+      some improvements in colaboration with James Olin Oden <joden@lee.k12.nc.us> 
+
+0.10 Apr 2004
+      some cleanup
+
+0.03 Tue Mar 23 20:19:23 CET 2004
+      hacked magic_open & magic_load but it's not mature enough
+
+0.02 Tue Mar 23 15:23:17 CET 2004
+      magic_file implemented
+
+0.01 Mon Mar 15 22:52:03 2004
+	- original version; created by h2xs 1.22 with options
+		--skip-ppport File::LibMagic
+
