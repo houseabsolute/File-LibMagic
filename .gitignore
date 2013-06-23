@@ -3,6 +3,9 @@
 Build
 Debian_CPANTS.txt
 File-LibMagic-*
+LibMagic.bs
+LibMagic.c
+LibMagic.o
 MANIFEST
 META.json
 META.yml
