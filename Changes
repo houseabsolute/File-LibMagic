@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Updated to the latest Devel::CheckLib, which should fix error reported by
+  Perl 5.18 against the old CheckLib we were shipping. Reported by Dominic. RT
+  #85210.
+
 - We no longer link against libz, since this module doesn't it. Reported by
   Ansgar Burchardt. RT #56479.
 
