@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.97     2013-06-23
+
 - Updated to the latest Devel::CheckLib, which should fix error reported by
   Perl 5.18 against the old CheckLib we were shipping. Reported by Dominic. RT
   #85210.
