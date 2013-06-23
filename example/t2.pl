@@ -6,5 +6,5 @@ use strict;
 use File::LibMagic ':easy';
 
 #print TT("H"),"\n";
-print MagicBuffer("Hello World\n"),"\n";
+print MagicBuffer("Hello World\n"), "\n";
 
