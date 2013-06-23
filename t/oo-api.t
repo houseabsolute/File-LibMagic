@@ -15,8 +15,6 @@ my %custom = (
     'foo.c'   => [ 'ASCII text', 'text/plain; charset=us-ascii' ],
 );
 
-plan tests => 4 + 4 * ( keys %standard ) + 4 * ( keys %custom );
-
 # try using a the standard magic database
 my $flm = File::LibMagic->new();
 isa_ok( $flm, 'File::LibMagic' );
@@ -28,7 +26,7 @@ while ( my ( $file, $expect ) = each %standard ) {
     # the original file utility uses text/plain;...  so does gentoo, debian,
     # etc ..., but OpenSUSE returns text/plain... (no semicolon)
     $mime =~ s/;/;?/g;
-    like( $flm->checktype_filename($file), qr#$mime#, "MIME $file" );
+    like( $flm->checktype_filename($file), qr/$mime/, "MIME $file" );
     is( $flm->describe_filename($file), $descr, "Describe $file" );
 
     my $data = do {
@@ -37,7 +35,7 @@ while ( my ( $file, $expect ) = each %standard ) {
         <$fh>;
     };
 
-    like( $flm->checktype_contents($data), qr#$mime#, "MIME data $file" );
+    like( $flm->checktype_contents($data), qr/$mime/, "MIME data $file" );
     is( $flm->describe_contents($data), $descr, "Describe data $file" );
 }
 
@@ -80,8 +78,12 @@ is(
     'text/x-test-passes'
 );
 
-# define a subclass of File::LibMagic to test subclassing
-package My::Magic::Subclass;
-use base qw( File::LibMagic );
-sub checktype_filename { 'text/x-test-passes' }
+done_testing();
 
+{
+    package My::Magic::Subclass;
+
+    use base qw( File::LibMagic );
+
+    sub checktype_filename { 'text/x-test-passes' }
+}
