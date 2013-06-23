@@ -165,6 +165,8 @@ the file package (version 4.x or 5.x).
 
 =head1 API
 
+This module provides an object-oriented API with the following methods:
+
 =head2 File::LibMagic->new()
 
 Creates a new File::LibMagic object.
