@@ -1,6 +1,8 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+#define NEED_sv_2pv_flags
+#include "ppport.h"
 
 #include <magic.h>
 #include <string.h>
@@ -118,7 +120,7 @@ IV   magic_load(handle,dbnames)
             Perl_croak( aTHX_ "magic_load requires a defined handle" );
         }
 		m=(magic_t) handle;
-		if ( SvOK(dbnames) ) {  // is dbnames defined?
+		if ( SvOK(dbnames) ) {  /* is dbnames defined? */
 		    dbnames_value = SvPV(dbnames, len);
 		}
 		/* FIXME 

@@ -14,7 +14,7 @@ int main(void) {
 
 	m    =magic_open(MAGIC_NONE); if (m==NULL)   { Exit("Err",1,m); }
 	ret_i=magic_load(m,"magic");     if (ret_i==-1) { Exit("Error Load",1,m); }
-	// ret_i=magic_load(m,"/NotExistentFile");
+	/* ret_i=magic_load(m,"/NotExistentFile"); */
 				      if (ret_i==-1) { Exit("Error Load NotExistentFile",1,m); }
 
 	c = (char *) magic_buffer(m, TestPattern, strlen(TestPattern));
@@ -24,7 +24,7 @@ int main(void) {
 		printf("%s\n",c);
 	}
 
-	// c = (char *) magic_file(m, "/etc/passwd"); 
+	/* c = (char *) magic_file(m, "/etc/passwd"); */
 	c = (char *) magic_file(m, "/NotExistent"); 
 	if (c==NULL) { 
 		Exit("F",3,m); 
