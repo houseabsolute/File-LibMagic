@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Fix test failures on midnightbsd (I hope) by relaxing a MIME type check in
+  one of the tests.
+
+
 0.97     2013-06-23
 
 - Updated to the latest Devel::CheckLib, which should fix error reported by
