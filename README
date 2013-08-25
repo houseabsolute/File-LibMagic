@@ -2,7 +2,7 @@ NAME
     File::LibMagic - Determine MIME types of data or files using libmagic
 
 VERSION
-    version 0.97
+    version 0.98
 
 SYNOPSIS
       use File::LibMagic;
