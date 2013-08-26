@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- More test changes to try to get tests passing on midnightbsd.
+
+
 0.98     2013-08-25
 
 - Fix test failures on midnightbsd (I hope) by relaxing a MIME type check in

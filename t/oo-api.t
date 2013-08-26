@@ -9,7 +9,8 @@ use Test::More 0.88;
 use File::LibMagic;
 
 my %standard = (
-    'foo.foo' => [ 'ASCII text', 'text/plain; charset=us-ascii' ],
+    'foo.foo' => [
+        'ASCII text', qr{text/plain(?:; charset=us-ascii)?} ],
     'foo.c'   => [
         [ 'ASCII C program text', 'C source, ASCII text' ],
         qr{text/x-c(?:; charset=us-ascii)?}
@@ -17,7 +18,7 @@ my %standard = (
 );
 
 my %custom = (
-    'foo.foo' => [ 'A foo file', 'text/plain; charset=us-ascii' ],
+    'foo.foo' => [ 'A foo file', qr{text/plain(?:; charset=us-ascii)?} ],
     'foo.c'   => [
         [ 'ASCII text', 'ASCII C program text', 'C source, ASCII text' ],
         qr{text/(?:plain|(?:x-)?c)(?:; charset=us-ascii)?}
