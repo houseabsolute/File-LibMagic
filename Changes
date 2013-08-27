@@ -17,8 +17,8 @@
   Perl 5.18 against the old CheckLib we were shipping. Reported by Dominic. RT
   #85210.
 
-- We no longer link against libz, since this module doesn't it. Reported by
-  Ansgar Burchardt. RT #56479.
+- We no longer link against libz, since this module doesn't need it. Reported
+  by Ansgar Burchardt. RT #56479.
 
 - Fixed tests to work with the latest libmagic. Patch by Gregor Herrmann. RT
   #75457.
