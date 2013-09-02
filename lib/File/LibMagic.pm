@@ -64,21 +64,17 @@ $EXPORT_TAGS{"all"}
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-use constant _MAGIC_FILE      => 0;
-use constant _MIME_HANDLE     => 1;
-use constant _DESCRIBE_HANDLE => 2;
-
 sub new {
     my ( $class, $magic_file ) = @_;
 
-    return bless [ $magic_file || q{} ], $class;
+    return bless { magic_file => $magic_file }, $class;
 }
 
 sub _mime_handle {
     my ($self) = @_;
 
     my $m = magic_open( MAGIC_MIME() );
-    magic_load( $m, $self->[_MAGIC_FILE] );
+    magic_load( $m, $self->{magic_file} );
 
     return $m;
 }
@@ -87,7 +83,7 @@ sub _descr_handle {
     my ($self) = @_;
 
     my $m = magic_open( MAGIC_NONE() );
-    magic_load( $m, $self->[_MAGIC_FILE] );
+    magic_load( $m, $self->{magic_file} );
 
     return $m;
 }
@@ -95,14 +91,14 @@ sub _descr_handle {
 sub checktype_contents {
     my ( $self, $data ) = @_;
 
-    my $m = $self->[_MIME_HANDLE] ||= $self->_mime_handle();
+    my $m = $self->{mime_handle} ||= $self->_mime_handle();
     return magic_buffer( $m, $data );
 }
 
 sub checktype_filename {
     my ( $self, $filename ) = @_;
 
-    my $m = $self->[_MIME_HANDLE] ||= $self->_mime_handle();
+    my $m = $self->{mime_handle} ||= $self->_mime_handle();
 
     return magic_file( $m, $filename );
 }
@@ -110,7 +106,7 @@ sub checktype_filename {
 sub describe_contents {
     my ( $self, $data ) = @_;
 
-    my $m = $self->[_DESCRIBE_HANDLE] ||= $self->_descr_handle();
+    my $m = $self->{describe_handle} ||= $self->_descr_handle();
 
     return magic_buffer( $m, $data );
 }
@@ -118,7 +114,7 @@ sub describe_contents {
 sub describe_filename {
     my ( $self, $filename ) = @_;
 
-    my $m = $self->[_DESCRIBE_HANDLE] ||= $self->_descr_handle();
+    my $m = $self->{describe_handle} ||= $self->_descr_handle();
 
     return magic_file( $m, $filename );
 }
@@ -126,8 +122,8 @@ sub describe_filename {
 sub DESTROY {
     my ($self) = @_;
 
-    for ( _MIME_HANDLE, _DESCRIBE_HANDLE ) {
-        magic_close( $self->[$_] ) if $self->[$_];
+    for my $key (qw( mime_handle describe_handle )) {
+        magic_close( $self->{$key} ) if defined $self->{$key};
     }
 }
 
