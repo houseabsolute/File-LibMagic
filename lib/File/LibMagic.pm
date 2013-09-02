@@ -66,57 +66,47 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 sub new {
     my ( $class, $magic_file ) = @_;
-
     return bless { magic_file => $magic_file }, $class;
+}
+
+sub checktype_contents {
+    my ( $self, $data ) = @_;
+    return magic_buffer( $self->_mime_handle(), $data );
+}
+
+sub checktype_filename {
+    my ( $self, $filename ) = @_;
+    return magic_file( $self->_mime_handle(), $filename );
+}
+
+sub describe_contents {
+    my ( $self, $data ) = @_;
+    return magic_buffer( $self->_describe_handle(), $data );
+}
+
+sub describe_filename {
+    my ( $self, $filename ) = @_;
+    return magic_file( $self->_describe_handle(), $filename );
 }
 
 sub _mime_handle {
     my ($self) = @_;
 
-    my $m = magic_open( MAGIC_MIME() );
-    magic_load( $m, $self->{magic_file} );
-
-    return $m;
+    return $self->{magic_handle} ||= do {
+        my $m = magic_open( MAGIC_MIME() );
+        magic_load( $m, $self->{magic_file} );
+        $m;
+    };
 }
 
-sub _descr_handle {
+sub _describe_handle {
     my ($self) = @_;
 
-    my $m = magic_open( MAGIC_NONE() );
-    magic_load( $m, $self->{magic_file} );
-
-    return $m;
-}
-
-sub checktype_contents {
-    my ( $self, $data ) = @_;
-
-    my $m = $self->{mime_handle} ||= $self->_mime_handle();
-    return magic_buffer( $m, $data );
-}
-
-sub checktype_filename {
-    my ( $self, $filename ) = @_;
-
-    my $m = $self->{mime_handle} ||= $self->_mime_handle();
-
-    return magic_file( $m, $filename );
-}
-
-sub describe_contents {
-    my ( $self, $data ) = @_;
-
-    my $m = $self->{describe_handle} ||= $self->_descr_handle();
-
-    return magic_buffer( $m, $data );
-}
-
-sub describe_filename {
-    my ( $self, $filename ) = @_;
-
-    my $m = $self->{describe_handle} ||= $self->_descr_handle();
-
-    return magic_file( $m, $filename );
+    return $self->{describe_handle} ||= do {
+        my $m = magic_open( MAGIC_NONE() );
+        magic_load( $m, $self->{magic_file} );
+        $m;
+    };
 }
 
 sub DESTROY {
