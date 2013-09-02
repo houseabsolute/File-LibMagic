@@ -168,7 +168,8 @@ magic files at all.
 
 =head2 $magic->checktype_contents($data)
 
-Returns the MIME type of the data given as the first argument.
+Returns the MIME type of the data given as the first argument. The data can be
+passed as a plain scalar or as a reference to a scalar.
 
 This is the same value as would be returned by the C<file> command with the
 C<-i> switch.
@@ -183,6 +184,7 @@ C<-i> switch.
 =head2 $magic->describe_contents($data)
 
 Returns a description (as a string) of the data given as the first argument.
+The data can be passed as a plain scalar or as a reference to a scalar.
 
 This is the same value as would be returned by the C<file> command with no
 switches.

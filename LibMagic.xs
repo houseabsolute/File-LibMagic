@@ -155,7 +155,7 @@ SV * magic_buffer(handle,buffer)
         }
 
 		m = (magic_t) handle;
-        buffer_value = SvPV(buffer, len);
+        buffer_value = SvROK(buffer) ? SvPV(SvRV(buffer), len) : SvPV(buffer, len);
         ret = (char*) magic_buffer(m,buffer_value,len);
         if ( ret == NULL ) {
             Perl_croak(aTHX_ "libmagic %s", magic_error(m));

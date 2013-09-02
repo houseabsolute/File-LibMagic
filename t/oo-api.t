@@ -62,19 +62,32 @@ for my $file ( sort keys %standard ) {
 
     like(
         $flm->checktype_contents($data), qr/$mime/,
-        "MIME data $file - standard magic file"
+        "MIME data $file file contents - standard magic file"
+    );
+
+    like(
+        $flm->checktype_contents(\$data), qr/$mime/,
+        "MIME data $file contents as ref - standard magic file"
     );
 
     if ( ref $descr ) {
         is_any_of(
             $flm->describe_contents($data), $descr,
-            "Describe data $file - standard magic file"
+            "Describe data $file contents - standard magic file"
+        );
+        is_any_of(
+            $flm->describe_contents(\$data), $descr,
+            "Describe data $file contents as ref - standard magic file"
         );
     }
     else {
         is(
             $flm->describe_contents($data), $descr,
-            "Describe data $file - standard magic file"
+            "Describe data $file contents - standard magic file"
+        );
+        is(
+            $flm->describe_contents(\$data), $descr,
+            "Describe data $file contents as ref - standard magic file"
         );
     }
 }

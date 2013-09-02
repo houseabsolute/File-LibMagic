@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- The checktype_contents() and describe_contents() methods now accept a scalar
+  ref in addition to a plain scalar. RT #28747.
+
+
 0.99     2013-08-26
 
 - More test changes to try to get tests passing on midnightbsd.
