@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Don't get all excited about this being 1.00. It's just what comes after
+  0.99.
+
 - The checktype_contents() and describe_contents() methods now accept a scalar
   ref in addition to a plain scalar. RT #28747.
 
