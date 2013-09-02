@@ -2,7 +2,7 @@ NAME
     File::LibMagic - Determine MIME types of data or files using libmagic
 
 VERSION
-    version 0.99
+    version 1.00
 
 SYNOPSIS
       use File::LibMagic;
@@ -42,7 +42,8 @@ API
     find any magic files at all.
 
   $magic->checktype_contents($data)
-    Returns the MIME type of the data given as the first argument.
+    Returns the MIME type of the data given as the first argument. The data
+    can be passed as a plain scalar or as a reference to a scalar.
 
     This is the same value as would be returned by the "file" command with
     the "-i" switch.
@@ -55,7 +56,8 @@ API
 
   $magic->describe_contents($data)
     Returns a description (as a string) of the data given as the first
-    argument.
+    argument. The data can be passed as a plain scalar or as a reference to
+    a scalar.
 
     This is the same value as would be returned by the "file" command with
     no switches.
