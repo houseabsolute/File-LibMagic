@@ -266,7 +266,7 @@ Closes the magic handle.
 
 =head1 EXCEPTIONS
 
-This module can throw an exception if you system runs out of memory when
+This module can throw an exception if your system runs out of memory when
 trying to call C<magic_open> internally.
 
 =head1 SUPPORT
