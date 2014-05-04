@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.01     2014-05-04
+
 - Fixed repository metadata. Reported by Jens Rehsack. RT #89200.
 
 - A File::LibMagic object would not close one of the handles it might have

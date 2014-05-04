@@ -2,7 +2,7 @@ NAME
     File::LibMagic - Determine MIME types of data or files using libmagic
 
 VERSION
-    version 1.00
+    version 1.01
 
 SYNOPSIS
       use File::LibMagic;
@@ -94,7 +94,7 @@ DEPRECATED APIS
   The "complete" interface
     This interface is exported by:
 
-      use File::LibMagic ':easy';
+      use File::LibMagic ':complete';
 
     This interface exports several subroutines:
 
@@ -129,8 +129,8 @@ DEPRECATED APIS
         Closes the magic handle.
 
 EXCEPTIONS
-    This module can throw an exception if you system runs out of memory when
-    trying to call "magic_open" internally.
+    This module can throw an exception if your system runs out of memory
+    when trying to call "magic_open" internally.
 
 SUPPORT
     Please submit bugs to the CPAN RT system at
@@ -168,7 +168,7 @@ AUTHORS
     *   Dave Rolsky <autarch@urth.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2013 by Andreas Fitzner, Michael
+    This software is copyright (c) 2014 by Andreas Fitzner, Michael
     Hendricks, and Dave Rolsky.
 
     This is free software; you can redistribute it and/or modify it under
