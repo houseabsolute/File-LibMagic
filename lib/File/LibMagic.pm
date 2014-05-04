@@ -92,7 +92,7 @@ sub describe_filename {
 sub _mime_handle {
     my ($self) = @_;
 
-    return $self->{magic_handle} ||= do {
+    return $self->{mime_handle} ||= do {
         my $m = magic_open( MAGIC_MIME() );
         magic_load( $m, $self->{magic_file} );
         $m;
