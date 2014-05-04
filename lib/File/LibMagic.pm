@@ -228,7 +228,7 @@ Returns the description of a file, just like the C<describe_filename> method.
 
 This interface is exported by:
 
-  use File::LibMagic ':easy';
+  use File::LibMagic ':complete';
 
 This interface exports several subroutines:
 
