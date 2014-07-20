@@ -25,5 +25,3 @@ WriteMakefile(
     DEFINE  => '',
     INC     => '-I.'
 );
-
-exit 0;
