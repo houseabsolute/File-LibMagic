@@ -13,8 +13,6 @@ BEGIN {
     ExtUtils::MakeMaker::Dist::Zilla::Develop->import();
 }
 
-use ExtUtils::MakeMaker;
-
 use lib qw( inc );
 use Devel::CheckLib;
 
