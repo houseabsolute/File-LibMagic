@@ -141,8 +141,19 @@ __END__
 
 =head1 DESCRIPTION
 
-The C<File::LibMagic> is a simple perl interface to libmagic from
-the file package (version 4.x or 5.x).
+The C<File::LibMagic> is a simple perl interface to libmagic from the file
+package (version 4.x or 5.x). You will need both the library (F<libmagic.so>)
+and the header file (F<magic.h>) to build this Perl module.
+
+=head2 Installing libmagic
+
+On Debian/Ubuntu run:
+
+    sudo apt-get install libmagic-dev
+
+On Mac you can use homebrew (http://brew.sh/):
+
+    brew install libmagic
 
 =head1 API
 
