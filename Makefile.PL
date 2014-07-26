@@ -14,9 +14,18 @@ BEGIN {
 }
 
 use lib qw( inc );
-use Devel::CheckLib;
+use Config::AutoConf;
 
-check_lib_or_exit( lib => 'magic', header => 'magic.h' );
+unless ( Config::AutoConf->check_header('magic.h')
+    && Config::AutoConf->check_lib( 'magic', 'magic_open' ) ) {
+    warn <<'EOF';
+
+  This module requires the libmagic.so library and magic.h header. See
+  INSTALL.md for more details on installing these.
+
+EOF
+    exit 1;
+}
 
 WriteMakefile(
     NAME    => 'File::LibMagic',

@@ -20,12 +20,21 @@ around write_makefile_args => sub {
     return $args;
 };
 
-my $CheckLib = <<'EOF';
+my $check = <<'EOC';
 use lib qw( inc );
-use Devel::CheckLib;
+use Config::AutoConf;
 
-check_lib_or_exit( lib => 'magic', header => 'magic.h' );
+unless ( Config::AutoConf->check_header('magic.h')
+    && Config::AutoConf->check_lib( 'magic', 'magic_open' ) ) {
+    warn <<'EOF';
+
+  This module requires the libmagic.so library and magic.h header. See
+  INSTALL.md for more details on installing these.
+
 EOF
+    exit 1;
+}
+EOC
 
 around fill_in_string => sub {
     my $orig     = shift;
@@ -33,7 +42,7 @@ around fill_in_string => sub {
     my $template = shift;
     my $args     = shift;
 
-    $template =~ s/(use ExtUtils::MakeMaker.+;\n)/$1\n$CheckLib\n/;
+    $template =~ s/(use ExtUtils::MakeMaker.+;\n)/$1\n$check\n/;
 
     return $self->$orig( $template, $args );
 };

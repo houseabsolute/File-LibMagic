@@ -3,6 +3,10 @@
 - Added instructions for installing libmagic.so and magic.h to the POD and
   INSTALL.md file. Requested by Gabor Szabo. RT #97391.
 
+- Switched from using Devel::CheckLib to Config::AutoConf with the hope that
+  the latter will work with more compilers. Requested by Jens Rehsack. RT
+  #46543.
+
 
 1.01     2014-05-04
 

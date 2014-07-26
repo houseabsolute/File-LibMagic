@@ -16,5 +16,6 @@ Makefile.old
 \#*\#
 _build
 blib*
+config.log
 cover_db*
 pm_to_blib*
