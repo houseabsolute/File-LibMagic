@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.02     2014-07-26
+
 - Added instructions for installing libmagic.so and magic.h to the POD and
   INSTALL.md file. Requested by Gabor Szabo. RT #97391.
 
