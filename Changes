@@ -7,6 +7,9 @@
   the latter will work with more compilers. Requested by Jens Rehsack. RT
   #46543.
 
+- Switched the primary git repo to github
+  (https://github.com/autarch/File-LibMagic).
+
 
 1.01     2014-05-04
 
