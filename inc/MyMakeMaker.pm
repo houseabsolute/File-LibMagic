@@ -32,7 +32,7 @@ unless ( Config::AutoConf->check_header('magic.h')
   INSTALL.md for more details on installing these.
 
 EOF
-    exit 1;
+    exit 0;
 }
 EOC
 
