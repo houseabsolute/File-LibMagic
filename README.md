@@ -4,7 +4,7 @@ File::LibMagic - Determine MIME types of data or files using libmagic
 
 # VERSION
 
-version 1.02
+version 1.03
 
 # SYNOPSIS
 
@@ -35,6 +35,17 @@ On Debian/Ubuntu run:
 On Mac you can use homebrew (http://brew.sh/):
 
     brew install libmagic
+
+## Specifying lib and/or include directories
+
+On some systems, you may need to pass additional lib and include directories
+to the Makefile.PL. You can do this with the \`--lib\` and \`--include\`
+parameters:
+
+    perl Makefile.PL --lib /usr/local/include --include /usr/local/include
+
+You can pass these parameters multiple times to specify more than one
+location.
 
 # API
 

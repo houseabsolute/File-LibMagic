@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.03     2014-08-30
+
 - The shipped Makefile.PL now accepts --lib and --include command line
   arguments so you can specify additional lib and include directories. This
   should make this package easier to build on BSD systems, among
