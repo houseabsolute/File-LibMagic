@@ -155,6 +155,17 @@ On Mac you can use homebrew (http://brew.sh/):
 
     brew install libmagic
 
+=head2 Specifying lib and/or include directories
+
+On some systems, you may need to pass additional lib and include directories
+to the Makefile.PL. You can do this with the `--lib` and `--include`
+parameters:
+
+    perl Makefile.PL --lib /usr/local/include --include /usr/local/include
+
+You can pass these parameters multiple times to specify more than one
+location.
+
 =head1 API
 
 This module provides an object-oriented API with the following methods:

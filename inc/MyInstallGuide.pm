@@ -59,6 +59,17 @@ If you are installing into a system-wide directory, you may need to run:
 
     % sudo make install
 
+## Specifying additional lib and include directories
+
+On some systems, you may need to pass additional lib and include directories
+to the Makefile.PL. You can do this with the `--lib` and `--include`
+parameters:
+
+    perl Makefile.PL --lib /usr/local/include --include /usr/local/include
+
+You can pass these parameters multiple times to specify more than one
+location.
+
 ## Documentation
 
 File-LibMagic documentation is available as POD.

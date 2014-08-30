@@ -14,18 +14,9 @@ BEGIN {
 }
 
 use lib qw( inc );
-use Config::AutoConf;
+use inc::MyMakeMaker;
 
-unless ( Config::AutoConf->check_header('magic.h')
-    && Config::AutoConf->check_lib( 'magic', 'magic_open' ) ) {
-    warn <<'EOF';
-
-  This module requires the libmagic.so library and magic.h header. See
-  INSTALL.md for more details on installing these.
-
-EOF
-    exit 1;
-}
+inc::MyMakeMaker->run_autoconf_check();
 
 WriteMakefile(
     NAME    => 'File::LibMagic',

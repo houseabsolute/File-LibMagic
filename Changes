@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+- The shipped Makefile.PL now accepts --lib and --include command line
+  arguments so you can specify additional lib and include directories. This
+  should make this package easier to build on BSD systems, among
+  others. Reported by Alexander Bluhm. RT #97945.
+
+
 1.02     2014-07-26
 
 - Added instructions for installing libmagic.so and magic.h to the POD and
