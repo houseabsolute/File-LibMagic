@@ -14,7 +14,8 @@ around write_makefile_args => sub {
 
     my $args = $self->$orig(@_);
 
-    $args->{LIBS} = ['-lmagic'];
+    $args->{EXTRALIBS} = ['-lmagic'];
+    $args->{LDLOADLIBS} = ['-lmagic'];
     $args->{INC}  = '-I.';
 
     return $args;
@@ -43,8 +44,7 @@ $ac_args{extra_include_flags} = \@includes
 
 my $ac = Config::AutoConf->new(%ac_args);
 
-unless ( $ac->check_header('magic.h')
-    && $ac->check_lib( 'magic', 'magic_open' ) ) {
+unless ( $ac->search_libs( "magic_open", ["magic"] ) ) {
     warn <<'EOF';
 
   This module requires the libmagic.so library and magic.h header. See
@@ -70,9 +70,9 @@ around fill_in_string => sub {
     $template =~ s/(use ExtUtils::MakeMaker.+;\n)/$1\n$check\n/;
 
     my $munge_args = <<'EOF';
-unshift @{ $WriteMakefileArgs{LIBS} }, @libs;
-$WriteMakefileArgs{INC} = join q{ }, @includes, $WriteMakefileArgs{INC};
-
+$WriteMakefileArgs{INC} = join q{ }, @{ $ac->{extra_preprocess_flags} }, @{ $ac->{extra_include_flags} }, $WriteMakefileArgs{INC};
+$WriteMakefileArgs{EXTRALIBS} = join q{ }, @{ $ac->{extra_link_flags} }, $WriteMakefileArgs{EXTRALIBS};
+$WriteMakefileArgs{LDLOADLIBS} = join q{ }, @{ $ac->{extra_link_flags} }, $WriteMakefileArgs{LDLOADLIBS};
 
 EOF
 
