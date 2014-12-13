@@ -1,16 +1,17 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
-#define NEED_sv_2pv_flags
 #include "ppport.h"
-
+#define NEED_sv_2pv_flags_GLOBAL
 #include <magic.h>
 #include <string.h>
 
 #include "const/inc.c"
 
-/* I don't know anything about perlxs, just trying my best. ;)
-*/
+magic_t magic_handle(SV *self)
+{
+    return (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0)));
+}
 
 MODULE = File::LibMagic     PACKAGE = File::LibMagic
 
@@ -179,6 +180,12 @@ SV *magic_file(m, file)
         RETVAL = newSVpvn(ret, strlen(ret));
     OUTPUT:
         RETVAL
+
+void magic_setflags(m, flags)
+    magic_t m
+    int flags
+    CODE:
+        magic_setflags(m, flags);
 
 SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m

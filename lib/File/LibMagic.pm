@@ -63,7 +63,14 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 sub new {
     my ( $class, $magic_file ) = @_;
-    return bless { magic_file => $magic_file }, $class;
+
+    my $m = magic_open( MAGIC_NONE() );
+    magic_load( $m, $magic_file );
+
+    return bless {
+        magic      => $m,
+        magic_file => $magic_file,
+    }, $class;
 }
 
 sub checktype_contents {
@@ -86,24 +93,16 @@ sub describe_filename {
     return magic_file( $self->_describe_handle(), $filename );
 }
 
-sub _mime_handle {
-    my ($self) = @_;
-
-    return $self->{mime_handle} ||= do {
-        my $m = magic_open( MAGIC_MIME() );
-        magic_load( $m, $self->{magic_file} );
-        $m;
-    };
+sub _describe_handle {
+    my $self = shift;
+    magic_setflags( $self->{magic}, MAGIC_NONE() );
+    return $self->{magic};
 }
 
-sub _describe_handle {
-    my ($self) = @_;
-
-    return $self->{describe_handle} ||= do {
-        my $m = magic_open( MAGIC_NONE() );
-        magic_load( $m, $self->{magic_file} );
-        $m;
-    };
+sub _mime_handle {
+    my $self = shift;
+    magic_setflags( $self->{magic}, MAGIC_MIME() );
+    return $self->{magic};
 }
 
 sub DESTROY {
