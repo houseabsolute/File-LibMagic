@@ -179,7 +179,7 @@ SV *magic_file(m, file)
     OUTPUT:
         RETVAL
 
-void magic_setflags(m, flags)
+void _magic_setflags(m, flags)
     magic_t m
     int flags
     CODE:

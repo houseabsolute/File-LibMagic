@@ -133,13 +133,13 @@ sub describe_filename {
 
 sub _describe_handle {
     my $self = shift;
-    magic_setflags( $self->{magic}, MAGIC_NONE() );
+    _magic_setflags( $self->{magic}, MAGIC_NONE() );
     return $self->{magic};
 }
 
 sub _mime_handle {
     my $self = shift;
-    magic_setflags( $self->{magic}, MAGIC_MIME() );
+    _magic_setflags( $self->{magic}, MAGIC_MIME() );
     return $self->{magic};
 }
 
