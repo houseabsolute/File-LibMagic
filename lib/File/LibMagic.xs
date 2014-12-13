@@ -37,12 +37,12 @@ SV * MagicBuffer(buffer)
          if ( m == NULL ) {
              Perl_croak(aTHX_ "libmagic out of memory");
          }
-         ret_i = magic_load(m,NULL);
+         ret_i = magic_load(m, NULL);
          if ( ret_i < 0 ) {
              Perl_croak(aTHX_ "libmagic %s", magic_error(m));
          }
          buffer_value = SvPV(buffer, len);
-         ret = (char*) magic_buffer(m,buffer_value,len);
+         ret = (char*) magic_buffer(m, buffer_value, len);
          if ( ret == NULL ) {
              Perl_croak(aTHX_ "libmagic %s", magic_error(m));
          }
@@ -68,12 +68,12 @@ SV * MagicFile(buffer)
          if ( m == NULL ) {
              Perl_croak(aTHX_ "libmagic out of memory");
          }
-         ret_i = magic_load(m,NULL);
+         ret_i = magic_load(m, NULL);
          if ( ret_i < 0 ) {
              Perl_croak(aTHX_ "libmagic %s", magic_error(m));
          }
 	 buffer_value = SvPV_nolen(buffer);
-	 ret=(char*) magic_file(m,buffer_value);
+	 ret=(char*) magic_file(m, buffer_value);
          if ( ret == NULL ) {
              Perl_croak(aTHX_ "libmagic %s", magic_error(m));
          }
@@ -107,7 +107,7 @@ void magic_close(handle)
 		m=(magic_t) handle;
 		magic_close(m);
 
-IV   magic_load(handle,dbnames)
+IV   magic_load(handle, dbnames)
 	long handle
 	SV * dbnames
 	PREINIT:
@@ -128,7 +128,7 @@ IV   magic_load(handle,dbnames)
 		 * thus does the following line correctly reflect this? */
 		ret=magic_load(m, len > 0 ? dbnames_value : NULL);
 		/*
-		 * printf("Ret %d, \"%s\"\n",ret,dbnames_value);
+		 * printf("Ret %d, \"%s\"\n", ret, dbnames_value);
 		 */
 		RETVAL = ! ret;
         if ( RETVAL < 0 ) {
@@ -137,7 +137,7 @@ IV   magic_load(handle,dbnames)
 	OUTPUT:
 		RETVAL
 
-SV * magic_buffer(handle,buffer)
+SV * magic_buffer(handle, buffer)
 	long handle
 	SV * buffer
 	PREINIT:
@@ -156,7 +156,7 @@ SV * magic_buffer(handle,buffer)
 
 		m = (magic_t) handle;
         buffer_value = SvROK(buffer) ? SvPV(SvRV(buffer), len) : SvPV(buffer, len);
-        ret = (char*) magic_buffer(m,buffer_value,len);
+        ret = (char*) magic_buffer(m, buffer_value, len);
         if ( ret == NULL ) {
             Perl_croak(aTHX_ "libmagic %s", magic_error(m));
         }
@@ -164,7 +164,7 @@ SV * magic_buffer(handle,buffer)
 	OUTPUT:
 		RETVAL
 
-SV * magic_buffer_offset(handle,buffer,offset,BuffLen)
+SV * magic_buffer_offset(handle, buffer, offset, BuffLen)
 	long handle
 	char * buffer
 	long offset
@@ -189,7 +189,7 @@ SV * magic_buffer_offset(handle,buffer,offset,BuffLen)
 	OUTPUT:
 		RETVAL
 
-SV * magic_file(handle,buffer)
+SV * magic_file(handle, buffer)
        long handle
        SV * buffer
        PREINIT:
@@ -207,7 +207,7 @@ SV * magic_file(handle,buffer)
 
          m = (magic_t) handle;
          buffer_value = SvPV_nolen(buffer);
-         ret = (char*) magic_file(m,buffer_value);
+         ret = (char*) magic_file(m, buffer_value);
          if ( ret == NULL ) {
              Perl_croak(aTHX_ "libmagic %s", magic_error(m));
          }
