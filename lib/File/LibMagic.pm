@@ -73,6 +73,44 @@ sub new {
     }, $class;
 }
 
+sub info_from_string {
+    my $self = shift;
+    return $self->_info_hash( $self->_info_from_string(@_) );
+}
+
+sub info_from_filename {
+    my $self = shift;
+    return $self->_info_hash( $self->_info_from_filename(@_) );
+}
+
+sub info_from_handle {
+    my $self = shift;
+    return $self->_info_hash( $self->_info_from_handle(@_) );
+}
+
+sub _info_hash {
+    return {
+        description        => $_[1],
+        mime_type          => $_[2],
+        encoding           => $_[3],
+        mime_with_encoding => $_[0]->_mime_with_encoding( @_[ 2, 3 ] ),
+    };
+}
+
+sub _mime_with_encoding {
+    return $_[1] unless $_[2];
+    return "$_[1]; charset=$_[2]";
+}
+
+sub DESTROY {
+    my ($self) = @_;
+
+    for my $key (qw( mime_handle describe_handle )) {
+        magic_close( $self->{$key} ) if defined $self->{$key};
+    }
+}
+
+# Old OO API
 sub checktype_contents {
     my ( $self, $data ) = @_;
     return magic_buffer( $self->_mime_handle(), $data );
@@ -105,14 +143,6 @@ sub _mime_handle {
     return $self->{magic};
 }
 
-sub DESTROY {
-    my ($self) = @_;
-
-    for my $key (qw( mime_handle describe_handle )) {
-        magic_close( $self->{$key} ) if defined $self->{$key};
-    }
-}
-
 1;
 
 # ABSTRACT: Determine MIME types of data or files using libmagic
@@ -127,13 +157,21 @@ __END__
 
   my $magic = File::LibMagic->new();
 
-  # prints a description like "ASCII text"
-  print $magic->describe_filename('path/to/file');
-  print $magic->describe_contents('this is some data');
+  my $info = $magic->info_from_filename('path/to/file');
+  # Prints a description like "ASCII text"
+  print $info->{description};
+  # Prints a MIME type like "text/plain"
+  print $info->{mime_type};
+  # Prints a character encoding like "us-ascii"
+  print $info->{encoding};
+  # Prints a MIME type with encoding like "text/plain; charset=us-ascii"
+  print $info->{mime_with_encoding};
 
-  # Prints a MIME type like "text/plain; charset=us-ascii"
-  print $magic->checktype_filename('path/to/file');
-  print $magic->checktype_contents('this is some data');
+  my $file_content = read_file('path/to/file');
+  my $info = $magic->info_from_string($file_content);
+
+  open my $fh, '<', 'path/to/file' or die $!;
+  my $info = $magic->info_from_handle($fh);
 
 =head1 DESCRIPTION
 
@@ -170,12 +208,12 @@ This module provides an object-oriented API with the following methods:
 
 Creates a new File::LibMagic object.
 
-Using the object oriented interface provides an efficient way to repeatedly
-determine the magic of a file.
+Using the object oriented interface only opens the magic database once, which
+is probably most efficient for repeated uses.
 
-Each File::LibMagic object loads the magic database independently of other
-File::LibMagic objects, so you may want to share a single object across many
-modules as a singleton.
+Each C<File::LibMagic> object loads the magic database independently of other
+C<File::LibMagic> objects, so you may want to share a single object across
+many modules.
 
 This method takes an optional argument containing a path to the magic file. If
 the file doesn't exist this will throw an exception (but only with libmagic
@@ -184,7 +222,62 @@ the file doesn't exist this will throw an exception (but only with libmagic
 If you don't pass an argument, it will throw an exception if it can't find any
 magic files at all.
 
-=head2 $magic->checktype_contents($data)
+=head2 $magic->info_from_filename('path/to/file')
+
+This method returns info about the given file. The return value is a hash
+reference with four keys:
+
+=over 4
+
+=item * description
+
+A textual description of the file content like "ASCII C program text".
+
+=item * mime_type
+
+The MIME type without a character encoding, like "text/x-c".
+
+=item * encoding
+
+Just the character encoding, like "us-ascii".
+
+=item * mime_with_encoding
+
+The MIME type with a character encoding, like "text/x-c;
+charset=us-ascii". Note that if no encoding was found, this will be the same
+as the C<mime_type> key.
+
+=back
+
+=head2 $magic->info_from_string($string)
+
+This method returns info about the given string. The string can be passed as a
+reference to save memory.
+
+The return value is the same as that of C<< $mime->info_from_filename() >>.
+
+=head2 $magic->info_from_handle($fh)
+
+This method returns info about the given filehandle.
+
+=head1 DEPRECATED APIS
+
+This module offers two different procedural APIs based on optional exports,
+the "easy" and "complete" interfaces. There is also an older OO API still
+available. All of these APIs are deprecated, but will not be removed in the
+near future, nor will using them cause any warnings.
+
+I strongly recommend you use the new OO API. It's simpler than the complete
+interface, more efficient than the easy interface, and more featureful than
+the old OO API.
+
+=head2 The Old OO API
+
+This API uses the same constructor as the current API.
+
+=over 4
+
+=item * $magic->checktype_contents($data)
 
 Returns the MIME type of the data given as the first argument. The data can be
 passed as a plain scalar or as a reference to a scalar.
@@ -192,14 +285,14 @@ passed as a plain scalar or as a reference to a scalar.
 This is the same value as would be returned by the C<file> command with the
 C<-i> switch.
 
-=head2 $magic->checktype_filename($filename)
+=item * $magic->checktype_filename($filename)
 
 Returns the MIME type of the given file.
 
 This is the same value as would be returned by the C<file> command with the
 C<-i> switch.
 
-=head2 $magic->describe_contents($data)
+=item * $magic->describe_contents($data)
 
 Returns a description (as a string) of the data given as the first argument.
 The data can be passed as a plain scalar or as a reference to a scalar.
@@ -207,19 +300,14 @@ The data can be passed as a plain scalar or as a reference to a scalar.
 This is the same value as would be returned by the C<file> command with no
 switches.
 
-=head2 $magic->describe_filename($filename)
+=item * $magic->describe_filename($filename)
 
 Returns a description (as a string) of the given file.
 
 This is the same value as would be returned by the C<file> command with no
 switches.
 
-=head1 DEPRECATED APIS
-
-This module offers two different procedural APIS based on optional exports,
-the "easy" and "complete" interfaces. These APIS are now deprecated. I
-strongly recommend you use the OO interface. It's simpler than the complete
-interface and more efficient than the easy interface.
+=back
 
 =head2 The "easy" interface
 

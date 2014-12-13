@@ -8,10 +8,8 @@
 
 #include "const/inc.c"
 
-magic_t magic_handle(SV *self)
-{
-    return (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0)));
-}
+/* This is how much data libmagic reads from an fd, so we'll emulate that. */
+#define BUFSIZE (256 * 1024)
 
 MODULE = File::LibMagic     PACKAGE = File::LibMagic
 
@@ -31,21 +29,21 @@ SV *MagicBuffer(buffer)
    CODE:
        /* First make sure they actually gave us a defined scalar */
        if ( !SvOK(buffer) ) {
-          Perl_croak(aTHX_ "MagicBuffer requires defined content");
+          croak(aTHX_ "MagicBuffer requires defined content");
        }
 
        m = magic_open(MAGIC_NONE);
        if ( m == NULL ) {
-           Perl_croak(aTHX_ "libmagic out of memory");
+           croak(aTHX_ "libmagic out of memory");
        }
        ret_i = magic_load(m, NULL);
        if ( ret_i < 0 ) {
-           Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+           croak(aTHX_ "libmagic %s", magic_error(m));
        }
        buffer_value = SvPV(buffer, len);
        ret = (char*) magic_buffer(m, buffer_value, len);
        if ( ret == NULL ) {
-           Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+           croak(aTHX_ "libmagic %s", magic_error(m));
        }
        RETVAL = newSVpvn(ret, strlen(ret));
        magic_close(m);
@@ -62,21 +60,21 @@ SV *MagicFile(file)
    CODE:
        /* First make sure they actually gave us a defined scalar */
        if ( !SvOK(file) ) {
-          Perl_croak(aTHX_ "MagicFile requires a filename");
+          croak(aTHX_ "MagicFile requires a filename");
        }
 
        m = magic_open(MAGIC_NONE);
        if ( m == NULL ) {
-           Perl_croak(aTHX_ "libmagic out of memory");
+           croak(aTHX_ "libmagic out of memory");
        }
        ret_i = magic_load(m, NULL);
        if ( ret_i < 0 ) {
-           Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+           croak(aTHX_ "libmagic %s", magic_error(m));
        }
        file_value = SvPV_nolen(file);
        ret = (char*) magic_file(m, file_value);
        if ( ret == NULL ) {
-           Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+           croak(aTHX_ "libmagic %s", magic_error(m));
        }
        RETVAL = newSVpvn(ret, strlen(ret));
        magic_close(m);
@@ -90,7 +88,7 @@ magic_t magic_open(flags)
    CODE:
         m = magic_open(flags);
         if ( m == NULL ) {
-            Perl_croak( aTHX_ "libmagic out of memory" );
+            croak( aTHX_ "libmagic out of memory" );
         }
         RETVAL = m;
    OUTPUT:
@@ -100,7 +98,7 @@ void magic_close(m)
     magic_t m
     CODE:
         if ( !m ) {
-            Perl_croak( aTHX_ "magic_close requires a defined handle" );
+            croak( aTHX_ "magic_close requires a defined handle" );
         }
         magic_close(m);
 
@@ -113,7 +111,7 @@ IV magic_load(m, dbnames)
         int ret;
     CODE:
         if ( !m ) {
-            Perl_croak( aTHX_ "magic_load requires a defined handle" );
+            croak( aTHX_ "magic_load requires a defined handle" );
         }
         if ( SvOK(dbnames) ) {  /* is dbnames defined? */
             dbnames_value = SvPV(dbnames, len);
@@ -127,7 +125,7 @@ IV magic_load(m, dbnames)
          */
         RETVAL = ! ret;
         if ( RETVAL < 0 ) {
-            Perl_croak( aTHX_ "libmagic %s", magic_error(m) );
+            croak( aTHX_ "libmagic %s", magic_error(m) );
         }
     OUTPUT:
         RETVAL
@@ -141,17 +139,17 @@ SV *magic_buffer(m, buffer)
         char *buffer_value;
     CODE:
         if ( !m ) {
-            Perl_croak( aTHX_ "magic_buffer requires a defined handle" );
+            croak( aTHX_ "magic_buffer requires a defined handle" );
         }
         /* First make sure they actually gave us a defined scalar */
         if ( !SvOK(buffer) ) {
-            Perl_croak(aTHX_ "magic_buffer requires defined content");
+            croak(aTHX_ "magic_buffer requires defined content");
         }
 
         buffer_value = SvROK(buffer) ? SvPV(SvRV(buffer), len) : SvPV(buffer, len);
         ret = (char*) magic_buffer(m, buffer_value, len);
         if ( ret == NULL ) {
-            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+            croak(aTHX_ "libmagic %s", magic_error(m));
         }
         RETVAL = newSVpvn(ret, strlen(ret));
     OUTPUT:
@@ -165,17 +163,17 @@ SV *magic_file(m, file)
         char *file_value;
     CODE:
         if ( !m ) {
-            Perl_croak( aTHX_ "magic_file requires a defined handle" );
+            croak( aTHX_ "magic_file requires a defined handle" );
         }
         /* First make sure they actually gave us a defined scalar */
         if ( !SvOK(file) ) {
-            Perl_croak(aTHX_ "magic_file requires a filename");
+            croak(aTHX_ "magic_file requires a filename");
         }
 
         file_value = SvPV_nolen(file);
         ret = (char*) magic_file(m, file_value);
         if ( ret == NULL ) {
-            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+            croak(aTHX_ "libmagic %s", magic_error(m));
         }
         RETVAL = newSVpvn(ret, strlen(ret));
     OUTPUT:
@@ -198,14 +196,125 @@ SV *magic_buffer_offset(m, buffer, offset, BuffLen)
         long MyLen;
     CODE:
         if ( !m ) {
-            Perl_croak( aTHX_ "magic_buffer requires a defined handle" );
+            croak( aTHX_ "magic_buffer requires a defined handle" );
         }
         /* FIXME check length for out of bound errors */
         MyLen = (long) BuffLen;
         ret = (char*) magic_buffer(m, (char *) &buffer[ (long) offset], MyLen);
         if ( ret == NULL ) {
-            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+            croak(aTHX_ "libmagic %s", magic_error(m));
         }
         RETVAL = newSVpvn(ret, strlen(ret));
     OUTPUT:
         RETVAL
+
+#define RETURN_INFO(self, magic_func, ...) \
+        magic = (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0))); \
+        magic_setflags(magic, MAGIC_NONE);              \
+        description = magic_func(magic, __VA_ARGS__);   \
+        if ( NULL == description ) {                    \
+            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
+        }                                               \
+        d = newSVpvn(description, strlen(description)); \
+        magic_setflags(magic, MAGIC_MIME);              \
+        mime = magic_func(magic, __VA_ARGS__);          \
+        if ( NULL == mime ) {                           \
+            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
+        }                                               \
+        m = newSVpvn(mime, strlen(mime));               \
+        magic_setflags(magic, MAGIC_MIME_ENCODING);     \
+        encoding = magic_func(magic, __VA_ARGS__);      \
+        if ( NULL == encoding ) {                       \
+            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
+        }                                               \
+        e = newSVpvn(encoding, strlen(encoding));       \
+        EXTEND(SP, 3);                                  \
+        mPUSHs(d);                                      \
+        mPUSHs(m);                                      \
+        mPUSHs(e);
+
+SV *_info_from_string(self, buffer)
+        SV *self
+        SV *buffer
+    PREINIT:
+        magic_t magic;
+        SV *content;
+        STRLEN len;
+        char *string;
+        const char *description;
+        const char *mime;
+        const char *encoding;
+        SV *d;
+        SV *m;
+        SV *e;
+    PPCODE:
+        if (SvROK(buffer)) {
+            content = SvRV(buffer);
+        }
+        else {
+            content = buffer;
+        }
+
+        if ( ! SvPOK(content) ) {
+            croak(aTHX_ "info_from_string requires a scalar or reference to a scalar as its argument");
+        }
+
+        string = SvPV(content, len);
+
+        RETURN_INFO(self, magic_buffer, string, len);
+
+SV *_info_from_filename(self, filename)
+        SV *self
+        SV *filename
+    PREINIT:
+        magic_t magic;
+        char *file;
+        char *string;
+        const char *description;
+        const char *mime;
+        const char *encoding;
+        SV *d;
+        SV *m;
+        SV *e;
+    PPCODE:
+        if ( ! SvPOK(filename) ) {
+            croak(aTHX_ "info_from_filename requires a scalar as its argument");
+        }
+
+        file = SvPV_nolen(filename);
+
+        RETURN_INFO(self, magic_file, file);
+
+SV *_info_from_handle(self, handle)
+        SV *self
+        SV *handle
+    PREINIT:
+        magic_t magic;
+        PerlIO *io;
+        char buf[BUFSIZE];
+        SSize_t read;
+        const char *description;
+        const char *mime;
+        const char *encoding;
+        SV *d;
+        SV *m;
+        SV *e;
+    PPCODE:
+        if ( ! SvOK(handle) ) {
+            croak(aTHX_ "info_from_handle requires a scalar filehandle as its argument");
+        }
+
+        io = IoIFP(sv_2io(handle));
+        if ( ! io ) {
+            croak(aTHX_ "info_from_handle requires a scalar filehandle as its argument");
+        }
+
+        read = PerlIO_read(io, buf, BUFSIZE);
+        if ( read < 0 ) {
+            croak(aTHX_ "info_from_handle could not read data from the filehandle provided: %s", strerror(errno));
+        }
+        else if ( 0 == read ) {
+            croak(aTHX_ "info_from_handle could not read data from the filehandle provided - is the file empty?");
+        }
+
+        RETURN_INFO(self, magic_buffer, buf, strlen(buf));
