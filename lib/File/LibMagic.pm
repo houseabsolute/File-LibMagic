@@ -9,12 +9,9 @@ use Carp;
 use Exporter;
 use XSLoader;
 
-XSLoader::load(
-    __PACKAGE__,
-    exists $File::LibMagic::{VERSION} && ${ $File::LibMagic::{VERSION} }
-    ? ${ $File::LibMagic::{VERSION} }
-    : 42
-);
+our $VERSION = '1.04';
+
+XSLoader::load( __PACKAGE__, $VERSION );
 
 use base 'Exporter';
 

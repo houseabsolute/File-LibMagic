@@ -19,6 +19,9 @@ around write_makefile_args => sub {
     $args->{LIBS}   = ['-lmagic'];
     $args->{INC}    = '-I. -Ic';
 
+    delete $args->{VERSION};
+    $args->{VERSION_FROM} = 'lib/File/LibMagic.pm';
+
     return $args;
 };
 

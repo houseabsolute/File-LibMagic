@@ -75,7 +75,7 @@ my %WriteMakefileArgs = (
     "Test::More" => "0.88",
     "lib" => 0
   },
-  "VERSION" => "1.03",
+  "VERSION_FROM" => "lib/File/LibMagic.pm",
   "XS" => {
     "lib/File/LibMagic.xs" => "lib/File/LibMagic.c"
   },
