@@ -53,12 +53,16 @@ my %WriteMakefileArgs = (
   "DISTNAME" => "File-LibMagic",
   "EXE_FILES" => [],
   "INC" => "-I. -Ic",
+  "LDFROM" => "LibMagic\$(OBJ_EXT)",
   "LIBS" => [
     "-lmagic"
   ],
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.008",
   "NAME" => "File::LibMagic",
+  "OBJECT" => [
+    "lib/File/LibMagic\$(OBJ_EXT)"
+  ],
   "PREREQ_PM" => {
     "Carp" => 0,
     "Exporter" => 0,

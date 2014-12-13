@@ -14,10 +14,12 @@ around write_makefile_args => sub {
 
     my $args = $self->$orig(@_);
 
-    $args->{XS}     = { 'lib/File/LibMagic.xs' => 'lib/File/LibMagic.c' };
-    $args->{C}      = ['lib/File/LibMagic.c'];
     $args->{LIBS}   = ['-lmagic'];
     $args->{INC}    = '-I. -Ic';
+    $args->{XS}     = { 'lib/File/LibMagic.xs' => 'lib/File/LibMagic.c' };
+    $args->{C}      = ['lib/File/LibMagic.c'];
+    $args->{OBJECT} = ['lib/File/LibMagic$(OBJ_EXT)'];
+    $args->{LDFROM} = 'LibMagic$(OBJ_EXT)';
 
     delete $args->{VERSION};
     $args->{VERSION_FROM} = 'lib/File/LibMagic.pm';
