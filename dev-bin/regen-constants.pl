@@ -25,8 +25,8 @@ ExtUtils::Constant::WriteConstants(
     NAME         => 'File::LibMagic',
     NAMES        => \@names,
     DEFAULT_TYPE => 'IV',
-    C_FILE       => 'const-c.inc',
-    XS_FILE      => 'const-xs.inc',
+    C_FILE       => 'const/inc.c',
+    XS_FILE      => 'const/inc.xs',
 );
 
 exit 0;

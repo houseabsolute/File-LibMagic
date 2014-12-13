@@ -7,14 +7,14 @@
 #include <magic.h>
 #include <string.h>
 
-#include "const-c.inc"
+#include "const/inc.c"
 
 /* I don't know anything about perlxs, just trying my best. ;)
 */
 
 MODULE = File::LibMagic		PACKAGE = File::LibMagic		
 
-INCLUDE: const-xs.inc
+INCLUDE: ../../const/inc.xs
 
 PROTOTYPES: ENABLE
 

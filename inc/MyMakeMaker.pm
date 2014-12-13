@@ -14,8 +14,10 @@ around write_makefile_args => sub {
 
     my $args = $self->$orig(@_);
 
-    $args->{LIBS} = ['-lmagic'];
-    $args->{INC}  = '-I.';
+    $args->{XS}     = { 'lib/File/LibMagic.xs' => 'lib/File/LibMagic.c' };
+    $args->{C}      = ['lib/File/LibMagic.c'];
+    $args->{LIBS}   = ['-lmagic'];
+    $args->{INC}    = '-I. -Ic';
 
     return $args;
 };
@@ -25,7 +27,6 @@ use lib qw( inc );
 use Config::AutoConf;
 use Getopt::Long;
 
-my %ac_args;
 my @libs;
 my @includes;
 GetOptions(
@@ -34,14 +35,13 @@ GetOptions(
 );
 
 @libs = map { '-L' . $_ } @libs;
-$ac_args{extra_link_flags} = \@libs
-    if @libs;
 
 @includes = map { '-I' . $_ } @includes;
-$ac_args{extra_include_flags} = \@includes
-    if @includes;
 
-my $ac = Config::AutoConf->new(%ac_args);
+my $ac = Config::AutoConf->new(
+    extra_link_flags    => \@libs,
+    extra_include_flags => \@includes,
+);
 
 unless ( $ac->check_header('magic.h')
     && $ac->check_lib( 'magic', 'magic_open' ) ) {
@@ -66,7 +66,6 @@ around fill_in_string => sub {
     my $munge_args = <<'EOF';
 unshift @{ $WriteMakefileArgs{LIBS} }, @libs;
 $WriteMakefileArgs{INC} = join q{ }, @includes, $WriteMakefileArgs{INC};
-
 
 EOF
 
