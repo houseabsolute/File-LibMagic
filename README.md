@@ -202,6 +202,10 @@ the file package.
 - Michael Hendricks <michael@ndrix.org>
 - Dave Rolsky <autarch@urth.org>
 
+# CONTRIBUTOR
+
+Olaf Alders <olaf@wundersolutions.com>
+
 # COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2014 by Andreas Fitzner, Michael Hendricks, and Dave Rolsky.
