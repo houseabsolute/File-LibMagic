@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.04     2014-12-13 (TRIAL RELEASE)
+
 - Added yet another OO API to File::LibMagic. This provides a simpler and more
   future-proof API which can be expanded on later. The new methods are
   info_from_string(), info_from_filename(), and info_from_handle(). The latter

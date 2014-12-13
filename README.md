@@ -12,13 +12,21 @@ version 1.04
 
     my $magic = File::LibMagic->new();
 
-    # prints a description like "ASCII text"
-    print $magic->describe_filename('path/to/file');
-    print $magic->describe_contents('this is some data');
+    my $info = $magic->info_from_filename('path/to/file');
+    # Prints a description like "ASCII text"
+    print $info->{description};
+    # Prints a MIME type like "text/plain"
+    print $info->{mime_type};
+    # Prints a character encoding like "us-ascii"
+    print $info->{encoding};
+    # Prints a MIME type with encoding like "text/plain; charset=us-ascii"
+    print $info->{mime_with_encoding};
 
-    # Prints a MIME type like "text/plain; charset=us-ascii"
-    print $magic->checktype_filename('path/to/file');
-    print $magic->checktype_contents('this is some data');
+    my $file_content = read_file('path/to/file');
+    $info = $magic->info_from_string($file_content);
+
+    open my $fh, '<', 'path/to/file' or die $!;
+    $info = $magic->info_from_handle($fh);
 
 # DESCRIPTION
 
@@ -55,12 +63,12 @@ This module provides an object-oriented API with the following methods:
 
 Creates a new File::LibMagic object.
 
-Using the object oriented interface provides an efficient way to repeatedly
-determine the magic of a file.
+Using the object oriented interface only opens the magic database once, which
+is probably most efficient for repeated uses.
 
-Each File::LibMagic object loads the magic database independently of other
-File::LibMagic objects, so you may want to share a single object across many
-modules as a singleton.
+Each `File::LibMagic` object loads the magic database independently of other
+`File::LibMagic` objects, so you may want to share a single object across
+many modules.
 
 This method takes an optional argument containing a path to the magic file. If
 the file doesn't exist this will throw an exception (but only with libmagic
@@ -69,42 +77,86 @@ the file doesn't exist this will throw an exception (but only with libmagic
 If you don't pass an argument, it will throw an exception if it can't find any
 magic files at all.
 
-## $magic->checktype\_contents($data)
+## $magic->info\_from\_filename('path/to/file')
 
-Returns the MIME type of the data given as the first argument. The data can be
-passed as a plain scalar or as a reference to a scalar.
+This method returns info about the given file. The return value is a hash
+reference with four keys:
 
-This is the same value as would be returned by the `file` command with the
-`-i` switch.
+- description
 
-## $magic->checktype\_filename($filename)
+    A textual description of the file content like "ASCII C program text".
 
-Returns the MIME type of the given file.
+- mime\_type
 
-This is the same value as would be returned by the `file` command with the
-`-i` switch.
+    The MIME type without a character encoding, like "text/x-c".
 
-## $magic->describe\_contents($data)
+- encoding
 
-Returns a description (as a string) of the data given as the first argument.
-The data can be passed as a plain scalar or as a reference to a scalar.
+    Just the character encoding, like "us-ascii".
 
-This is the same value as would be returned by the `file` command with no
-switches.
+- mime\_with\_encoding
 
-## $magic->describe\_filename($filename)
+    The MIME type with a character encoding, like "text/x-c;
+    charset=us-ascii". Note that if no encoding was found, this will be the same
+    as the `mime_type` key.
 
-Returns a description (as a string) of the given file.
+## $magic->info\_from\_string($string)
 
-This is the same value as would be returned by the `file` command with no
-switches.
+This method returns info about the given string. The string can be passed as a
+reference to save memory.
+
+The return value is the same as that of `$mime->info_from_filename()`.
+
+## $magic->info\_from\_handle($fh)
+
+This method returns info about the given filehandle. It will read data
+starting from the handle's current position, and leave the handle at that same
+position after reading.
 
 # DEPRECATED APIS
 
-This module offers two different procedural APIS based on optional exports,
-the "easy" and "complete" interfaces. These APIS are now deprecated. I
-strongly recommend you use the OO interface. It's simpler than the complete
-interface and more efficient than the easy interface.
+This module offers two different procedural APIs based on optional exports,
+the "easy" and "complete" interfaces. There is also an older OO API still
+available. All of these APIs are deprecated, but will not be removed in the
+near future, nor will using them cause any warnings.
+
+I strongly recommend you use the new OO API. It's simpler than the complete
+interface, more efficient than the easy interface, and more featureful than
+the old OO API.
+
+## The Old OO API
+
+This API uses the same constructor as the current API.
+
+- $magic->checktype\_contents($data)
+
+    Returns the MIME type of the data given as the first argument. The data can be
+    passed as a plain scalar or as a reference to a scalar.
+
+    This is the same value as would be returned by the `file` command with the
+    `-i` switch.
+
+- $magic->checktype\_filename($filename)
+
+    Returns the MIME type of the given file.
+
+    This is the same value as would be returned by the `file` command with the
+    `-i` switch.
+
+- $magic->describe\_contents($data)
+
+    Returns a description (as a string) of the data given as the first argument.
+    The data can be passed as a plain scalar or as a reference to a scalar.
+
+    This is the same value as would be returned by the `file` command with no
+    switches.
+
+- $magic->describe\_filename($filename)
+
+    Returns a description (as a string) of the given file.
+
+    This is the same value as would be returned by the `file` command with no
+    switches.
 
 ## The "easy" interface
 
