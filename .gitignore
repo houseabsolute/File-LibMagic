@@ -20,3 +20,4 @@ blib*
 config.log
 cover_db*
 pm_to_blib*
+weaver.ini
