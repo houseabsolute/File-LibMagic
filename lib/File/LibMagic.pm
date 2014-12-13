@@ -9,7 +9,7 @@ use Carp;
 use Exporter;
 use XSLoader;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05'; # TRIAL
 
 XSLoader::load( __PACKAGE__, $VERSION );
 
