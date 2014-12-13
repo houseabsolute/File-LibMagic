@@ -6,6 +6,7 @@ File-LibMagic-*
 LibMagic.bs
 LibMagic.c
 LibMagic.o
+LibMagic.xsc
 MANIFEST
 META.json
 META.yml
