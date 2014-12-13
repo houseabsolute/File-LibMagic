@@ -19,13 +19,13 @@ INCLUDE: ../../const/inc.xs
 PROTOTYPES: ENABLE
 
 # First the two :easy functions
-SV * MagicBuffer(buffer)
-   SV * buffer
+SV *MagicBuffer(buffer)
+   SV *buffer
    PREINIT:
-       char * ret;
+       char *ret;
        STRLEN len;
        int ret_i;
-       char * buffer_value;
+       char *buffer_value;
        magic_t m;
    CODE:
        /* First make sure they actually gave us a defined scalar */
@@ -51,13 +51,13 @@ SV * MagicBuffer(buffer)
    OUTPUT:
        RETVAL
 
-SV * MagicFile(file)
-   SV * file
+SV *MagicFile(file)
+   SV *file
    PREINIT:
-       char * ret;
+       char *ret;
        int ret_i;
        magic_t m;
-       char * file_value;
+       char *file_value;
    CODE:
        /* First make sure they actually gave us a defined scalar */
        if ( !SvOK(file) ) {
@@ -105,10 +105,10 @@ void magic_close(m)
 
 IV magic_load(m, dbnames)
     magic_t m
-    SV * dbnames
+    SV *dbnames
     PREINIT:
         STRLEN len = 0;
-        char * dbnames_value;
+        char *dbnames_value;
         int ret;
     CODE:
         if ( !m ) {
@@ -118,11 +118,11 @@ IV magic_load(m, dbnames)
             dbnames_value = SvPV(dbnames, len);
         }
         /* FIXME
-         * manpage says 0 = success, any other failure
-         * thus does the following line correctly reflect this? */
+         *manpage says 0 = success, any other failure
+         *thus does the following line correctly reflect this? */
         ret = magic_load(m, len > 0 ? dbnames_value : NULL);
         /*
-         * printf("Ret %d, \"%s\"\n", ret, dbnames_value);
+         *printf("Ret %d, \"%s\"\n", ret, dbnames_value);
          */
         RETVAL = ! ret;
         if ( RETVAL < 0 ) {
@@ -131,13 +131,13 @@ IV magic_load(m, dbnames)
     OUTPUT:
         RETVAL
 
-SV * magic_buffer(m, buffer)
+SV *magic_buffer(m, buffer)
     magic_t m
-    SV * buffer
+    SV *buffer
     PREINIT:
-        char * ret;
+        char *ret;
         STRLEN len;
-        char * buffer_value;
+        char *buffer_value;
     CODE:
         if ( !m ) {
             Perl_croak( aTHX_ "magic_buffer requires a defined handle" );
@@ -156,12 +156,12 @@ SV * magic_buffer(m, buffer)
     OUTPUT:
         RETVAL
 
-SV * magic_file(m, file)
+SV *magic_file(m, file)
     magic_t m
-    SV * file
+    SV *file
     PREINIT:
-        char * ret;
-        char * file_value;
+        char *ret;
+        char *file_value;
     CODE:
         if ( !m ) {
             Perl_croak( aTHX_ "magic_file requires a defined handle" );
@@ -180,13 +180,13 @@ SV * magic_file(m, file)
     OUTPUT:
         RETVAL
 
-SV * magic_buffer_offset(m, buffer, offset, BuffLen)
+SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m
-    char * buffer
+    char *buffer
     long offset
     long BuffLen
     PREINIT:
-        char * ret;
+        char *ret;
         STRLEN len;
         long MyLen;
     CODE:
