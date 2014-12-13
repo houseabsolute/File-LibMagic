@@ -156,29 +156,6 @@ SV * magic_buffer(m, buffer)
     OUTPUT:
         RETVAL
 
-SV * magic_buffer_offset(m, buffer, offset, BuffLen)
-    magic_t m
-    char * buffer
-    long offset
-    long BuffLen
-    PREINIT:
-        char * ret;
-        STRLEN len;
-        long MyLen;
-    CODE:
-        if ( !m ) {
-            Perl_croak( aTHX_ "magic_buffer requires a defined handle" );
-        }
-        /* FIXME check length for out of bound errors */
-        MyLen = (long) BuffLen;
-        ret = (char*) magic_buffer(m, (char *) &buffer[ (long) offset], MyLen);
-        if ( ret == NULL ) {
-            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
-        }
-        RETVAL = newSVpvn(ret, strlen(ret));
-    OUTPUT:
-        RETVAL
-
 SV * magic_file(m, buffer)
     magic_t m
     SV * buffer
@@ -196,6 +173,29 @@ SV * magic_file(m, buffer)
 
         buffer_value = SvPV_nolen(buffer);
         ret = (char*) magic_file(m, buffer_value);
+        if ( ret == NULL ) {
+            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
+        }
+        RETVAL = newSVpvn(ret, strlen(ret));
+    OUTPUT:
+        RETVAL
+
+SV * magic_buffer_offset(m, buffer, offset, BuffLen)
+    magic_t m
+    char * buffer
+    long offset
+    long BuffLen
+    PREINIT:
+        char * ret;
+        STRLEN len;
+        long MyLen;
+    CODE:
+        if ( !m ) {
+            Perl_croak( aTHX_ "magic_buffer requires a defined handle" );
+        }
+        /* FIXME check length for out of bound errors */
+        MyLen = (long) BuffLen;
+        ret = (char*) magic_buffer(m, (char *) &buffer[ (long) offset], MyLen);
         if ( ret == NULL ) {
             Perl_croak(aTHX_ "libmagic %s", magic_error(m));
         }
