@@ -55,12 +55,6 @@ EOF
 }
 EOC
 
-sub run_autoconf_check {
-    local $@;
-    eval $check;
-    die $@ if $@;
-}
-
 around fill_in_string => sub {
     my $orig     = shift;
     my $self     = shift;
