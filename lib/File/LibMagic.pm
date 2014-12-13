@@ -168,10 +168,10 @@ __END__
   print $info->{mime_with_encoding};
 
   my $file_content = read_file('path/to/file');
-  my $info = $magic->info_from_string($file_content);
+  $info = $magic->info_from_string($file_content);
 
   open my $fh, '<', 'path/to/file' or die $!;
-  my $info = $magic->info_from_handle($fh);
+  $info = $magic->info_from_handle($fh);
 
 =head1 DESCRIPTION
 
