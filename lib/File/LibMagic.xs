@@ -51,16 +51,16 @@ SV * MagicBuffer(buffer)
    OUTPUT:
        RETVAL
 
-SV * MagicFile(buffer)
-   SV * buffer
+SV * MagicFile(file)
+   SV * file
    PREINIT:
        char * ret;
        int ret_i;
        magic_t m;
-       char * buffer_value;
+       char * file_value;
    CODE:
        /* First make sure they actually gave us a defined scalar */
-       if ( !SvOK(buffer) ) {
+       if ( !SvOK(file) ) {
           Perl_croak(aTHX_ "MagicFile requires a filename");
        }
 
@@ -72,8 +72,8 @@ SV * MagicFile(buffer)
        if ( ret_i < 0 ) {
            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
        }
-       buffer_value = SvPV_nolen(buffer);
-       ret = (char*) magic_file(m, buffer_value);
+       file_value = SvPV_nolen(file);
+       ret = (char*) magic_file(m, file_value);
        if ( ret == NULL ) {
            Perl_croak(aTHX_ "libmagic %s", magic_error(m));
        }
@@ -156,23 +156,23 @@ SV * magic_buffer(m, buffer)
     OUTPUT:
         RETVAL
 
-SV * magic_file(m, buffer)
+SV * magic_file(m, file)
     magic_t m
-    SV * buffer
+    SV * file
     PREINIT:
         char * ret;
-        char * buffer_value;
+        char * file_value;
     CODE:
         if ( !m ) {
             Perl_croak( aTHX_ "magic_file requires a defined handle" );
         }
         /* First make sure they actually gave us a defined scalar */
-        if ( !SvOK(buffer) ) {
+        if ( !SvOK(file) ) {
             Perl_croak(aTHX_ "magic_file requires a filename");
         }
 
-        buffer_value = SvPV_nolen(buffer);
-        ret = (char*) magic_file(m, buffer_value);
+        file_value = SvPV_nolen(file);
+        ret = (char*) magic_file(m, file_value);
         if ( ret == NULL ) {
             Perl_croak(aTHX_ "libmagic %s", magic_error(m));
         }
