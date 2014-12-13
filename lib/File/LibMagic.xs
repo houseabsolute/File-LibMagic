@@ -5,6 +5,7 @@
 #define NEED_sv_2pv_flags_GLOBAL
 #include <magic.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "const/inc.c"
 
@@ -292,6 +293,7 @@ SV *_info_from_handle(self, handle)
         magic_t magic;
         PerlIO *io;
         char buf[BUFSIZE];
+        Off_t pos;
         SSize_t read;
         const char *description;
         const char *mime;
@@ -309,6 +311,11 @@ SV *_info_from_handle(self, handle)
             croak(aTHX_ "info_from_handle requires a scalar filehandle as its argument");
         }
 
+        pos = PerlIO_tell(io);
+        if ( pos < 0 ) {
+            croak(aTHX_ "info_from_handle could not call tell() on the filehandle provided: %s", strerror(errno));
+        }
+
         read = PerlIO_read(io, buf, BUFSIZE);
         if ( read < 0 ) {
             croak(aTHX_ "info_from_handle could not read data from the filehandle provided: %s", strerror(errno));
@@ -316,5 +323,7 @@ SV *_info_from_handle(self, handle)
         else if ( 0 == read ) {
             croak(aTHX_ "info_from_handle could not read data from the filehandle provided - is the file empty?");
         }
+
+        PerlIO_seek(io, pos, SEEK_SET);
 
         RETURN_INFO(self, magic_buffer, buf, strlen(buf));

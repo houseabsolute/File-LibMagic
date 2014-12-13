@@ -164,6 +164,11 @@ sub _test_new_oo_api {
         sub {
             open my $fh, '<', $file or die $!;
             _test_info( $flm->info_from_handle($fh), @args );
+            my $content = do { local $/; <$fh> };
+            ok(
+                length $content,
+                'info_from_handle resets pos after reading'
+            );
         },
     );
 

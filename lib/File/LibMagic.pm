@@ -258,7 +258,9 @@ The return value is the same as that of C<< $mime->info_from_filename() >>.
 
 =head2 $magic->info_from_handle($fh)
 
-This method returns info about the given filehandle.
+This method returns info about the given filehandle. It will read data
+starting from the handle's current position, and leave the handle at that same
+position after reading.
 
 =head1 DEPRECATED APIS
 
