@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Added a test that outputs the return value of magic_version() to help me
+  debug test failures.
+
+
 1.04     2014-12-13 (TRIAL RELEASE)
 
 - Added yet another OO API to File::LibMagic. This provides a simpler and more

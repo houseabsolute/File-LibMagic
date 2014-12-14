@@ -209,6 +209,12 @@ SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     OUTPUT:
         RETVAL
 
+IV magic_version()
+    CODE:
+        RETVAL = magic_version();
+    OUTPUT:
+        RETVAL
+
 #define RETURN_INFO(self, magic_func, ...) \
         magic = (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0))); \
         magic_setflags(magic, MAGIC_NONE);              \
