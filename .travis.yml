@@ -34,7 +34,7 @@ install:
   - sudo apt-get install libmagic1 libmagic-dev
   - cpan-install ExtUtils::MakeMaker~6.68 --deps
 script:
-  - file -v
+  - file -v | true
   - perl Makefile.PL
   - make
   - prove -br -j$(test-jobs) $(test-files)
