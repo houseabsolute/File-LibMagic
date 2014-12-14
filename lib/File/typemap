@@ -1,3 +1,2 @@
 TYPEMAP
-magic_t       T_IV
-
+magic_t       T_PTR
