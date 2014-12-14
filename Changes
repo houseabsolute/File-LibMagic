@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.06     2014-12-13 (TRIAL RELEASE)
+
 - Guard against older versions of libmagic that don't provide magic_version().
 
 - Fix compilation with a threaded Perl.
