@@ -105,9 +105,7 @@ sub _mime_with_encoding {
 sub DESTROY {
     my ($self) = @_;
 
-    for my $key (qw( mime_handle describe_handle )) {
-        magic_close( $self->{$key} ) if defined $self->{$key};
-    }
+    magic_close( $self->{magic} ) if defined $self->{magic};
 }
 
 # Old OO API
