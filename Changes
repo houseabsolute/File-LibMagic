@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Guard against older versions of libmagic that don't provide magic_version().
+
+- Fix compilation with a threaded Perl.
+
+
 1.05     2014-12-13 (TRIAL RELEASE)
 
 - Added a test that outputs the return value of magic_version() to help me
