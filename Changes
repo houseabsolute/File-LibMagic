@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.05     2014-12-13 (TRIAL RELEASE)
+
 - Added a test that outputs the return value of magic_version() to help me
   debug test failures.
 
