@@ -1,5 +1,19 @@
 {{$NEXT}}
 
+- No changes from 1.06.
+
+[SUMMARY OF USER-FACING CHANGES SINCE 1.03]
+
+- Added yet another OO API to File::LibMagic. This provides a simpler and more
+  future-proof API which can be expanded on later. The new methods are
+  info_from_string(), info_from_filename(), and info_from_handle(). The latter
+  method allows you to get info about an open filehandle. These new methods
+  return the description, MIME type, and character encoding in one call. This
+  addresses RT #54843 and partially addresses RT #99470.
+
+- Fix compilation with a threaded Perl.
+
+
 1.06     2014-12-13 (TRIAL RELEASE)
 
 - Guard against older versions of libmagic that don't provide magic_version().
