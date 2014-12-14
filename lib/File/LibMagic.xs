@@ -211,7 +211,11 @@ SV *magic_buffer_offset(m, buffer, offset, BuffLen)
 
 IV magic_version()
     CODE:
+#ifdef HAVE_MAGIC_VERSION
         RETVAL = magic_version();
+#else
+        RETVAL = 0;
+#endif
     OUTPUT:
         RETVAL
 
