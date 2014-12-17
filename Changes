@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.08     2014-12-17
+
 - Fix generated Makefile.PL so it's compatible with older versions of
   ExtUtils::MakeMaker. The previous release accidentally required EUMM 6.83_04
   or newer without declaring this in configure_requires. Reported by Nick
