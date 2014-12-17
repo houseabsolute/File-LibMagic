@@ -28,9 +28,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.008",
   "NAME" => "File::LibMagic",
-  "OBJECT" => [
-    "lib/File/LibMagic\$(OBJ_EXT)"
-  ],
+  "OBJECT" => "lib/File/LibMagic\$(OBJ_EXT)",
   "PREREQ_PM" => {
     "Carp" => 0,
     "Exporter" => 0,

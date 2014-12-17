@@ -17,7 +17,7 @@ override _build_WriteMakefile_args => sub {
     $args->{INC}    = '-I. -Ic';
     $args->{XS}     = { 'lib/File/LibMagic.xs' => 'lib/File/LibMagic.c' };
     $args->{C}      = ['lib/File/LibMagic.c'];
-    $args->{OBJECT} = ['lib/File/LibMagic$(OBJ_EXT)'];
+    $args->{OBJECT} = 'lib/File/LibMagic$(OBJ_EXT)';
     $args->{LDFROM} = 'LibMagic$(OBJ_EXT)';
 
     delete $args->{VERSION};
