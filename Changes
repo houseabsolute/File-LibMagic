@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- No code changes. This release just removes some junk that accidentally ended
+  up in the last release's tarball. Reported by Alexander Bluhm. RT #101015.
+
+
 1.08     2014-12-17
 
 - Fix generated Makefile.PL so it's compatible with older versions of
