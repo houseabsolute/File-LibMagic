@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.09     2014-12-20
+
 - No code changes. This release just removes some junk that accidentally ended
   up in the last release's tarball. Reported by Alexander Bluhm. RT #101015.
 
