@@ -1,5 +1,6 @@
 .\#*
 .build
+/.tidyall.d
 Build
 Debian_CPANTS.txt
 File-LibMagic-*
@@ -20,4 +21,3 @@ blib*
 config.log
 cover_db*
 pm_to_blib*
-weaver.ini
