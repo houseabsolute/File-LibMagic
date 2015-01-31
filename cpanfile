@@ -11,7 +11,7 @@ on 'test' => sub {
   requires "File::Spec" => "0";
   requires "IO::Handle" => "0";
   requires "IPC::Open3" => "0";
-  requires "Test::More" => "0.88";
+  requires "Test::More" => "0.96";
   requires "lib" => "0";
 };
 
@@ -24,6 +24,8 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
+  requires "Perl::Critic" => "1.123";
+  requires "Perl::Tidy" => "20140711";
   requires "Pod::Coverage::TrustPod" => "0";
   requires "Test::CPAN::Changes" => "0.19";
   requires "Test::EOL" => "0";
@@ -33,4 +35,5 @@ on 'develop' => sub {
   requires "Test::Pod::Coverage" => "1.08";
   requires "Test::Spelling" => "0.12";
   requires "Test::Synopsis" => "0";
+  requires "Test::Version" => "1";
 };
