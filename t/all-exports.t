@@ -3,32 +3,24 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::AnyOf;
+use Test::Exports qw( test_complete test_easy );
 use Test::More 0.88;
 
-use File::LibMagic qw( :all );
+{
 
-# subs from :easy
-is( MagicBuffer("Hello World\n"), 'ASCII text' );
+    package Test::AllExports;
 
-is( MagicFile('t/samples/foo.txt'), 'ASCII text' );
-is_any_of(
-    MagicFile('t/samples/foo.c'),
-    [ 'ASCII C program text', 'C source, ASCII text' ]
+    use File::LibMagic qw( :all );
+}
+
+subtest(
+    'complete API exported by :all',
+    sub { test_complete('Test::AllExports') }
 );
 
-# subs from :complete
-my $handle = magic_open(MAGIC_NONE);
-magic_load( $handle, q{} );
-is( magic_buffer( $handle, "Hello World\n" ), 'ASCII text' );
-
-is( magic_file( $handle, 't/samples/foo.txt' ), 'ASCII text' );
-
-is_any_of(
-    magic_file( $handle, 't/samples/foo.c' ),
-    [ 'ASCII C program text', 'C source, ASCII text' ]
+subtest(
+    'easy API exported by :all',
+    sub { test_easy('Test::AllExports') }
 );
-
-magic_close($handle);
 
 done_testing();

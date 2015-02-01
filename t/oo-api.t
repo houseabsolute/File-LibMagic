@@ -4,7 +4,7 @@ use warnings;
 use lib 't/lib';
 
 use Test::AnyOf;
-use Test::More 0.88;
+use Test::More 0.96;
 
 use File::LibMagic;
 
@@ -96,11 +96,9 @@ sub _test_old_oo_api {
         "describe_filename $file",
     );
 
-    my $data = do {
-        local $/;
-        open my $fh, '<', $file or die $!;
-        <$fh>;
-    };
+    open my $fh, '<', $file or die $!;
+    my $data = do { local $/ = undef; <$fh>; };
+    close $fh or die $!;
 
     like(
         $flm->checktype_contents($data),
@@ -143,8 +141,8 @@ sub _test_new_oo_api {
         "info_from_string $file",
         sub {
             open my $fh, '<', $file or die $!;
-            my $string = do { local $/; <$fh> };
-            close $fh;
+            my $string = do { local $/ = undef; <$fh> };
+            close $fh or die $!;
             _test_info( $flm->info_from_string($string), @args );
         },
     );
@@ -153,8 +151,8 @@ sub _test_new_oo_api {
         "info_from_string $file as ref",
         sub {
             open my $fh, '<', $file or die $!;
-            my $string = do { local $/; <$fh> };
-            close $fh;
+            my $string = do { local $/ = undef; <$fh> };
+            close $fh or die $!;
             _test_info( $flm->info_from_string( \$string ), @args );
         },
     );
@@ -164,7 +162,8 @@ sub _test_new_oo_api {
         sub {
             open my $fh, '<', $file or die $!;
             _test_info( $flm->info_from_handle($fh), @args );
-            my $content = do { local $/; <$fh> };
+            my $content = do { local $/ = undef; <$fh> };
+            close $fh or die $!;
             ok(
                 length $content,
                 'info_from_handle resets pos after reading'
@@ -175,12 +174,15 @@ sub _test_new_oo_api {
     subtest(
         "info_from_handle $file - handle from scalar ref",
         sub {
-            open my $fh, '<', $file or die $!;
-            my $string = do { local $/; <$fh> };
-            close $fh;
+            open my $file_fh, '<', $file or die $!;
+            my $string = do { local $/ = undef; <$file_fh> };
+            close $file_fh or die $!;
 
-            open $fh, '<', \$string;
-            _test_info( $flm->info_from_handle($fh), @args );
+            ## no critic (InputOutput::RequireCheckedOpen, InputOutput::RequireCheckedSyscalls)
+            open my $string_fh, '<', \$string;
+            _test_info( $flm->info_from_handle($string_fh), @args );
+            close $string_fh;
+            ## use critic
         },
     );
 }
@@ -218,11 +220,12 @@ sub _test_info {
 
 {
     {
+
         package My::Magic::Subclass;
 
         use base qw( File::LibMagic );
 
-        sub checktype_filename { 'text/x-test-passes' }
+        sub checktype_filename {'text/x-test-passes'}
     }
 
     subtest(

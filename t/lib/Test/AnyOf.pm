@@ -29,7 +29,7 @@ sub is_any_of ($$;$) {
          got: $got
     expected: any one of ...
 EOF
-        $diag .= join "\n", map { "             $_"} @{$expect};
+        $diag .= join "\n", map {"             $_"} @{$expect};
 
         $tb->diag($diag);
     }
