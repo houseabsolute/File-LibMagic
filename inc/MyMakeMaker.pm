@@ -32,8 +32,15 @@ override _build_WriteMakefile_dump => sub {
     my $dump = super();
     $dump .= <<'EOF';
 $WriteMakefileArgs{DEFINE} = _defines();
-$WriteMakefileArgs{LIBS} = join q{ }, _libs(), $WriteMakefileArgs{LIBS};
 $WriteMakefileArgs{INC} = join q{ }, _includes(), $WriteMakefileArgs{INC};
+
+if ( my @libpaths = _libs() ){
+  my @eumm_libs;
+  foreach my $_lib ( @{ $WriteMakefileArgs{LIBS} } ){
+    push @eumm_libs, join(q{ }, @libpaths, $_lib);
+  }
+  $WriteMakefileArgs{LIBS} = [ @eumm_libs ];
+}
 
 EOF
 
