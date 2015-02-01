@@ -21,6 +21,7 @@ on 'test' => sub {
 };
 
 on 'configure' => sub {
+  requires "ExtUtils::CBuilder" => "0";
   requires "ExtUtils::MakeMaker" => "0";
 };
 

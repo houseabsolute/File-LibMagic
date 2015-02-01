@@ -16,6 +16,7 @@ my %WriteMakefileArgs = (
     "lib/File/LibMagic.c"
   ],
   "CONFIGURE_REQUIRES" => {
+    "ExtUtils::CBuilder" => 0,
     "ExtUtils::MakeMaker" => 0
   },
   "DISTNAME" => "File-LibMagic",
@@ -59,6 +60,7 @@ $WriteMakefileArgs{LIBS}   = join q{ }, _libs(), $WriteMakefileArgs{LIBS};
 my %FallbackPrereqs = (
   "Carp" => 0,
   "Exporter" => 0,
+  "ExtUtils::CBuilder" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
