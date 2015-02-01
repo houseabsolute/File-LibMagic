@@ -41,7 +41,7 @@ EOF
 };
 
 override _build_MakeFile_PL_template => sub {
-    return super() . do { local $/; <DATA> };
+    return super() . do { local $/ = undef; <DATA> };
 };
 
 __PACKAGE__->meta->make_immutable;
