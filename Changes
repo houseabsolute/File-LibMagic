@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.10     2015-02-01
+
 - Fixed Makefile.PL to actually use --lib and --include properly. Previously
   it did the wrong thing with both of these arguments, and they were
   essentially ignored. Reported by WATANABE Hiroaki. Patch by Mithun
