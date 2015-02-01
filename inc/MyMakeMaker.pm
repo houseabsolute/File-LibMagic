@@ -67,8 +67,8 @@ sub _defines {
     );
 
     my $ac = Config::AutoConf->new(
-        extra_link_flags    => [ map { '-L' . $_ } @libs ],
-        extra_include_dirs  => [ map { '-I' . $_ } @includes ],
+        extra_link_flags   => [ _libs() ],
+        extra_include_dirs => [ _includes() ],
     );
 
     _check_libmagic($ac);
