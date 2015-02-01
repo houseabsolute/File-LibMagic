@@ -32,8 +32,15 @@ override _build_WriteMakefile_dump => sub {
     my $dump = super();
     $dump .= <<'EOF';
 $WriteMakefileArgs{DEFINE} = _defines();
-unshift @{ $WriteMakefileArgs{LIBS} }, _libs();
 $WriteMakefileArgs{INC} = join q{ }, _includes(), $WriteMakefileArgs{INC};
+
+if ( my @libpaths = _libs() ){
+  my @eumm_libs;
+  foreach my $_lib ( @{ $WriteMakefileArgs{LIBS} } ){
+    push @eumm_libs, join(q{ }, @libpaths, $_lib);
+  }
+  $WriteMakefileArgs{LIBS} = [ @eumm_libs ];
+}
 
 EOF
 
@@ -57,8 +64,8 @@ use Getopt::Long;
 my @libs;
 my @includes;
 
-sub _libs     { return @libs }
-sub _includes { return @includes }
+sub _libs     { return map { '-L' . $_ } @libs }
+sub _includes { return map { '-I' . $_ } @includes }
 
 sub _defines {
     GetOptions(
@@ -68,7 +75,7 @@ sub _defines {
 
     my $ac = Config::AutoConf->new(
         extra_link_flags    => [ map { '-L' . $_ } @libs ],
-        extra_include_flags => [ map { '-I' . $_ } @includes ],
+        extra_include_dirs  => [ map { '-I' . $_ } @includes ],
     );
 
     _check_libmagic($ac);
