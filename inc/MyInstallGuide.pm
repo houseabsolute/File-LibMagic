@@ -6,8 +6,7 @@ use Moose::Autobox;
 
 use namespace::autoclean;
 
-with 'Dist::Zilla::Role::FileGatherer';
-with 'Dist::Zilla::Role::TextTemplate';
+with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::TextTemplate';
 
 my $content = <<'EOF';
 # Installing File-LibMagic
@@ -84,7 +83,7 @@ sub gather_files {
     $self->add_file(
         Dist::Zilla::File::FromCode->new(
             name => 'INSTALL.md',
-            code => sub { $content },
+            code => sub {$content},
         )
     );
 
