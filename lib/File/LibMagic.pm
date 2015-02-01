@@ -37,8 +37,10 @@ for my $name (@Constants) {
 
     my $sub = sub {$value};
 
+    ## no critic (TestingAndDebugging::ProhibitNoStrict)
     no strict 'refs';
     *{$name} = $sub;
+    ## use critic
 }
 
 our %EXPORT_TAGS = (
@@ -56,8 +58,7 @@ our %EXPORT_TAGS = (
     ]
 );
 
-$EXPORT_TAGS{"all"}
-    = [ @{ $EXPORT_TAGS{"easy"} }, @{ $EXPORT_TAGS{"complete"} } ];
+$EXPORT_TAGS{all} = [ @{ $EXPORT_TAGS{easy} }, @{ $EXPORT_TAGS{complete} } ];
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
