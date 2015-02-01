@@ -35,7 +35,7 @@ for my $name (@Constants) {
     croak "WTF defining $name - $error"
         if defined $error;
 
-    my $sub = sub { $value };
+    my $sub = sub {$value};
 
     no strict 'refs';
     *{$name} = $sub;
