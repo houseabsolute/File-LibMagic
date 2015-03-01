@@ -28,7 +28,7 @@ sub is_any_of ($$;$) {
     $tb->ok( $match, $name );
 
     unless ($match) {
-        my $diag = <<'EOF';
+        my $diag = <<"EOF";
          got: $got
     expected: any one of ...
 EOF
