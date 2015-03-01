@@ -6,6 +6,9 @@
 - The info_from_*() methods returned a full mime type with encoding in the
   "mime_type" key rather than just the mime type alone.
 
+- Allow File::LibMagic->new() to accept an array reference containing multiple
+  magic file paths.
+
 
 1.10     2015-02-01
 

@@ -66,7 +66,13 @@ sub new {
     my ( $class, $magic_file ) = @_;
 
     my $m = magic_open( MAGIC_NONE() );
-    magic_load( $m, $magic_file );
+
+    if ( ref $magic_file ) {
+        magic_load( $m, join ':', @{$magic_file} );
+    }
+    else {
+        magic_load( $m, $magic_file );
+    }
 
     return bless {
         magic      => $m,
@@ -214,12 +220,16 @@ Each C<File::LibMagic> object loads the magic database independently of other
 C<File::LibMagic> objects, so you may want to share a single object across
 many modules.
 
-This method takes an optional argument containing a path to the magic file. If
-the file doesn't exist this will throw an exception (but only with libmagic
-4.17+).
+This method takes an optional argument containing one or more path to the
+magic file. If the file doesn't exist this will throw an exception (but only
+with libmagic 4.17+).
 
 If you don't pass an argument, it will throw an exception if it can't find any
 magic files at all.
+
+You can pass an array reference to specify more than one file. Note that even
+if you're using a custom file, you probably I<also> want to use the standard
+file (F</usr/share/misc/magic> on my system, yours may vary).
 
 =head2 $magic->info_from_filename('path/to/file')
 

@@ -37,29 +37,38 @@ use File::LibMagic;
     );
 }
 
-{
-    my %custom = (
-        'foo.foo' => [
-            'A foo file',
-            qr{text/plain},
-            qr{us-ascii},
-        ],
-        'foo.c' => [
-            [ 'ASCII text', 'ASCII C program text', 'C source, ASCII text' ],
-            qr{text/(?:plain|(?:x-)?c)},
-            qr{us-ascii},
-        ],
-    );
+SKIP:
+    {
+        skip 'The standard magic file must exist at /usr/share/misc/magic', 1
+            unless -l '/usr/share/misc/magic' || -f _;
 
-    my $flm = File::LibMagic->new('t/samples/magic');
+        my %custom = (
+            'foo.foo' => [
+                'A foo file',
+                'text/plain',
+                'us-ascii',
+            ],
+            'foo.c' => [
+                [ 'ASCII C program text', 'C source, ASCII text' ],
+                'text/x-c',
+                'us-ascii',
+            ],
+        );
 
-    subtest(
-        'custom magic file',
-        sub {
-            _test_flm( $flm, \%custom );
-        }
-    );
-}
+        my $flm = File::LibMagic->new(
+            [
+                't/samples/magic',
+                '/usr/share/misc/magic',
+            ],
+        );
+
+        subtest(
+            'custom magic file',
+            sub {
+                _test_flm( $flm, \%custom );
+            }
+        );
+    }
 
 sub _test_flm {
     my $flm   = shift;
