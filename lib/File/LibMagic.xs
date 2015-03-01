@@ -336,4 +336,4 @@ SV *_info_from_handle(self, handle)
 
         PerlIO_seek(io, pos, SEEK_SET);
 
-        RETURN_INFO(self, magic_buffer, buf, strlen(buf));
+        RETURN_INFO(self, magic_buffer, buf, read);
