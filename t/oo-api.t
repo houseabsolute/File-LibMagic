@@ -38,37 +38,37 @@ use File::LibMagic;
 }
 
 SKIP:
-    {
-        skip 'The standard magic file must exist at /usr/share/misc/magic', 1
-            unless -l '/usr/share/misc/magic' || -f _;
+{
+    skip 'The standard magic file must exist at /usr/share/misc/magic', 1
+        unless -l '/usr/share/misc/magic' || -f _;
 
-        my %custom = (
-            'foo.foo' => [
-                'A foo file',
-                'text/plain',
-                'us-ascii',
-            ],
-            'foo.c' => [
-                [ 'ASCII C program text', 'C source, ASCII text' ],
-                'text/x-c',
-                'us-ascii',
-            ],
-        );
+    my %custom = (
+        'foo.foo' => [
+            'A foo file',
+            'text/plain',
+            'us-ascii',
+        ],
+        'foo.c' => [
+            [ 'ASCII C program text', 'C source, ASCII text' ],
+            'text/x-c',
+            'us-ascii',
+        ],
+    );
 
-        my $flm = File::LibMagic->new(
-            [
-                't/samples/magic',
-                '/usr/share/misc/magic',
-            ],
-        );
+    my $flm = File::LibMagic->new(
+        [
+            't/samples/magic',
+            '/usr/share/misc/magic',
+        ],
+    );
 
-        subtest(
-            'custom magic file',
-            sub {
-                _test_flm( $flm, \%custom );
-            }
-        );
-    }
+    subtest(
+        'custom magic file',
+        sub {
+            _test_flm( $flm, \%custom );
+        }
+    );
+}
 
 sub _test_flm {
     my $flm   = shift;
@@ -144,14 +144,14 @@ sub _test_new_oo_api {
 
     my @s;
     subtest(
-        "info_from_filename",
+        'info_from_filename',
         sub {
             _test_info( $flm->info_from_filename($file), @args );
         },
     );
 
     subtest(
-        "info_from_string",
+        'info_from_string',
         sub {
             open my $fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$fh> };
@@ -161,7 +161,7 @@ sub _test_new_oo_api {
     );
 
     subtest(
-        "info_from_string as ref",
+        'info_from_string as ref',
         sub {
             open my $fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$fh> };
@@ -172,7 +172,7 @@ sub _test_new_oo_api {
     );
 
     subtest(
-        "info_from_handle",
+        'info_from_handle',
         sub {
             open my $fh, '<:raw', $file or die $!;
             _test_info( $flm->info_from_handle($fh), @args );
@@ -186,7 +186,7 @@ sub _test_new_oo_api {
     );
 
     subtest(
-        "info_from_handle - handle from scalar ref",
+        'info_from_handle - handle from scalar ref',
         sub {
             open my $file_fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$file_fh> };
