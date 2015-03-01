@@ -12,13 +12,18 @@ use File::LibMagic;
     my %standard = (
         'foo.foo' => [
             'ASCII text',
-            qr{text/plain},
-            qr{us-ascii},
+            'text/plain',
+            'us-ascii',
         ],
         'foo.c' => [
             [ 'ASCII C program text', 'C source, ASCII text' ],
-            qr{text/x-c},
-            qr{us-ascii},
+            'text/x-c',
+            'us-ascii',
+        ],
+        'tiny.pdf' => [
+            'PDF document, version 1.4',
+            'application/pdf',
+            'binary',
         ],
     );
 
@@ -27,7 +32,6 @@ use File::LibMagic;
     subtest(
         'standard magic file',
         sub {
-            isa_ok( $flm, 'File::LibMagic' );
             _test_flm( $flm, \%standard );
         }
     );
@@ -52,7 +56,6 @@ use File::LibMagic;
     subtest(
         'custom magic file',
         sub {
-            isa_ok( $flm, 'File::LibMagic' );
             _test_flm( $flm, \%custom );
         }
     );
@@ -66,12 +69,12 @@ sub _test_flm {
         my $path = "t/samples/$file";
 
         subtest(
-            'old API',
+            "old API with $path",
             sub { _test_old_oo_api( $flm, $path, @{ $tests->{$file} } ); },
         );
 
         subtest(
-            'new API',
+            "new API with $path",
             sub { _test_new_oo_api( $flm, $path, @{ $tests->{$file} } ); },
         );
     }
@@ -130,17 +133,18 @@ sub _test_new_oo_api {
     my $file = shift;
     my @args = @_;
 
+    my @s;
     subtest(
-        "info_from_filename $file",
+        "info_from_filename",
         sub {
             _test_info( $flm->info_from_filename($file), @args );
         },
     );
 
     subtest(
-        "info_from_string $file",
+        "info_from_string",
         sub {
-            open my $fh, '<', $file or die $!;
+            open my $fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$fh> };
             close $fh or die $!;
             _test_info( $flm->info_from_string($string), @args );
@@ -148,19 +152,20 @@ sub _test_new_oo_api {
     );
 
     subtest(
-        "info_from_string $file as ref",
+        "info_from_string as ref",
         sub {
-            open my $fh, '<', $file or die $!;
+            open my $fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$fh> };
+            push @s, $string;
             close $fh or die $!;
             _test_info( $flm->info_from_string( \$string ), @args );
         },
     );
 
     subtest(
-        "info_from_handle $file",
+        "info_from_handle",
         sub {
-            open my $fh, '<', $file or die $!;
+            open my $fh, '<:raw', $file or die $!;
             _test_info( $flm->info_from_handle($fh), @args );
             my $content = do { local $/ = undef; <$fh> };
             close $fh or die $!;
@@ -172,9 +177,9 @@ sub _test_new_oo_api {
     );
 
     subtest(
-        "info_from_handle $file - handle from scalar ref",
+        "info_from_handle - handle from scalar ref",
         sub {
-            open my $file_fh, '<', $file or die $!;
+            open my $file_fh, '<:raw', $file or die $!;
             my $string = do { local $/ = undef; <$file_fh> };
             close $file_fh or die $!;
 
@@ -199,21 +204,21 @@ sub _test_info {
         'description'
     );
 
-    like(
+    is(
         $info->{mime_type},
-        qr/$mime/,
+        $mime,
         'mime_type',
     );
 
-    like(
+    is(
         $info->{encoding},
         $encoding,
         'encoding'
     );
 
-    like(
+    is(
         $info->{mime_with_encoding},
-        qr/$mime; charset=$encoding/,
+        "$mime; charset=$encoding",
         'mime_with_encoding'
     );
 }

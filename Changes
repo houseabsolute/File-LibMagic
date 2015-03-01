@@ -3,6 +3,9 @@
 - The info_from_handle() method did not handle binary data correctly, which
   could lead to incorrect results.
 
+- The info_from_*() methods returned a full mime type with encoding in the
+  "mime_type" key rather than just the mime type alone.
+
 
 1.10     2015-02-01
 

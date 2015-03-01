@@ -227,7 +227,7 @@ IV magic_version()
             croak("error calling %s: %s", #magic_func, magic_error(magic)); \
         }                                               \
         d = newSVpvn(description, strlen(description)); \
-        magic_setflags(magic, MAGIC_MIME);              \
+        magic_setflags(magic, MAGIC_MIME_TYPE);         \
         mime = magic_func(magic, __VA_ARGS__);          \
         if ( NULL == mime ) {                           \
             croak("error calling %s: %s", #magic_func, magic_error(magic)); \
