@@ -249,7 +249,7 @@ This should be a string or an arrayref containing one or more magic files.
 If a file you provide doesn't exist the constructor will throw an exception,
 but only with libmagic 4.17+.
 
-If you don't set this parameter, the cosntructor will throw an exception if it
+If you don't set this parameter, the constructor will throw an exception if it
 can't find any magic files at all.
 
 Note that even if you're using a custom file, you probably I<also> want to use
