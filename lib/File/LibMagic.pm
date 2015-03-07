@@ -68,7 +68,6 @@ sub new {
 
     my $flags = MAGIC_NONE();
     my $magic_file;
-    my $follow_symlinks;
     if ( @_ == 1 ) {
         $magic_file = shift;
     }
