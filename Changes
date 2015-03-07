@@ -10,6 +10,8 @@
   documentation. I have no plan to remove these APIs any time soon or to make
   them warn, so "deprecated" was too strong a word.
 
+- Changed a test to hopefully skip rather than fail on OpenBSD systems.
+
 
 1.11     2015-03-01
 
