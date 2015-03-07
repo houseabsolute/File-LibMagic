@@ -39,8 +39,14 @@ use File::LibMagic;
 
 SKIP:
 {
-    skip 'The standard magic file must exist at /usr/share/misc/magic', 1
-        unless -l '/usr/share/misc/magic' || -f _;
+    my $standard_file = '/usr/share/file/magic.mgc';
+    skip "The standard magic file must exist at $standard_file", 1
+        unless -l $standard_file || -f _;
+
+    my $info = File::LibMagic->new()
+        ->info_from_filename($standard_file);
+    skip "The file at $standard_file is not a magic file", 1
+        unless $info && $info->{description} =~ /magic binary file/;
 
     my %custom = (
         'foo.foo' => [
@@ -58,7 +64,7 @@ SKIP:
     my $flm = File::LibMagic->new(
         [
             't/samples/magic',
-            '/usr/share/misc/magic',
+            $standard_file,
         ],
     );
 

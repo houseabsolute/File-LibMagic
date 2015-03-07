@@ -64,9 +64,24 @@ $EXPORT_TAGS{all} = [ @{ $EXPORT_TAGS{easy} }, @{ $EXPORT_TAGS{complete} } ];
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 sub new {
-    my ( $class, $magic_file ) = @_;
+    my $class = shift;
 
-    my $m = magic_open( MAGIC_NONE() );
+    my $flags = MAGIC_NONE();
+    my $magic_file;
+    my $follow_symlinks;
+    if ( @_ == 1 ) {
+        $magic_file = shift;
+    }
+    else {
+        my %p = @_;
+        $magic_file      = $p{magic_file};
+        $flags |= MAGIC_SYMLINK()
+            if $p{follow_symlinks};
+        $flags |= MAGIC_COMPRESS()
+            if $p{uncompress};
+    }
+
+    my $m = magic_open($flags);
 
     my $magic_paths
         = ref $magic_file && reftype($magic_file) eq 'ARRAY'
@@ -79,6 +94,7 @@ sub new {
     return bless {
         magic      => $m,
         magic_file => $magic_file,
+        flags      => $flags,
     }, $class;
 }
 
@@ -222,16 +238,35 @@ Each C<File::LibMagic> object loads the magic database independently of other
 C<File::LibMagic> objects, so you may want to share a single object across
 many modules.
 
-This method takes an optional argument containing one or more path to the
-magic file. If the file doesn't exist this will throw an exception (but only
-with libmagic 4.17+).
+This method takes the following named parameters:
 
-If you don't pass an argument, it will throw an exception if it can't find any
-magic files at all.
+=over 4
 
-You can pass an array reference to specify more than one file. Note that even
-if you're using a custom file, you probably I<also> want to use the standard
-file (F</usr/share/misc/magic> on my system, yours may vary).
+=item * magic_file
+
+This should be a string or an arrayref containing one or more magic files.
+
+If a file you provide doesn't exist the constructor will throw an exception,
+but only with libmagic 4.17+.
+
+If you don't set this parameter, the cosntructor will throw an exception if it
+can't find any magic files at all.
+
+Note that even if you're using a custom file, you probably I<also> want to use
+the standard file (F</usr/share/misc/magic> on my system, yours may vary).
+
+=item * follow_symlinks
+
+If this is true, then calls to C<< $magic->info_from_filename >> will follow
+symlinks to the real file.
+
+=item * uncompress
+
+If this is true, then compressed files (such as gzip files) will be
+uncompressed, and the various C<< info_from_* >> methods will return info
+about the uncompressed file.
+
+=back
 
 =head2 $magic->info_from_filename('path/to/file')
 
@@ -273,11 +308,11 @@ This method returns info about the given filehandle. It will read data
 starting from the handle's current position, and leave the handle at that same
 position after reading.
 
-=head1 DEPRECATED APIS
+=head1 DISCOURAGED APIS
 
 This module offers two different procedural APIs based on optional exports,
 the "easy" and "complete" interfaces. There is also an older OO API still
-available. All of these APIs are deprecated, but will not be removed in the
+available. All of these APIs are discouraged, but will not be removed in the
 near future, nor will using them cause any warnings.
 
 I strongly recommend you use the new OO API. It's simpler than the complete

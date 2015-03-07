@@ -1,5 +1,16 @@
 {{$NEXT}}
 
+- The constructor now accepts named params. In addition to a magic_file param,
+  it now accepts follow_symlinks and uncompress params. These do what you'd
+  expect, tell the object to follow symlinks and/or uncompress files when
+  getting info from them. The old single parameter constructor is still
+  supported, but is no longer documented.
+
+- The old APIs are now called "discouraged" rather than "deprecated" in the
+  documentation. I have no plan to remove these APIs any time soon or to make
+  them warn, so "deprecated" was too strong a word.
+
+
 1.11     2015-03-01
 
 - The info_from_handle() method did not handle binary data correctly, which

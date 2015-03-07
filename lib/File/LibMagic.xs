@@ -221,27 +221,28 @@ IV magic_version()
 
 #define RETURN_INFO(self, magic_func, ...) \
         magic = (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0))); \
-        magic_setflags(magic, MAGIC_NONE);              \
-        description = magic_func(magic, __VA_ARGS__);   \
-        if ( NULL == description ) {                    \
+        flags = (int)SvIV(*( hv_fetchs((HV *)SvRV(self), "flags", 0))); \
+        magic_setflags(magic, flags);                     \
+        description = magic_func(magic, __VA_ARGS__);     \
+        if ( NULL == description ) {                      \
             croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                               \
+        }                                                 \
         d = newSVpvn(description, strlen(description)); \
-        magic_setflags(magic, MAGIC_MIME_TYPE);         \
-        mime = magic_func(magic, __VA_ARGS__);          \
-        if ( NULL == mime ) {                           \
+        magic_setflags(magic, flags|MAGIC_MIME_TYPE);     \
+        mime = magic_func(magic, __VA_ARGS__);            \
+        if ( NULL == mime ) {                             \
             croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                               \
-        m = newSVpvn(mime, strlen(mime));               \
-        magic_setflags(magic, MAGIC_MIME_ENCODING);     \
-        encoding = magic_func(magic, __VA_ARGS__);      \
-        if ( NULL == encoding ) {                       \
+        }                                                 \
+        m = newSVpvn(mime, strlen(mime));                 \
+        magic_setflags(magic, flags|MAGIC_MIME_ENCODING); \
+        encoding = magic_func(magic, __VA_ARGS__);        \
+        if ( NULL == encoding ) {                         \
             croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                               \
-        e = newSVpvn(encoding, strlen(encoding));       \
-        EXTEND(SP, 3);                                  \
-        mPUSHs(d);                                      \
-        mPUSHs(m);                                      \
+        }                                                 \
+        e = newSVpvn(encoding, strlen(encoding));         \
+        EXTEND(SP, 3);                                    \
+        mPUSHs(d);                                        \
+        mPUSHs(m);                                        \
         mPUSHs(e);
 
 SV *_info_from_string(self, buffer)
@@ -249,6 +250,7 @@ SV *_info_from_string(self, buffer)
         SV *buffer
     PREINIT:
         magic_t magic;
+        int flags;
         SV *content;
         STRLEN len;
         char *string;
@@ -279,6 +281,7 @@ SV *_info_from_filename(self, filename)
         SV *filename
     PREINIT:
         magic_t magic;
+        int flags;
         char *file;
         char *string;
         const char *description;
@@ -301,6 +304,7 @@ SV *_info_from_handle(self, handle)
         SV *handle
     PREINIT:
         magic_t magic;
+        int flags;
         PerlIO *io;
         char buf[BUFSIZE];
         Off_t pos;
