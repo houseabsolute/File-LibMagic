@@ -73,7 +73,7 @@ sub new {
     }
     else {
         my %p = @_;
-        $magic_file      = $p{magic_file};
+        $magic_file = $p{magic_file};
         $flags |= MAGIC_SYMLINK()
             if $p{follow_symlinks};
         $flags |= MAGIC_COMPRESS()

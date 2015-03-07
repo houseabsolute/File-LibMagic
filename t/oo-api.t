@@ -43,8 +43,7 @@ SKIP:
     skip "The standard magic file must exist at $standard_file", 1
         unless -l $standard_file || -f _;
 
-    my $info = File::LibMagic->new()
-        ->info_from_filename($standard_file);
+    my $info = File::LibMagic->new()->info_from_filename($standard_file);
     skip "The file at $standard_file is not a magic file", 1
         unless $info && $info->{description} =~ /magic binary file/;
 

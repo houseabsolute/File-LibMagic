@@ -56,5 +56,4 @@ use File::LibMagic;
     );
 }
 
-
 done_testing();
