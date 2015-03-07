@@ -11,8 +11,10 @@ use Test::More 0.96;
 use File::LibMagic;
 
 {
+    ## no critic (InputOutput::RequireCheckedSyscalls)
     skip 'This platform does not support symlinks', 1
         unless eval { symlink( q{}, q{} ); 1 };
+    ## use critic
 
     my $dir = tempdir( CLEANUP => 1 );
     my $link_file = "$dir/link-to-tiny.pdf";
