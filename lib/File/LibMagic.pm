@@ -7,6 +7,7 @@ use warnings;
 
 use Carp;
 use Exporter;
+use Scalar::Util qw( reftype );
 use XSLoader;
 
 our $VERSION = '1.12';
@@ -67,12 +68,13 @@ sub new {
 
     my $m = magic_open( MAGIC_NONE() );
 
-    if ( ref $magic_file ) {
-        magic_load( $m, join ':', @{$magic_file} );
-    }
-    else {
-        magic_load( $m, $magic_file );
-    }
+    my $magic_paths
+        = ref $magic_file && reftype($magic_file) eq 'ARRAY'
+        ? join ':', @{$magic_file}
+        : $magic_file;
+
+    # We need to call this even if $magic_paths is undef
+    magic_load( $m, $magic_paths );
 
     return bless {
         magic      => $m,
