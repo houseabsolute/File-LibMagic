@@ -5,6 +5,7 @@ use lib 't/lib';
 
 use Cwd qw( abs_path );
 use File::Temp qw( tempdir );
+use Test::AnyOf;
 use Test::More 0.96;
 
 use File::LibMagic;
@@ -36,10 +37,10 @@ use File::LibMagic;
     my $info
         = File::LibMagic->new()->info_from_filename('t/samples/tiny.pdf.gz');
 
-    is(
+    is_any_of(
         $info->{mime_type},
-        'application/gzip',
-        'gzip file is application/gzip by default'
+        [ 'application/gzip', 'application/x-gzip' ],
+        'gzip file is application/gzip or application/x-gzip by default'
     );
 
     $info
