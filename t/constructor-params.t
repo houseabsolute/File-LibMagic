@@ -37,7 +37,7 @@ use File::LibMagic;
 
 {
     my $info
-        = File::LibMagic->new()->info_from_filename('t/samples/tiny.pdf.gz');
+        = File::LibMagic->new()->info_from_filename('t/samples/tiny-pdf.gz');
 
     is_any_of(
         $info->{mime_type},
@@ -47,7 +47,7 @@ use File::LibMagic;
 
     $info
         = File::LibMagic->new( uncompress => 1 )
-        ->info_from_filename('t/samples/tiny.pdf.gz');
+        ->info_from_filename('t/samples/tiny-pdf.gz');
 
     is(
         $info->{mime_type},
