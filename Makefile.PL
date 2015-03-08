@@ -31,14 +31,17 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Carp" => 0,
     "Exporter" => 0,
+    "Scalar::Util" => 0,
     "XSLoader" => 0,
     "base" => 0,
     "strict" => 0,
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
+    "Cwd" => 0,
     "ExtUtils::MakeMaker" => 0,
     "File::Spec" => 0,
+    "File::Temp" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
     "Test::Fatal" => 0,
@@ -50,7 +53,7 @@ my %WriteMakefileArgs = (
     "lib/File/LibMagic.xs" => "lib/File/LibMagic.c"
   },
   "test" => {
-    "TESTS" => "t/*.t"
+    "TESTS" => "t/*.t t/old-apis/*.t"
   }
 );
 $WriteMakefileArgs{DEFINE} = _defines();
@@ -59,12 +62,15 @@ $WriteMakefileArgs{LIBS}   = join q{ }, _libs(), $WriteMakefileArgs{LIBS};
 
 my %FallbackPrereqs = (
   "Carp" => 0,
+  "Cwd" => 0,
   "Exporter" => 0,
   "ExtUtils::CBuilder" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
+  "File::Temp" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
+  "Scalar::Util" => 0,
   "Test::Fatal" => 0,
   "Test::More" => "0.96",
   "XSLoader" => 0,

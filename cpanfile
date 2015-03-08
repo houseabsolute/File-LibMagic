@@ -1,5 +1,6 @@
 requires "Carp" => "0";
 requires "Exporter" => "0";
+requires "Scalar::Util" => "0";
 requires "XSLoader" => "0";
 requires "base" => "0";
 requires "perl" => "5.008";
@@ -7,8 +8,10 @@ requires "strict" => "0";
 requires "warnings" => "0";
 
 on 'test' => sub {
+  requires "Cwd" => "0";
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
+  requires "File::Temp" => "0";
   requires "IO::Handle" => "0";
   requires "IPC::Open3" => "0";
   requires "Test::Fatal" => "0";

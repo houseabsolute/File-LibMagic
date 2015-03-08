@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.12     2015-03-07
+
 - The constructor now accepts named params. In addition to a magic_file param,
   it now accepts follow_symlinks and uncompress params. These do what you'd
   expect, tell the object to follow symlinks and/or uncompress files when
