@@ -2,7 +2,6 @@ package inc::MyInstallGuide;
 
 use Dist::Zilla::File::FromCode;
 use Moose;
-use Moose::Autobox;
 
 use namespace::autoclean;
 
