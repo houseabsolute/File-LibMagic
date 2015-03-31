@@ -2,7 +2,6 @@ package inc::MyMakeMaker;
 
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
 use Moose;
-use Moose::Autobox;
 
 use namespace::autoclean;
 
