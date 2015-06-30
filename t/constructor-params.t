@@ -24,15 +24,17 @@ use File::LibMagic;
     my $info = File::LibMagic->new( follow_symlinks => 1 )
         ->info_from_filename($link_file);
 
-    is_deeply(
-        $info, {
-            description        => 'PDF document, version 1.4',
-            mime_type          => 'application/pdf',
-            encoding           => 'binary',
-            mime_with_encoding => 'application/pdf; charset=binary',
-        },
-        'got expected info for symlink to PDF'
-    );
+    if(is(ref $info, 'HASH', 'is hash')) {
+        is_deeply([ sort keys %$info ],
+                  [qw[ description encoding mime_type mime_with_encoding ]],
+                  'keys');
+        is($info->{description}, 'PDF document, version 1.4', 'description');
+        is($info->{mime_type}, 'application/pdf', 'mime type');
+        like($info->{encoding}, qr/^(?:binary|unknown)$/, 'encoding');
+        like($info->{mime_with_encoding},
+             qr%^application/pdf; charset=(?:binary|unknown)$%,
+             'mime with charset');
+    }
 }
 
 {
