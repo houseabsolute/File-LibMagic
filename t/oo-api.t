@@ -13,17 +13,17 @@ use File::LibMagic;
         'foo.foo' => [
             'ASCII text',
             'text/plain',
-            'us-ascii',
+            qr/us-ascii/,
         ],
         'foo.c' => [
             [ 'ASCII C program text', 'C source, ASCII text' ],
             'text/x-c',
-            'us-ascii',
+            qr/us-ascii/,
         ],
         'tiny.pdf' => [
             'PDF document, version 1.4',
             'application/pdf',
-            'binary',
+            qr/(?:binary|unknown)/,
         ],
     );
 
@@ -224,15 +224,15 @@ sub _test_info {
         'mime_type',
     );
 
-    is(
+    like(
         $info->{encoding},
-        $encoding,
+        qr/^$encoding$/,
         'encoding'
     );
 
-    is(
+    like(
         $info->{mime_with_encoding},
-        "$mime; charset=$encoding",
+        qr/^$mime; charset=$encoding$/,
         'mime_with_encoding'
     );
 }

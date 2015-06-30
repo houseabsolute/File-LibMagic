@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Fix failing tests with some versions of libmagic. PR #5 by E. Choroba.
+
+
 1.12     2015-03-07
 
 - The constructor now accepts named params. In addition to a magic_file param,
