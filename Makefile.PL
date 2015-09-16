@@ -104,7 +104,7 @@ sub _defines {
 
     my $ac = Config::AutoConf->new(
         extra_link_flags   => [ _libs() ],
-        extra_include_dirs => [ _includes() ],
+        extra_include_dirs => [ @includes ],
     );
 
     _check_libmagic($ac);
