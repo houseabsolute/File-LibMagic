@@ -61,7 +61,6 @@ my %FallbackPrereqs = (
   "Carp" => 0,
   "Cwd" => 0,
   "Exporter" => 0,
-  "ExtUtils::CBuilder" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "File::Temp" => 0,
@@ -104,7 +103,7 @@ sub _defines {
 
     my $ac = Config::AutoConf->new(
         extra_link_flags   => [ _libs() ],
-        extra_include_dirs => [ _includes() ],
+        extra_include_dirs => \@includes,
     );
 
     _check_libmagic($ac);
