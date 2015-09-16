@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Fixed handling of extra include dirs passed to Makefile.PL via the -I
+  flag. This wasn't working properly in previous releases. Reported by Andy
+  Jack. GH #6.
+
+
 1.13     2015-07-12
 
 - Fix failing tests with some versions of libmagic. PR #5 by E. Choroba.
