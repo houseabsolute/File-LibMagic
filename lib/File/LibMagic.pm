@@ -10,7 +10,7 @@ use Exporter;
 use Scalar::Util qw( reftype );
 use XSLoader;
 
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 
 XSLoader::load( __PACKAGE__, $VERSION );
 
