@@ -9,10 +9,8 @@ LibMagic.c
 LibMagic.o
 LibMagic.xsc
 MANIFEST
-META.json
-META.yml
-MYMETA.json
-MYMETA.yml
+META.*
+MYMETA.*
 Makefile
 Makefile.old
 \#*\#
