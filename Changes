@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.15     2015-09-19
+
 - Fix the Makefile.PL so that we don't install the LibMagic.xs and typemap
   files. Based on a patch from Petr Pisar. RT #107081.
 
