@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Fix the Makefile.PL so that we don't install the LibMagic.xs and typemap
+  files. Based on a patch from Petr Pisar. RT #107081.
+
+
 1.14     2015-09-16
 
 - Fixed handling of extra include dirs passed to Makefile.PL via the -I
