@@ -207,6 +207,10 @@ On Debian/Ubuntu run:
 
     sudo apt-get install libmagic-dev
 
+on Red Hat run:
+
+    sudo yum install file-devel
+
 On Mac you can use homebrew (http://brew.sh/):
 
     brew install libmagic
