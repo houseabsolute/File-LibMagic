@@ -4,7 +4,7 @@ File::LibMagic - Determine MIME types of data or files using libmagic
 
 # VERSION
 
-version 1.09
+version 1.16
 
 # SYNOPSIS
 
@@ -40,6 +40,10 @@ On Debian/Ubuntu run:
 
     sudo apt-get install libmagic-dev
 
+on Red Hat run:
+
+    sudo yum install file-devel
+
 On Mac you can use homebrew (http://brew.sh/):
 
     brew install libmagic
@@ -50,7 +54,7 @@ On some systems, you may need to pass additional lib and include directories
 to the Makefile.PL. You can do this with the \`--lib\` and \`--include\`
 parameters:
 
-    perl Makefile.PL --lib /usr/local/include --include /usr/local/include
+    perl Makefile.PL --lib /usr/local/lib --include /usr/local/include
 
 You can pass these parameters multiple times to specify more than one
 location.
@@ -70,12 +74,31 @@ Each `File::LibMagic` object loads the magic database independently of other
 `File::LibMagic` objects, so you may want to share a single object across
 many modules.
 
-This method takes an optional argument containing a path to the magic file. If
-the file doesn't exist this will throw an exception (but only with libmagic
-4.17+).
+This method takes the following named parameters:
 
-If you don't pass an argument, it will throw an exception if it can't find any
-magic files at all.
+- magic\_file
+
+    This should be a string or an arrayref containing one or more magic files.
+
+    If a file you provide doesn't exist the constructor will throw an exception,
+    but only with libmagic 4.17+.
+
+    If you don't set this parameter, the constructor will throw an exception if it
+    can't find any magic files at all.
+
+    Note that even if you're using a custom file, you probably _also_ want to use
+    the standard file (`/usr/share/misc/magic` on my system, yours may vary).
+
+- follow\_symlinks
+
+    If this is true, then calls to `$magic->info_from_filename` will follow
+    symlinks to the real file.
+
+- uncompress
+
+    If this is true, then compressed files (such as gzip files) will be
+    uncompressed, and the various `info_from_*` methods will return info
+    about the uncompressed file.
 
 ## $magic->info\_from\_filename('path/to/file')
 
@@ -113,11 +136,11 @@ This method returns info about the given filehandle. It will read data
 starting from the handle's current position, and leave the handle at that same
 position after reading.
 
-# DEPRECATED APIS
+# DISCOURAGED APIS
 
 This module offers two different procedural APIs based on optional exports,
 the "easy" and "complete" interfaces. There is also an older OO API still
-available. All of these APIs are deprecated, but will not be removed in the
+available. All of these APIs are discouraged, but will not be removed in the
 near future, nor will using them cause any warnings.
 
 I strongly recommend you use the new OO API. It's simpler than the complete
@@ -216,12 +239,6 @@ This interface exports several subroutines:
 This module can throw an exception if your system runs out of memory when
 trying to call `magic_open` internally.
 
-# SUPPORT
-
-Please submit bugs to the CPAN RT system at
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-LibMagic or via email at
-bug-file-libmagic@rt.cpan.org.
-
 # BUGS
 
 This module is totally dependent on the version of file on your system. It's
@@ -248,19 +265,49 @@ File::Type uses a relatively small magic file, which is directly hacked into
 the module code. It is quite fast but the database is quite small relative to
 the file package.
 
+# SUPPORT
+
+Please submit bugs to the CPAN RT system at
+http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-LibMagic or via email at
+bug-file-libmagic@rt.cpan.org.
+
+Bugs may be submitted through [the RT bug tracker](http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic)
+(or [bug-file::libmagic@rt.cpan.org](mailto:bug-file::libmagic@rt.cpan.org)).
+
+I am also usually active on IRC as 'drolsky' on `irc://irc.perl.org`.
+
+# DONATIONS
+
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
+
+Please note that **I am not suggesting that you must do this** in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
+
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
+
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at [http://www.urth.org/~autarch/fs-donation.html](http://www.urth.org/~autarch/fs-donation.html).
+
 # AUTHORS
 
 - Andreas Fitzner
 - Michael Hendricks <michael@ndrix.org>
 - Dave Rolsky <autarch@urth.org>
 
-# CONTRIBUTOR
+# CONTRIBUTORS
 
-Olaf Alders <olaf@wundersolutions.com>
+- E. Choroba <choroba@matfyz.cz>
+- Mithun Ayachit <mayachit@amfam.com>
+- Olaf Alders <olaf@wundersolutions.com>
 
-# COPYRIGHT AND LICENSE
+# COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2014 by Andreas Fitzner, Michael Hendricks, and Dave Rolsky.
+This software is copyright (c) 2016 by Andreas Fitzner, Michael Hendricks, and Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
