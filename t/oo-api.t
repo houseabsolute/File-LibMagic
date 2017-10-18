@@ -8,6 +8,9 @@ use Test::More 0.96;
 
 use File::LibMagic;
 
+local $ENV{MAGIC};
+delete $ENV{MAGIC};
+
 {
     my %standard = (
         'foo.foo' => [
@@ -43,7 +46,10 @@ use File::LibMagic;
 
 SKIP:
 {
-    my $standard_file = '/usr/share/file/magic.mgc';
+    my $standard_file = _scrape_file_version();
+
+    note "Standard magic file is '$standard_file'";
+
     skip "The standard magic file must exist at $standard_file", 1
         unless -l $standard_file || -f _;
 
@@ -81,6 +87,21 @@ SKIP:
             _test_flm( $flm, \%custom );
         }
     );
+}
+
+sub _scrape_file_version {
+    foreach ( `file -v` ) {
+	chomp;
+	next
+	    unless m/\Amagic file from (.*)/;
+	my $magic = $1;
+	return "$magic.mgc"
+	    if $magic !~ m/ [.] mgc \z /smx && -f "$magic.mgc";
+	return $magic
+	    if -f $magic;
+	last;
+    }
+    return '/usr/share/file/magic.mgc';
 }
 
 sub _test_flm {
