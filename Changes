@@ -3,6 +3,8 @@
 - Added a doc not on installing the required dependencies on Red Hat. RT
   #110796.
 
+- Fix tests on macOS. Based on PR #7 from Tom Wyant.
+
 
 1.15     2015-09-19
 
