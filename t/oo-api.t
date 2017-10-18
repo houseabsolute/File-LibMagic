@@ -8,8 +8,8 @@ use Test::More 0.96;
 
 use File::LibMagic;
 
-local $ENV{MAGIC};
-delete $ENV{MAGIC};
+local $ENV{MAGIC};	## no critic (RequireInitializationForLocalVars)
+delete $ENV{MAGIC};	# To initialize and then delete seems silly
 
 {
     my %standard = (
@@ -90,7 +90,7 @@ SKIP:
 }
 
 sub _scrape_file_version {
-    foreach ( `file -v` ) {
+    foreach ( `file -v` ) {	## no critic (ProhibitBacktickOperators)
 	chomp;
 	next
 	    unless m/\Amagic file from (.*)/;
