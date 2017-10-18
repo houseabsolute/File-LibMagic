@@ -16,7 +16,11 @@ use File::LibMagic;
             qr/us-ascii/,
         ],
         'foo.c' => [
-            [ 'ASCII C program text', 'C source, ASCII text' ],
+            [
+		'ASCII C program text',
+		'C source, ASCII text',
+		'c program, ASCII text',	# Apple default magic
+	    ],
             'text/x-c',
             qr/us-ascii/,
         ],
@@ -54,7 +58,11 @@ SKIP:
             'us-ascii',
         ],
         'foo.c' => [
-            [ 'ASCII C program text', 'C source, ASCII text' ],
+            [
+		'ASCII C program text',
+		'C source, ASCII text',
+		'c program, ASCII text',	# Apple default magic
+	    ],
             'text/x-c',
             'us-ascii',
         ],
