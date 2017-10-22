@@ -31,6 +31,7 @@ on 'develop' => sub {
   requires "Code::TidyAll::Plugin::SortLines::Naturally" => "0.000003";
   requires "Code::TidyAll::Plugin::Test::Vars" => "0.02";
   requires "Devel::PPPort" => "3.23";
+  requires "ExtUtils::Constants" => "0";
   requires "File::Spec" => "0";
   requires "IO::Handle" => "0";
   requires "IPC::Open3" => "0";
