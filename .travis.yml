@@ -42,8 +42,6 @@ matrix:
     - perl: blead-thr
   include:
     - env: COVERAGE=1
-      perl: '5.24'
-    - env: COVERAGE=1
       perl: '5.26'
 env:
   global:
