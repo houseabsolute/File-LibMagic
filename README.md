@@ -271,10 +271,13 @@ Please submit bugs to the CPAN RT system at
 http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-LibMagic or via email at
 bug-file-libmagic@rt.cpan.org.
 
-Bugs may be submitted through [the RT bug tracker](http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic)
-(or [bug-file::libmagic@rt.cpan.org](mailto:bug-file::libmagic@rt.cpan.org)).
+Bugs may be submitted at [http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic](http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic) or via email to [bug-file::libmagic@rt.cpan.org](mailto:bug-file::libmagic@rt.cpan.org).
 
-I am also usually active on IRC as 'drolsky' on `irc://irc.perl.org`.
+I am also usually active on IRC as 'autarch' on `irc://irc.perl.org`.
+
+# SOURCE
+
+The source code repository for File-LibMagic can be found at [https://github.com/houseabsolute/File-LibMagic](https://github.com/houseabsolute/File-LibMagic).
 
 # DONATIONS
 
@@ -304,10 +307,14 @@ button at [http://www.urth.org/~autarch/fs-donation.html](http://www.urth.org/~a
 - E. Choroba <choroba@matfyz.cz>
 - Mithun Ayachit <mayachit@amfam.com>
 - Olaf Alders <olaf@wundersolutions.com>
+- Tom Wyant <wyant@cpan.org>
 
-# COPYRIGHT AND LICENCE
+# COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Andreas Fitzner, Michael Hendricks, and Dave Rolsky.
+This software is copyright (c) 2017 by Andreas Fitzner, Michael Hendricks, and Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+`LICENSE` file included with this distribution.
