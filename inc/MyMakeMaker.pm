@@ -5,7 +5,13 @@ use Moose;
 
 use namespace::autoclean;
 
-extends 'Dist::Zilla::Plugin::MakeMaker::Awesome';
+extends 'Dist::Zilla::Plugin::DROLSKY::MakeMaker';
+
+# We need to override this because we remove the DROLSKY::MakeMaker plugin
+# from our config, and that's where this value is passed from our bundle.
+has '+has_xs' => (
+    default => 1,
+);
 
 override _build_WriteMakefile_args => sub {
     my $self = shift;
@@ -32,7 +38,7 @@ override _build_WriteMakefile_dump => sub {
 
     my $dump = super();
     $dump .= <<'EOF';
-$WriteMakefileArgs{DEFINE} = _defines();
+$WriteMakefileArgs{DEFINE} = ( $WriteMakefileArgs{DEFINE} || q{} ) . _defines();
 $WriteMakefileArgs{INC}    = join q{ }, _includes(), $WriteMakefileArgs{INC};
 $WriteMakefileArgs{LIBS}   = join q{ }, _libs(), $WriteMakefileArgs{LIBS};
 
@@ -75,7 +81,7 @@ sub _defines {
     _check_libmagic($ac);
 
     return $ac->check_lib( 'magic', 'magic_version' )
-        ? '-DHAVE_MAGIC_VERSION'
+        ? ' -DHAVE_MAGIC_VERSION'
         : q{};
 }
 
