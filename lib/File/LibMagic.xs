@@ -108,7 +108,7 @@ IV magic_load(m, dbnames)
     SV *dbnames
     PREINIT:
         STRLEN len = 0;
-        char *dbnames_value;
+        char *dbnames_value = NULL;
         int ret;
     CODE:
         if ( !m ) {
@@ -193,7 +193,6 @@ SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     long BuffLen
     PREINIT:
         char *ret;
-        STRLEN len;
         long MyLen;
     CODE:
         if ( !m ) {
@@ -245,7 +244,7 @@ IV magic_version()
         mPUSHs(m);                                        \
         mPUSHs(e);
 
-SV *_info_from_string(self, buffer)
+void _info_from_string(self, buffer)
         SV *self
         SV *buffer
     PREINIT:
@@ -276,14 +275,13 @@ SV *_info_from_string(self, buffer)
 
         RETURN_INFO(self, magic_buffer, string, len);
 
-SV *_info_from_filename(self, filename)
+void _info_from_filename(self, filename)
         SV *self
         SV *filename
     PREINIT:
         magic_t magic;
         int flags;
         char *file;
-        char *string;
         const char *description;
         const char *mime;
         const char *encoding;
@@ -299,7 +297,7 @@ SV *_info_from_filename(self, filename)
 
         RETURN_INFO(self, magic_file, file);
 
-SV *_info_from_handle(self, handle)
+void _info_from_handle(self, handle)
         SV *self
         SV *handle
     PREINIT:
