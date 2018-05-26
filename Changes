@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Switched to using GitHub issues.
+
+
 1.16     2017-10-22
 
 - Added a doc note on installing the required dependencies on Red Hat. RT
