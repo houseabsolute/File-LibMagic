@@ -218,26 +218,26 @@ IV magic_version()
     OUTPUT:
         RETVAL
 
+#define MAYBE_CROAK_ERROR(str, magic, magic_func) \
+        if ( NULL == str ) {                \
+            const char *err = magic_error(magic); \
+            croak("error calling %s: %s", #magic_func, err != NULL ? err : "magic_error() returned NULL"); \
+        }
+
 #define RETURN_INFO(self, magic_func, ...) \
         magic = (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0))); \
         flags = (int)SvIV(*( hv_fetchs((HV *)SvRV(self), "flags", 0))); \
         magic_setflags(magic, flags);                     \
         description = magic_func(magic, __VA_ARGS__);     \
-        if ( NULL == description ) {                      \
-            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                                 \
-        d = newSVpvn(description, strlen(description)); \
+        MAYBE_CROAK_ERROR(description, magic, magic_func) \
+        d = newSVpvn(description, strlen(description));   \
         magic_setflags(magic, flags|MAGIC_MIME_TYPE);     \
         mime = magic_func(magic, __VA_ARGS__);            \
-        if ( NULL == mime ) {                             \
-            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                                 \
+        MAYBE_CROAK_ERROR(mime, magic, magic_func)        \
         m = newSVpvn(mime, strlen(mime));                 \
         magic_setflags(magic, flags|MAGIC_MIME_ENCODING); \
         encoding = magic_func(magic, __VA_ARGS__);        \
-        if ( NULL == encoding ) {                         \
-            croak("error calling %s: %s", #magic_func, magic_error(magic)); \
-        }                                                 \
+        MAYBE_CROAK_ERROR(encoding, magic, magic_func)    \
         e = newSVpvn(encoding, strlen(encoding));         \
         EXTEND(SP, 3);                                    \
         mPUSHs(d);                                        \
