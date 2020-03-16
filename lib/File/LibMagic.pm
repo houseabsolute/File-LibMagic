@@ -7,7 +7,7 @@ use warnings;
 
 use Carp;
 use Exporter;
-use Scalar::Util qw( reftype );
+use Scalar::Util qw( reftype looks_like_number );
 use XSLoader;
 
 our $VERSION = '1.17';
@@ -28,6 +28,13 @@ my @Constants = qw(
     MAGIC_PRESERVE_ATIME
     MAGIC_RAW
     MAGIC_SYMLINK
+    MAGIC_PARAM_INDIR_MAX
+    MAGIC_PARAM_NAME_MAX
+    MAGIC_PARAM_ELF_PHNUM_MAX
+    MAGIC_PARAM_ELF_SHNUM_MAX
+    MAGIC_PARAM_ELF_NOTES_MAX
+    MAGIC_PARAM_REGEX_MAX
+    MAGIC_PARAM_BYTES_MAX
 );
 
 for my $name (@Constants) {
@@ -63,11 +70,22 @@ $EXPORT_TAGS{all} = [ @{ $EXPORT_TAGS{easy} }, @{ $EXPORT_TAGS{complete} } ];
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
+my %magic_param_map = (
+    max_indir     => MAGIC_PARAM_INDIR_MAX(),
+    max_name      => MAGIC_PARAM_NAME_MAX(),
+    max_elf_phnum => MAGIC_PARAM_ELF_PHNUM_MAX(),
+    max_elf_shnum => MAGIC_PARAM_ELF_SHNUM_MAX(),
+    max_elf_notes => MAGIC_PARAM_ELF_NOTES_MAX(),
+    max_regex     => MAGIC_PARAM_REGEX_MAX(),
+    max_bytes     => MAGIC_PARAM_BYTES_MAX(),
+);
+
 sub new {
     my $class = shift;
 
     my $flags = MAGIC_NONE();
     my $magic_file;
+    my %magic_params = ();
     if ( @_ == 1 ) {
         $magic_file = shift;
     }
@@ -78,6 +96,19 @@ sub new {
             if $p{follow_symlinks};
         $flags |= MAGIC_COMPRESS()
             if $p{uncompress};
+        foreach my $name ( keys %magic_param_map ) {
+            if ( exists $p{$name} ) {
+                my $tag   = $magic_param_map{$name};
+                my $value = $p{$name};
+                $magic_params{$tag} = $value;
+            }
+        }
+        if ( exists $p{max_future_compat} ) {
+            foreach my $tag ( keys %{$p{max_future_compat}} ) {
+                my $value = $p{max_future_compat}{$tag};
+                $magic_params{$tag} = $value if looks_like_number($tag);
+            }
+        }
     }
 
     my $m = magic_open($flags);
@@ -89,6 +120,11 @@ sub new {
 
     # We need to call this even if $magic_paths is undef
     magic_load( $m, $magic_paths );
+
+    foreach my $tag ( keys %magic_params ) {
+        my $value = $magic_params{$tag};
+        _magic_setparam( $m, $tag, $value );
+    }
 
     return bless {
         magic      => $m,
@@ -268,6 +304,30 @@ symlinks to the real file.
 If this is true, then compressed files (such as gzip files) will be
 uncompressed, and the various C<< info_from_* >> methods will return info
 about the uncompressed file.
+
+=item * Processing limits
+
+libmagic offers a number of limits to its processing in order to
+prevent malicious files from causing too much resource usage.
+
+You can set the following limits through constructor parameters:
+
+ * max_indir: recursion limit for indirection
+ * max_name: use limit for name/use magic
+ * max_elf_notes: max ELF notes processed
+ * max_elf_phnum: max ELF prog sections processed
+ * max_elf_shnum: max ELF sections processed
+ * max_regex: length limit for regex searches
+ * max_bytes: max number of bytes to read from file
+
+The values of these parameters should be integer limits.
+
+For compatibility with future additions to the libmagic parameter defines,
+add the parameter max_future_compat as a ref to a hash where the integer
+value of future libmagic parameter defines are used as the hash key.
+The defines are named MAGIC_PARAM_*_MAX in the F<magic.h> header file.
+Please note that the names are not accepted, the hash keys must be integers
+that correspond to the values of MAGIC_PARAM_*_MAX defines.
 
 =back
 

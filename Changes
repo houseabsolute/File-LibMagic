@@ -5,6 +5,7 @@
 - Removed embedded copy of Config::AutoConf from distro. Instead this is now a
   configure phase prereq. Implemented by Paul Wise. GH #19.
 
+- Add support for setting libmagic processing limits. GH #15 by Paul Wise
 
 1.16     2017-10-22
 
