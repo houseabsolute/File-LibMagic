@@ -186,6 +186,13 @@ void _magic_setflags(m, flags)
     CODE:
         magic_setflags(m, flags);
 
+void _magic_setparam(m, param, value)
+    magic_t m
+    int param
+    size_t value
+    CODE:
+        magic_setparam(m, param, &value);
+
 SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m
     char *buffer

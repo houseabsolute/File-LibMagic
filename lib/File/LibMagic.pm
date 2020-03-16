@@ -48,22 +48,21 @@ $EXPORT_TAGS{all} = [ @{ $EXPORT_TAGS{easy} }, @{ $EXPORT_TAGS{complete} } ];
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
+my %magic_param_map = (
+    max_indir     => MAGIC_PARAM_INDIR_MAX(),
+    max_name      => MAGIC_PARAM_NAME_MAX(),
+    max_elf_phnum => MAGIC_PARAM_ELF_PHNUM_MAX(),
+    max_elf_shnum => MAGIC_PARAM_ELF_SHNUM_MAX(),
+    max_elf_notes => MAGIC_PARAM_ELF_NOTES_MAX(),
+    max_regex     => MAGIC_PARAM_REGEX_MAX(),
+    max_bytes     => MAGIC_PARAM_BYTES_MAX(),
+);
+
 sub new {
     my $class = shift;
 
-    my $flags = MAGIC_NONE();
-    my $magic_file;
-    if ( @_ == 1 ) {
-        $magic_file = shift;
-    }
-    else {
-        my %p = @_;
-        $magic_file = $p{magic_file};
-        $flags |= MAGIC_SYMLINK()
-            if $p{follow_symlinks};
-        $flags |= MAGIC_COMPRESS()
-            if $p{uncompress};
-    }
+    my ( $magic_file, $flags, %magic_params )
+        = $class->_constructor_params(@_);
 
     my $m = magic_open($flags);
 
@@ -75,11 +74,52 @@ sub new {
     # We need to call this even if $magic_paths is undef
     magic_load( $m, $magic_paths );
 
+    foreach my $tag ( keys %magic_params ) {
+        my $value = $magic_params{$tag};
+        _magic_setparam( $m, $tag, $value );
+    }
+
     return bless {
         magic      => $m,
         magic_file => $magic_file,
         flags      => $flags,
     }, $class;
+}
+
+sub _constructor_params {
+    my $class = shift;
+
+    my $flags = MAGIC_NONE();
+    my $magic_file;
+    my %magic_params = ();
+    if ( @_ == 1 ) {
+        return ( $_[0], undef, () );
+    }
+
+    my %p = @_;
+    $magic_file = delete $p{magic_file};
+    $flags |= MAGIC_SYMLINK()
+        if delete $p{follow_symlinks};
+    $flags |= MAGIC_COMPRESS()
+        if delete $p{uncompress};
+
+    for my $name ( keys %magic_param_map ) {
+        next unless exists $p{$name};
+        $magic_params{ $magic_param_map{$name} } = $p{$name};
+    }
+
+    if ( exists $p{max_future_compat} ) {
+        for my $tag ( keys %{ $p{max_future_compat} } ) {
+            unless ( $tag =~ /\A[0-9]+\z/ ) {
+                croak
+                    "You passed a non-integer key in the max_future_compat parameter: $tag";
+            }
+
+            $magic_params{$tag} = $p{max_future_compat}{$tag};
+        }
+    }
+
+    return ( $magic_file, $flags, %magic_params );
 }
 
 sub info_from_string {
@@ -230,7 +270,7 @@ This method takes the following named parameters:
 
 =over 4
 
-=item * magic_file
+=item * C<magic_file>
 
 This should be a string or an arrayref containing one or more magic files.
 
@@ -243,16 +283,71 @@ can't find any magic files at all.
 Note that even if you're using a custom file, you probably I<also> want to use
 the standard file (F</usr/share/misc/magic> on my system, yours may vary).
 
-=item * follow_symlinks
+=item * C<follow_symlinks>
 
 If this is true, then calls to C<< $magic->info_from_filename >> will follow
 symlinks to the real file.
 
-=item * uncompress
+=item * C<uncompress>
 
 If this is true, then compressed files (such as gzip files) will be
 uncompressed, and the various C<< info_from_* >> methods will return info
 about the uncompressed file.
+
+=item * Processing limits
+
+The libmagic library has a number of limits order to prevent malformed or
+malicious files from causing resource exhaustion or other errors.
+
+You can set the following limits through constructor parameters:
+
+=over 8
+
+=item * C<max_indir>
+
+This limits recursion for indirection when processing entries in the
+magic file.
+
+=item * C<max_name>
+
+This limits the maximum number of levels of name/use magic that will be
+processed in the magic file.
+
+=item * C<max_elf_notes>
+
+This limits the maximum number of ELF notes that will be processed when
+determining a file's mime type.
+
+=item * C<max_elf_phnum>
+
+This limits the maximum number of ELF program sections that will be processed
+when determining a file's mime type.
+
+=item * C<max_elf_shnum>
+
+This limits the maximum number of ELF sections that will be processed when
+determining a file's mime type.
+
+=item * C<max_regex>
+
+This limits the maximum size of regexes when processing entries in the magic
+file.
+
+=item * C<max_bytes>
+
+This limits the maximum number of bytes read from a file when determining a
+file's mime type.
+
+=back
+
+The values of these parameters should be integer limits.
+
+=item * C<max_future_compat>
+
+For compatibility with future additions to the libmagic processing limit
+parameters, you can pass a C<max_future_compat> parameter. This is a hash
+reference where the keys are constant values (integers defined by libmagic,
+not names) and the values are the limit you want to set.
 
 =back
 
@@ -263,19 +358,19 @@ reference with four keys:
 
 =over 4
 
-=item * description
+=item * C<description>
 
 A textual description of the file content like "ASCII C program text".
 
-=item * mime_type
+=item * C<mime_type>
 
 The MIME type without a character encoding, like "text/x-c".
 
-=item * encoding
+=item * C<encoding>
 
 Just the character encoding, like "us-ascii".
 
-=item * mime_with_encoding
+=item * C<mime_with_encoding>
 
 The MIME type with a character encoding, like "text/x-c;
 charset=us-ascii". Note that if no encoding was found, this will be the same

@@ -72,4 +72,16 @@ use File::LibMagic;
     );
 }
 
+{
+    my $info
+        = File::LibMagic->new( max_bytes => 1 )
+        ->info_from_filename("$Bin/samples/tiny-pdf.gz");
+
+    is(
+        $info->{mime_type},
+        'application/octet-stream',
+        'gzip file is application/octet-stream when max bytes is set to 1'
+    );
+}
+
 done_testing();

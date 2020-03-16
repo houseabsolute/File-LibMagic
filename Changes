@@ -8,6 +8,8 @@
 - Moved list of constants in libmagic that we care about to one
   module. Implemented by Paul Wise. GH #20.
 
+- Add support for setting libmagic processing limits. Implemented by Paul
+  Wise. GH #15.
 
 1.16     2017-10-22
 
