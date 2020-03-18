@@ -8,7 +8,7 @@ use Test::More 0.96;
 
 use File::LibMagic;
 
-# If tihs is populated then libmagic will use it to find the magic file.
+# If this is populated then libmagic will use it to find the magic file.
 delete $ENV{MAGIC};
 
 {

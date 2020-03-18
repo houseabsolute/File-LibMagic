@@ -202,7 +202,7 @@
       Changed t/6-oo.t in order to pass 'make test' for file-5.x
 
 0.90     2008-11-26
-      removed some debugging code I accidently left in
+      removed some debugging code I accidentally left in
 
 0.89     2008-08-06
       added -lz to Makefile.PL in order to compile under 
@@ -240,7 +240,7 @@
       Port to AMD-64, thanks to Nathan Hawkins <utsl@quic.net>
 
 0.80     2004-07-21
-      some improvements in colaboration with James Olin Oden <joden@lee.k12.nc.us> 
+      some improvements in collaboration with James Olin Oden <joden@lee.k12.nc.us> 
 
 0.10     2004-04-19
       some cleanup
