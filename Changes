@@ -2,6 +2,9 @@
 
 - Switched to using GitHub issues.
 
+- Removed embedded copy of Config::AutoConf from distro. Instead this is now a
+  configure phase prereq. Implemented by Paul Wise. GH #19.
+
 
 1.16     2017-10-22
 
