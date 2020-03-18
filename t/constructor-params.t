@@ -16,7 +16,7 @@ use File::LibMagic;
         unless eval { symlink( q{}, q{} ); 1 };
     ## use critic
 
-    my $dir = tempdir( CLEANUP => 1 );
+    my $dir       = tempdir( CLEANUP => 1 );
     my $link_file = "$dir/link-to-tiny.pdf";
     symlink abs_path() . '/t/samples/tiny.pdf' => $link_file
         or die "Cannot create symlink to t/samples/tiny.pdf: $!";
