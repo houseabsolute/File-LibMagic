@@ -44,7 +44,7 @@ on Red Hat run:
 
     sudo yum install file-devel
 
-On Mac you can use homebrew (http://brew.sh/):
+On Mac you can use homebrew (https://brew.sh/):
 
     brew install libmagic
 
@@ -249,7 +249,7 @@ version of file on your system as well!
 # DEPENDENCIES/PREREQUISITES
 
 This module requires file 4.x or file 5x and the associated libmagic library
-and headers (http://darwinsys.com/file/).
+and headers (https://darwinsys.com/file/).
 
 # RELATED MODULES
 
@@ -258,7 +258,7 @@ file 4.x) [File::MMagic](https://metacpan.org/pod/File::MMagic) only worked with
 
 [File::MimeInfo::Magic](https://metacpan.org/pod/File::MimeInfo::Magic) uses the magic file from freedesktop.org which is
 encoded in XML, and is thus not the fastest approach. See
-[http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html](http://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html)
+[https://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html](https://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html)
 for a discussion of this issue.
 
 File::Type uses a relatively small magic file, which is directly hacked into
@@ -268,10 +268,10 @@ the file package.
 # SUPPORT
 
 Please submit bugs to the CPAN RT system at
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-LibMagic or via email at
+https://rt.cpan.org/Public/Dist/Display.html?Name=File-LibMagic or via email at
 bug-file-libmagic@rt.cpan.org.
 
-Bugs may be submitted at [http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic](http://rt.cpan.org/Public/Dist/Display.html?Name=File::LibMagic) or via email to [bug-file::libmagic@rt.cpan.org](mailto:bug-file::libmagic@rt.cpan.org).
+Bugs may be submitted at [https://rt.cpan.org/Public/Dist/Display.html?Name=File-LibMagic](https://rt.cpan.org/Public/Dist/Display.html?Name=File-LibMagic) or via email to [bug-file::libmagic@rt.cpan.org](mailto:bug-file::libmagic@rt.cpan.org).
 
 I am also usually active on IRC as 'autarch' on `irc://irc.perl.org`.
 
@@ -294,7 +294,7 @@ software much more, unless I get so many donations that I can consider working
 on free software full time (let's all have a chuckle at that together).
 
 To donate, log into PayPal and send money to autarch@urth.org, or use the
-button at [http://www.urth.org/~autarch/fs-donation.html](http://www.urth.org/~autarch/fs-donation.html).
+button at [https://urth.org/fs-donation.html](https://urth.org/fs-donation.html).
 
 # AUTHORS
 
