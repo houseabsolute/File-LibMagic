@@ -193,7 +193,7 @@
 
 0.93     2009-05-12
       using Devel::CheckLib as suggested in 
-      http://wiki.cpantesters.org/wiki/CPANAuthorNotes
+      http://cpanwiki.grango.org/wiki/CPANAuthorNotes
 
 0.92     2009-05-12
       "normalisation"-problem -> changed t/6-oo.t
