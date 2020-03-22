@@ -37,10 +37,14 @@ use File::LibMagic;
             'description'
         );
         is( $info->{mime_type}, 'application/pdf', 'mime type' );
-        like( $info->{encoding}, qr/^(?:binary|unknown)$/, 'encoding' );
+        like(
+            $info->{encoding},
+            qr/^(?:binary|unknown|us-ascii)$/,
+            'encoding',
+        );
         like(
             $info->{mime_with_encoding},
-            qr{^application/pdf; charset=(?:binary|unknown)$},
+            qr{^application/pdf; charset=(?:binary|unknown|us-ascii)$},
             'mime with charset'
         );
     }

@@ -31,7 +31,7 @@ delete $ENV{MAGIC};
         'tiny.pdf' => [
             'PDF document, version 1.4',
             'application/pdf',
-            qr/(?:binary|unknown)/,
+            qr/(?:binary|unknown|us-ascii)/,
         ],
     );
 
