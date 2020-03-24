@@ -18,8 +18,11 @@ override _build_WriteMakefile_args => sub {
 
     my $args = super();
 
-    $args->{PM}
-        = { 'lib/File/LibMagic.pm' => '$(INST_LIB)/File/LibMagic.pm' };
+    $args->{PM} = {
+        'lib/File/LibMagic.pm' => '$(INST_LIB)/File/LibMagic.pm',
+        'lib/File/LibMagic/Constants.pm' =>
+            '$(INST_LIB)/File/LibMagic/Constants.pm',
+    };
     $args->{LIBS}   = '-lmagic';
     $args->{INC}    = '-I. -Ic';
     $args->{XS}     = { 'lib/File/LibMagic.xs' => 'lib/File/LibMagic.c' };

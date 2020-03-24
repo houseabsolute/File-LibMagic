@@ -8,6 +8,7 @@ use Test::Fatal;
 use Test::More 0.96;
 
 use Exporter qw( import );
+use File::LibMagic::Constants qw ( Constants );
 
 our @EXPORT_OK = qw( test_complete test_easy );
 
@@ -43,21 +44,7 @@ sub test_complete {
 sub _test_constants {
     my $package = shift;
 
-    my @constants = qw(
-        MAGIC_CHECK
-        MAGIC_COMPRESS
-        MAGIC_CONTINUE
-        MAGIC_DEBUG
-        MAGIC_DEVICES
-        MAGIC_ERROR
-        MAGIC_MIME
-        MAGIC_NONE
-        MAGIC_PRESERVE_ATIME
-        MAGIC_RAW
-        MAGIC_SYMLINK
-    );
-
-    foreach my $const (@constants) {
+    foreach my $const ( Constants() ) {
         ## no critic (Variables::RequireInitializationForLocalVars)
         local $@;
         ## no critic (BuiltinFunctions::ProhibitStringyEval)
