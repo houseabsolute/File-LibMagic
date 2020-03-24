@@ -7,6 +7,7 @@ use warnings;
 
 use Carp;
 use Exporter;
+use File::LibMagic::Constants qw ( constants );
 use Scalar::Util qw( reftype );
 use XSLoader;
 
@@ -16,21 +17,7 @@ XSLoader::load( __PACKAGE__, $VERSION );
 
 use base 'Exporter';
 
-my @Constants = qw(
-    MAGIC_CHECK
-    MAGIC_COMPRESS
-    MAGIC_CONTINUE
-    MAGIC_DEBUG
-    MAGIC_DEVICES
-    MAGIC_ERROR
-    MAGIC_MIME
-    MAGIC_NONE
-    MAGIC_PRESERVE_ATIME
-    MAGIC_RAW
-    MAGIC_SYMLINK
-);
-
-for my $name (@Constants) {
+for my $name ( constants() ) {
     my ( $error, $value ) = constant($name);
 
     croak "WTF defining $name - $error"
@@ -47,7 +34,7 @@ for my $name (@Constants) {
 our %EXPORT_TAGS = (
     'easy'     => [qw( MagicBuffer MagicFile )],
     'complete' => [
-        @Constants,
+        constants(),
         qw(
             magic_buffer
             magic_buffer_offset

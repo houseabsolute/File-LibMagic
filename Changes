@@ -5,6 +5,9 @@
 - Removed embedded copy of Config::AutoConf from distro. Instead this is now a
   configure phase prereq. Implemented by Paul Wise. GH #19.
 
+- Moved list of constants in libmagic that we care about to one
+  module. Implemented by Paul Wise. GH #20.
+
 
 1.16     2017-10-22
 
