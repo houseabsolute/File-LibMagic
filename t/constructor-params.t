@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/lib";
 
 use Cwd qw( abs_path );
 use File::Temp qw( tempdir );
@@ -18,8 +19,9 @@ use File::LibMagic;
 
     my $dir       = tempdir( CLEANUP => 1 );
     my $link_file = "$dir/link-to-tiny.pdf";
-    symlink abs_path() . '/t/samples/tiny.pdf' => $link_file
-        or die "Cannot create symlink to t/samples/tiny.pdf: $!";
+    my $to        = abs_path($Bin) . '/samples/tiny.pdf';
+    symlink $to => $link_file
+        or die "Cannot create symlink to $to: $!";
 
     my $info = File::LibMagic->new( follow_symlinks => 1 )
         ->info_from_filename($link_file);
@@ -46,7 +48,8 @@ use File::LibMagic;
 
 {
     my $info
-        = File::LibMagic->new()->info_from_filename('t/samples/tiny-pdf.gz');
+        = File::LibMagic->new()
+        ->info_from_filename("$Bin/samples/tiny-pdf.gz");
 
     is_any_of(
         $info->{mime_type},
@@ -56,7 +59,7 @@ use File::LibMagic;
 
     $info
         = File::LibMagic->new( uncompress => 1 )
-        ->info_from_filename('t/samples/tiny-pdf.gz');
+        ->info_from_filename("$Bin/samples/tiny-pdf.gz");
 
     is(
         $info->{mime_type},

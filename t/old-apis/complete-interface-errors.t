@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use FindBin qw( $Bin );
 use Test::Fatal;
 use Test::More 0.88;
 
@@ -16,7 +17,7 @@ use File::LibMagic qw( :complete );
     {
         no warnings 'uninitialized';
         like(
-            exception { magic_load( undef, 't/samples/magic' ) },
+            exception { magic_load( undef, "$Bin/../samples/magic" ) },
             qr{magic_load requires a defined handle},
             'magic_load error when not given a handle'
         );
@@ -27,7 +28,7 @@ use File::LibMagic qw( :complete );
 
 {
     my $h = magic_open(MAGIC_NONE);
-    magic_load( $h, 't/samples/magic' );
+    magic_load( $h, "$Bin/samples/magic" );
 
     {
         no warnings 'uninitialized';
@@ -47,7 +48,7 @@ use File::LibMagic qw( :complete );
     {
         no warnings 'uninitialized';
         like(
-            exception { magic_file( undef, 't/samples/foo.foo' ) },
+            exception { magic_file( undef, "$Bin/samples/foo.foo" ) },
             qr{magic_file requires a defined handle},
             'magic_file error when not given a handle'
         );
@@ -62,7 +63,7 @@ use File::LibMagic qw( :complete );
 TODO: {
         local $TODO = 'check libmagic version';
         like(
-            exception { magic_file( $h, 't/samples/missing' ) },
+            exception { magic_file( $h, "$Bin/samples/missing" ) },
             qr{libmagic cannot open .+ at },
             'magic_file error when given a non-existent file (depends on libmagic version)'
         );
