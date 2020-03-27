@@ -1,4 +1,4 @@
-package MyInstallGuide;
+package inc::MyInstallGuide;
 
 use Dist::Zilla::File::FromCode;
 use Moose;
