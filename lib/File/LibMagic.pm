@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Carp;
-use Exporter;
+use Exporter qw( import );
 use File::LibMagic::Constants qw ( constants );
 use Scalar::Util qw( reftype );
 use XSLoader;
@@ -14,8 +14,6 @@ use XSLoader;
 our $VERSION = '1.17';
 
 XSLoader::load( __PACKAGE__, $VERSION );
-
-use base 'Exporter';
 
 for my $name ( constants() ) {
     my ( $error, $value ) = constant($name);
