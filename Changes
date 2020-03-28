@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Fix one last test that assumed a limit parameter was available. Reported by
+  Slaven Rezić. GH #22.
+
+
 1.19     2020-03-28 (TRIAL RELEASE)
 
 - Fix tests that still mistakenly assumed that all limit parameter constants

@@ -72,7 +72,11 @@ use File::LibMagic;
     );
 }
 
+SKIP:
 {
+    skip 'The install libmagic does not support the max_bytes parameter', 1
+        unless File::LibMagic->can('MAGIC_PARAM_BYTES_MAX');
+
     my $info
         = File::LibMagic->new( max_bytes => 1 )
         ->info_from_filename("$Bin/samples/tiny-pdf.gz");
