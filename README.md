@@ -4,7 +4,7 @@ File::LibMagic - Determine MIME types of data or files using libmagic
 
 # VERSION
 
-version 1.17
+version 1.18
 
 # SYNOPSIS
 
@@ -102,10 +102,16 @@ This method takes the following named parameters:
 
 - Processing limits
 
-    The libmagic library has a number of limits order to prevent malformed or
-    malicious files from causing resource exhaustion or other errors.
+    Newer versions of the libmagic library have a number of limits order to
+    prevent malformed or malicious files from causing resource exhaustion or other
+    errors.
 
-    You can set the following limits through constructor parameters:
+    If your libmagic support its, you can set the following limits through
+    constructor parameters. If your version does not support setting these limits,
+    passing these options will cause the constructor to croak. In addition, the
+    specific limits were introduced over a number of libmagic releases, and your
+    version of libmagic may not support every parameter. Using a parameter that is
+    not supported by your libmagic will also cause the constructor to cloak.
 
     - `max_indir`
 

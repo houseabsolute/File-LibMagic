@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.18     2020-03-28 (TRIAL RELEASE)
+
 - Not all versions of libmagic support setting processing limits, and those
   that do may not support all the limit parameters that the most recent
   version supports. This release fixes compilation and runtime issues that
