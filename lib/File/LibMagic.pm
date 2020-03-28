@@ -285,16 +285,16 @@ as the C<mime_type> key.
 
 =head2 $magic->info_from_string($string)
 
-This method returns info about the given string. The string can be passed as a
-reference to save memory.
+This method returns info about the contents of the given string. The string
+can be passed as a reference to save memory.
 
 The return value is the same as that of C<< $mime->info_from_filename() >>.
 
 =head2 $magic->info_from_handle($fh)
 
-This method returns info about the given filehandle. It will read data
-starting from the handle's current position, and leave the handle at that same
-position after reading.
+This method returns info about the contents read from the given filehandle. It
+will read data starting from the handle's current position, and leave the
+handle at that same position after reading.
 
 =head1 DISCOURAGED APIS
 
