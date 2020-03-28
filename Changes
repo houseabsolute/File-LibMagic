@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.20     2020-03-28 (TRIAL RELEASE)
+
 - Fix one last test that assumed a limit parameter was available. Reported by
   Slaven Rezić. GH #22.
 
