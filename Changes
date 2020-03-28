@@ -11,6 +11,10 @@
 - Add support for setting libmagic processing limits. Implemented by Paul
   Wise. GH #15.
 
+- Check all libmagic function return values properly and croak on
+  failure. Implemented by Paul Wise. GH #21.
+
+
 1.16     2017-10-22
 
 - Added a doc note on installing the required dependencies on Red Hat. RT

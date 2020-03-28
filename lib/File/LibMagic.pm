@@ -74,9 +74,12 @@ sub new {
     # We need to call this even if $magic_paths is undef
     magic_load( $m, $magic_paths );
 
-    foreach my $tag ( keys %magic_params ) {
-        my $value = $magic_params{$tag};
-        _magic_setparam( $m, $tag, $value );
+    foreach my $param ( keys %magic_params ) {
+        my $value = $magic_params{$param}[1];
+        unless ( _magic_setparam( $m, $param, $value ) ) {
+            my $desc = $magic_params{$param}[0];
+            croak "calling magic_setparam with $desc failed";
+        }
     }
 
     return bless {
@@ -105,17 +108,20 @@ sub _constructor_params {
 
     for my $name ( keys %magic_param_map ) {
         next unless exists $p{$name};
-        $magic_params{ $magic_param_map{$name} } = $p{$name};
+        $magic_params{ $magic_param_map{$name} } = [ $name, $p{$name} ];
     }
 
     if ( exists $p{max_future_compat} ) {
-        for my $tag ( keys %{ $p{max_future_compat} } ) {
-            unless ( $tag =~ /\A[0-9]+\z/ ) {
+        for my $param ( keys %{ $p{max_future_compat} } ) {
+            unless ( $param =~ /\A[0-9]+\z/ ) {
                 croak
-                    "You passed a non-integer key in the max_future_compat parameter: $tag";
+                    "You passed a non-integer key in the max_future_compat parameter: $param";
             }
 
-            $magic_params{$tag} = $p{max_future_compat}{$tag};
+            $magic_params{$param} = [
+                "max_future_compat: $param",
+                $p{max_future_compat}{$param},
+            ];
         }
     }
 

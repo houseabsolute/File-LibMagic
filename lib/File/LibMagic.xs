@@ -99,7 +99,7 @@ void magic_close(m)
     magic_t m
     CODE:
         if ( !m ) {
-            croak( "magic_close requires a defined handle" );
+            croak( "magic_close requires a defined magic handle" );
         }
         magic_close(m);
 
@@ -112,22 +112,18 @@ IV magic_load(m, dbnames)
         int ret;
     CODE:
         if ( !m ) {
-            croak( "magic_load requires a defined handle" );
+            croak( "magic_load requires a defined magic handle" );
         }
         if ( SvOK(dbnames) ) {  /* is dbnames defined? */
             dbnames_value = SvPV(dbnames, len);
         }
-        /* FIXME
-         *manpage says 0 = success, any other failure
-         *thus does the following line correctly reflect this? */
         ret = magic_load(m, len > 0 ? dbnames_value : NULL);
-        /*
-         *printf("Ret %d, \"%s\"\n", ret, dbnames_value);
-         */
-        RETVAL = ! ret;
-        if ( RETVAL < 0 ) {
-            croak( "libmagic %s", magic_error(m) );
+        if ( ret == -1 ) {
+            croak( "magic_load(%s): libmagic %s", dbnames_value, magic_error(m) );
         }
+        /* We already croaked on errors but we'll return true for
+         * backcompat. */
+        RETVAL = 1;
     OUTPUT:
         RETVAL
 
@@ -140,7 +136,7 @@ SV *magic_buffer(m, buffer)
         char *buffer_value;
     CODE:
         if ( !m ) {
-            croak( "magic_buffer requires a defined handle" );
+            croak( "magic_buffer requires a defined magic handle" );
         }
         /* First make sure they actually gave us a defined scalar */
         if ( !SvOK(buffer) ) {
@@ -164,7 +160,7 @@ SV *magic_file(m, file)
         char *file_value;
     CODE:
         if ( !m ) {
-            croak( "magic_file requires a defined handle" );
+            croak( "magic_file requires a defined magic handle" );
         }
         /* First make sure they actually gave us a defined scalar */
         if ( !SvOK(file) ) {
@@ -174,24 +170,40 @@ SV *magic_file(m, file)
         file_value = SvPV_nolen(file);
         ret = (char*) magic_file(m, file_value);
         if ( ret == NULL ) {
-            croak("libmagic %s", magic_error(m));
+            croak("magic_file: libmagic %s", magic_error(m));
         }
         RETVAL = newSVpvn(ret, strlen(ret));
     OUTPUT:
         RETVAL
 
-void _magic_setflags(m, flags)
+IV _magic_setflags(m, flags)
     magic_t m
     int flags
+    PREINIT:
+        int ret;
     CODE:
-        magic_setflags(m, flags);
+        if ( !m ) {
+            croak( "magic_setflags requires a defined magic handle" );
+        }
+        ret = magic_setflags(m, flags);
+        RETVAL = !ret;
+    OUTPUT:
+        RETVAL
 
-void _magic_setparam(m, param, value)
+IV _magic_setparam(m, param, value)
     magic_t m
     int param
     size_t value
+    PREINIT:
+        int ret;
     CODE:
-        magic_setparam(m, param, &value);
+        if ( !m ) {
+            croak( "magic_setparam requires a defined magic handle" );
+        }
+        ret = magic_setparam(m, param, &value);
+        RETVAL = !ret;
+    OUTPUT:
+        RETVAL
 
 SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m
@@ -203,7 +215,7 @@ SV *magic_buffer_offset(m, buffer, offset, BuffLen)
         long MyLen;
     CODE:
         if ( !m ) {
-            croak( "magic_buffer requires a defined handle" );
+            croak( "magic_buffer requires a defined magic handle" );
         }
         /* FIXME check length for out of bound errors */
         MyLen = (long) BuffLen;
@@ -225,8 +237,13 @@ IV magic_version()
     OUTPUT:
         RETVAL
 
-#define MAYBE_CROAK_ERROR(str, magic, magic_func) \
-        if ( NULL == str ) {                \
+#define MAGIC_SETFLAGS_OR_CROAK(magic, flags) \
+        if ( magic_setflags(magic, flags) == -1 ) {       \
+            croak( "error setting flags to %d", flags );  \
+        }                                                 \
+
+#define MAYBE_CROAK_ERROR(retval, magic, magic_func) \
+        if ( NULL == retval ) {                   \
             const char *err = magic_error(magic); \
             croak("error calling %s: %s", #magic_func, err != NULL ? err : "magic_error() returned NULL"); \
         }
@@ -234,21 +251,22 @@ IV magic_version()
 #define RETURN_INFO(self, magic_func, ...) \
         magic = (magic_t)SvIV(*( hv_fetchs((HV *)SvRV(self), "magic", 0))); \
         flags = (int)SvIV(*( hv_fetchs((HV *)SvRV(self), "flags", 0))); \
-        magic_setflags(magic, flags);                     \
-        description = magic_func(magic, __VA_ARGS__);     \
-        MAYBE_CROAK_ERROR(description, magic, magic_func) \
-        d = newSVpvn(description, strlen(description));   \
-        magic_setflags(magic, flags|MAGIC_MIME_TYPE);     \
-        mime = magic_func(magic, __VA_ARGS__);            \
-        MAYBE_CROAK_ERROR(mime, magic, magic_func)        \
-        m = newSVpvn(mime, strlen(mime));                 \
-        magic_setflags(magic, flags|MAGIC_MIME_ENCODING); \
-        encoding = magic_func(magic, __VA_ARGS__);        \
-        MAYBE_CROAK_ERROR(encoding, magic, magic_func)    \
-        e = newSVpvn(encoding, strlen(encoding));         \
-        EXTEND(SP, 3);                                    \
-        mPUSHs(d);                                        \
-        mPUSHs(m);                                        \
+        MAGIC_SETFLAGS_OR_CROAK(magic, flags)                     \
+        description = magic_func(magic, __VA_ARGS__);             \
+        MAYBE_CROAK_ERROR(description, magic, magic_func)         \
+        d = newSVpvn(description, strlen(description));           \
+        MAGIC_SETFLAGS_OR_CROAK(magic, flags|MAGIC_MIME_TYPE)     \
+        magic_setflags(magic, flags|MAGIC_MIME_TYPE);             \
+        mime = magic_func(magic, __VA_ARGS__);                    \
+        MAYBE_CROAK_ERROR(mime, magic, magic_func)                \
+        m = newSVpvn(mime, strlen(mime));                         \
+        MAGIC_SETFLAGS_OR_CROAK(magic, flags|MAGIC_MIME_ENCODING) \
+        encoding = magic_func(magic, __VA_ARGS__);                \
+        MAYBE_CROAK_ERROR(encoding, magic, magic_func)            \
+        e = newSVpvn(encoding, strlen(encoding));                 \
+        EXTEND(SP, 3);                                            \
+        mPUSHs(d);                                                \
+        mPUSHs(m);                                               \
         mPUSHs(e);
 
 void _info_from_string(self, buffer)
