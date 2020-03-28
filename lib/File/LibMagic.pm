@@ -110,20 +110,19 @@ sub new {
 sub _constructor_params {
     my $class = shift;
 
-    my $flags = MAGIC_NONE();
-    my $magic_file;
-    my %magic_params = ();
     if ( @_ == 1 ) {
         return ( $_[0], undef, () );
     }
 
     my %p = @_;
-    $magic_file = delete $p{magic_file};
-    $flags |= MAGIC_SYMLINK()
-        if delete $p{follow_symlinks};
-    $flags |= MAGIC_COMPRESS()
-        if delete $p{uncompress};
 
+    my $flags = MAGIC_NONE();
+    $flags |= MAGIC_SYMLINK()
+        if $p{follow_symlinks};
+    $flags |= MAGIC_COMPRESS()
+        if $p{uncompress};
+
+    my %magic_params;
     for my $param (@all_params) {
         next unless exists $p{$param};
         croak "Your version of libmagic does not support the $param parameter"
@@ -145,7 +144,7 @@ sub _constructor_params {
         }
     }
 
-    return ( $magic_file, $flags, %magic_params );
+    return ( $p{magic_file}, $flags, %magic_params );
 }
 
 sub info_from_string {
