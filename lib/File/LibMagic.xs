@@ -188,12 +188,20 @@ IV _magic_setflags(m, flags)
     OUTPUT:
         RETVAL
 
-void _magic_setparam(m, param, value)
+IV _magic_setparam(m, param, value)
     magic_t m
     int param
     size_t value
+    PREINIT:
+        int ret;
     CODE:
-        magic_setparam(m, param, &value);
+        if ( !m ) {
+            croak( "magic_setparam requires a defined handle" );
+        }
+        ret = magic_setparam(m, param, &value);
+        RETVAL = ! ret;
+    OUTPUT:
+        RETVAL
 
 SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m
