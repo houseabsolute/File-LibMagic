@@ -60,7 +60,6 @@ __PACKAGE__->meta->make_immutable;
 
 __DATA__
 
-use lib qw( inc );
 use Config::AutoConf;
 use Getopt::Long;
 
