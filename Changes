@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.17     2020-03-28 (TRIAL RELEASE)
+
 - Switched to using GitHub issues.
 
 - Removed embedded copy of Config::AutoConf from distro. Instead this is now a
