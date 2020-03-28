@@ -174,11 +174,19 @@ SV *magic_file(m, file)
     OUTPUT:
         RETVAL
 
-void _magic_setflags(m, flags)
+IV _magic_setflags(m, flags)
     magic_t m
     int flags
+    PREINIT:
+        int ret;
     CODE:
-        magic_setflags(m, flags);
+        if ( !m ) {
+            croak( "magic_setflags requires a defined handle" );
+        }
+        ret = magic_setflags(m, flags);
+        RETVAL = ! ret;
+    OUTPUT:
+        RETVAL
 
 void _magic_setparam(m, param, value)
     magic_t m
