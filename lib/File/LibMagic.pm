@@ -120,22 +120,22 @@ sub DESTROY {
 # Old OO API
 sub checktype_contents {
     my ( $self, $data ) = @_;
-    return magic_buffer( $self->_mime_handle(), $data );
+    return magic_buffer( $self->_mime_handle, $data );
 }
 
 sub checktype_filename {
     my ( $self, $filename ) = @_;
-    return magic_file( $self->_mime_handle(), $filename );
+    return magic_file( $self->_mime_handle, $filename );
 }
 
 sub describe_contents {
     my ( $self, $data ) = @_;
-    return magic_buffer( $self->_describe_handle(), $data );
+    return magic_buffer( $self->_describe_handle, $data );
 }
 
 sub describe_filename {
     my ( $self, $filename ) = @_;
-    return magic_file( $self->_describe_handle(), $filename );
+    return magic_file( $self->_describe_handle, $filename );
 }
 
 sub _describe_handle {
@@ -162,7 +162,7 @@ __END__
 
   use File::LibMagic;
 
-  my $magic = File::LibMagic->new();
+  my $magic = File::LibMagic->new;
 
   my $info = $magic->info_from_filename('path/to/file');
   # Prints a description like "ASCII text"
@@ -215,7 +215,7 @@ location.
 
 This module provides an object-oriented API with the following methods:
 
-=head2 File::LibMagic->new()
+=head2 File::LibMagic->new
 
 Creates a new File::LibMagic object.
 
@@ -288,7 +288,7 @@ as the C<mime_type> key.
 This method returns info about the contents of the given string. The string
 can be passed as a reference to save memory.
 
-The return value is the same as that of C<< $mime->info_from_filename() >>.
+The return value is the same as that of C<< $mime->info_from_filename >>.
 
 =head2 $magic->info_from_handle($fh)
 
