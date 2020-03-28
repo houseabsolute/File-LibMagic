@@ -18,10 +18,15 @@ XSLoader::load( __PACKAGE__, $VERSION );
 for my $name ( constants() ) {
     my ( $error, $value ) = constant($name);
 
-    croak "WTF defining $name - $error"
+    # The various MAGIC_..._MAX constants have been introduced over various
+    # releases of libmagic. If some of them aren't available we'll just skip
+    # them.
+    next if $error && $name =~ /_MAX$/;
+
+    croak "Could not define $name() - $error"
         if defined $error;
 
-    my $sub = sub {$value};
+    my $sub = sub () {$value};
 
     ## no critic (TestingAndDebugging::ProhibitNoStrict)
     no strict 'refs';
@@ -48,15 +53,28 @@ $EXPORT_TAGS{all} = [ @{ $EXPORT_TAGS{easy} }, @{ $EXPORT_TAGS{complete} } ];
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-my %magic_param_map = (
-    max_indir     => MAGIC_PARAM_INDIR_MAX(),
-    max_name      => MAGIC_PARAM_NAME_MAX(),
-    max_elf_phnum => MAGIC_PARAM_ELF_PHNUM_MAX(),
-    max_elf_shnum => MAGIC_PARAM_ELF_SHNUM_MAX(),
-    max_elf_notes => MAGIC_PARAM_ELF_NOTES_MAX(),
-    max_regex     => MAGIC_PARAM_REGEX_MAX(),
-    max_bytes     => MAGIC_PARAM_BYTES_MAX(),
+my %magic_param_map;
+my @all_params = qw(
+    max_indir
+    max_name
+    max_elf_phnum
+    max_elf_shnum
+    max_elf_notes
+    max_regex
+    max_bytes
 );
+
+# Since these params were introduced in different libmagic releases, we need
+# to check that they exist, rather than just assuming they're all defined in
+# the libmagic we've linked against.
+for my $param (@all_params) {
+    ( my $name = $param ) =~ s/^max_//;
+    my $constant_name = 'MAGIC_PARAM_' . ( uc $name ) . '_MAX';
+    my $const         = __PACKAGE__->can($constant_name)
+        or next;
+
+    $magic_param_map{$param} = $const->();
+}
 
 sub new {
     my $class = shift;
@@ -106,9 +124,11 @@ sub _constructor_params {
     $flags |= MAGIC_COMPRESS()
         if delete $p{uncompress};
 
-    for my $name ( keys %magic_param_map ) {
-        next unless exists $p{$name};
-        $magic_params{ $magic_param_map{$name} } = [ $name, $p{$name} ];
+    for my $param (@all_params) {
+        next unless exists $p{$param};
+        croak "Your version of libmagic does not support the $param parameter"
+            unless $magic_param_map{$param};
+        $magic_params{ $magic_param_map{$param} } = [ $param, $p{$param} ];
     }
 
     if ( exists $p{max_future_compat} ) {
@@ -310,7 +330,8 @@ If your libmagic support its, you can set the following limits through
 constructor parameters. If your version does not support setting these limits,
 passing these options will cause the constructor to croak. In addition, the
 specific limits were introduced over a number of libmagic releases, and your
-version of libmagic may not support every parameter.
+version of libmagic may not support every parameter. Using a parameter that is
+not supported by your libmagic will also cause the constructor to cloak.
 
 =over 8
 
