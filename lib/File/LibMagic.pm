@@ -86,6 +86,7 @@ sub new {
     my $flags = MAGIC_NONE();
     my $magic_file;
     my %magic_params = ();
+    my @magic_bad_params = ();
     if ( @_ == 1 ) {
         $magic_file = shift;
     }
@@ -123,13 +124,15 @@ sub new {
 
     foreach my $tag ( keys %magic_params ) {
         my $value = $magic_params{$tag};
-        _magic_setparam( $m, $tag, $value );
+        my $ret = _magic_setparam( $m, $tag, $value );
+        push @magic_bad_params, $tag if !$ret;
     }
 
     return bless {
         magic      => $m,
         magic_file => $magic_file,
         flags      => $flags,
+        bad_params => \@magic_bad_params,
     }, $class;
 }
 
@@ -160,6 +163,11 @@ sub _info_hash {
 sub _mime_with_encoding {
     return $_[1] unless $_[2];
     return "$_[1]; charset=$_[2]";
+}
+
+sub bad_max_future_compat {
+    my $self = shift;
+    return @{$self->{bad_params}};
 }
 
 sub DESTROY {
@@ -328,6 +336,8 @@ value of future libmagic parameter defines are used as the hash key.
 The defines are named MAGIC_PARAM_*_MAX in the F<magic.h> header file.
 Please note that the names are not accepted, the hash keys must be integers
 that correspond to the values of MAGIC_PARAM_*_MAX defines.
+Use the $magic->bad_max_future_compat() function to list values not
+yet supported by libmagic.
 
 =back
 
@@ -370,6 +380,11 @@ The return value is the same as that of C<< $mime->info_from_filename() >>.
 This method returns info about the given filehandle. It will read data
 starting from the handle's current position, and leave the handle at that same
 position after reading.
+
+=head2 $magic->bad_max_future_compat()
+
+Returns an array of keys from the max_future_compat hash that are currently
+not supported by libmagic.
 
 =head1 DISCOURAGED APIS
 
