@@ -7,7 +7,7 @@ use warnings;
 
 use Exporter qw( import );
 
-our $VERSION = '1.17';
+our $VERSION = '1.18';
 
 sub constants {
     return qw(
