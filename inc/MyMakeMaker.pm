@@ -82,9 +82,14 @@ sub _defines {
 
     _check_libmagic($ac);
 
-    return $ac->check_lib( 'magic', 'magic_version' )
-        ? ' -DHAVE_MAGIC_VERSION'
-        : q{};
+    my @defs;
+    push @defs, '-DHAVE_MAGIC_VERSION'
+            if $ac->check_lib( 'magic', 'magic_version' );
+    push @defs, '-DHAVE_MAGIC_SETPARAM'
+            if $ac->check_lib( 'magic', 'magic_setparam' );
+
+    return q{} unless @defs;
+    return q{ } . join q{ }, @defs;
 }
 
 sub _check_libmagic {

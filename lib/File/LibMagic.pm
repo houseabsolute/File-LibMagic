@@ -302,10 +302,15 @@ about the uncompressed file.
 
 =item * Processing limits
 
-The libmagic library has a number of limits order to prevent malformed or
-malicious files from causing resource exhaustion or other errors.
+Newer versions of the libmagic library have a number of limits order to
+prevent malformed or malicious files from causing resource exhaustion or other
+errors.
 
-You can set the following limits through constructor parameters:
+If your libmagic support its, you can set the following limits through
+constructor parameters. If your version does not support setting these limits,
+passing these options will cause the constructor to croak. In addition, the
+specific limits were introduced over a number of libmagic releases, and your
+version of libmagic may not support every parameter.
 
 =over 8
 

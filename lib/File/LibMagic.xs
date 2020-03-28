@@ -197,11 +197,15 @@ IV _magic_setparam(m, param, value)
     PREINIT:
         int ret;
     CODE:
+#ifdef HAVE_MAGIC_SETPARAM
         if ( !m ) {
             croak( "magic_setparam requires a defined magic handle" );
         }
         ret = magic_setparam(m, param, &value);
         RETVAL = !ret;
+#else
+        croak( "your libmagic library does not provide magic_setparam" );
+#endif
     OUTPUT:
         RETVAL
 
