@@ -10,20 +10,77 @@ stages:
     parameters:
       debug: true
 
-  - template: templates/helpers/linux.yml@ci-perl-helpers
-    parameters:
-      coverage: codecov
-      debug: true
-      include_threads: true
-      test_xt: true
-      use_default_perls: true
-      apt:
-        - libmagic-dev
+  # - template: templates/helpers/linux.yml@ci-perl-helpers
+  #   parameters:
+  #     coverage: codecov
+  #     debug: true
+  #     include_threads: true
+  #     test_xt: true
+  #     use_default_perls: true
+  #     apt:
+  #       - libmagic-dev
 
-  - template: templates/helpers/macos.yml@ci-perl-helpers
-    parameters:
-      debug: true
-      include_threads: true
-      use_default_perls: true
-      brew:
-        - libmagic
+  # - template: templates/helpers/macos.yml@ci-perl-helpers
+  #   parameters:
+  #     debug: true
+  #     include_threads: true
+  #     use_default_perls: true
+  #     brew:
+  #       - libmagic
+
+  # It'd be much better  if the ci-perl-helpers made it easy  to test on other
+  # images. "Deep including"  the various testing templates  isn't something I
+  # want to support long-term.
+  - stage: Centos6_9
+    displayName: Centos 6.9
+    dependsOn: Build
+    variables:
+      - template: templates/helpers/variables.yml@ci-perl-helpers
+        parameters:
+          debug: true
+    jobs:
+      - job: TestOnCentos69
+        displayName: Test on Centos 6.9
+        container: centos:6.9
+        steps:
+
+          - bash: |
+              set -e
+              set -x
+              su -c 'yum install file-devel perl'
+            displayName: Install file-devel and perl
+
+          - template: templates/helpers/steps/install-helper-tools.yml@ci-perl-helpers
+
+          - template: templates/shared/install-perlbrew.yml@ci-perl-helpers
+
+          - bash: |
+              set -e
+              set -x
+              if [ ! -d "$PERLBREW_ROOT/perls/tools-perl" ]; then
+                  "$PERLBREW_ROOT/bin/perlbrew" install --verbose --notest --noman -j $( sysctl -n hw.ncpu ) --as tools-perl $(latest_stable_perl)
+              fi
+            displayName: Perlbrew install Perl $(latest_stable_perl) as tools-perl
+
+          - bash: |
+              set -e
+              set -x
+              if [ ! -d "$PERLBREW_ROOT/perls/runtime-perl" ]; then
+                  threads=""
+                  if [ -n "$(threads)" ]; then
+                      threads="--threads"
+                  fi
+                  "$PERLBREW_ROOT/bin/perlbrew" install --verbose --notest --noman -j $( sysctl -n hw.ncpu ) --as runtime-perl $threads $(perl)
+              fi
+            displayName: Perlbrew install Perl $(perl) as runtime-perl
+
+          - template: templates/helpers/steps/install-cpm.yml@ci-perl-helpers
+
+          - template: templates/helpers/steps/install-tools-prereqs.yml@ci-perl-helpers
+
+          - template: templates/helpers/steps/test-core-steps.yml@ci-perl-helpers
+            parameters:
+              runtime_perl_path: $(Pipeline.Workspace)/local-lib/runtime-perl
+              extra_prereqs: []
+              cache_key: 'cache'
+              publish_coverage_artifact: false
