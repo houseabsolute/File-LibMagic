@@ -1,5 +1,12 @@
 {{$NEXT}}
 
+- Not all versions of libmagic support setting processing limits, and those
+  that do may not support all the limit parameters that the most recent
+  version supports. This release fixes compilation and runtime issues that
+  would occur with older libmagic versions that don't support the same options
+  as the version I have installed locally. Reported by Slaven Rezić.
+
+
 1.17     2020-03-28 (TRIAL RELEASE)
 
 - Switched to using GitHub issues.
