@@ -117,15 +117,9 @@ IV magic_load(m, dbnames)
         if ( SvOK(dbnames) ) {  /* is dbnames defined? */
             dbnames_value = SvPV(dbnames, len);
         }
-        /* FIXME
-         *manpage says 0 = success, any other failure
-         *thus does the following line correctly reflect this? */
         ret = magic_load(m, len > 0 ? dbnames_value : NULL);
-        /*
-         *printf("Ret %d, \"%s\"\n", ret, dbnames_value);
-         */
         RETVAL = ! ret;
-        if ( RETVAL < 0 ) {
+        if ( ! RETVAL ) {
             croak( "libmagic %s", magic_error(m) );
         }
     OUTPUT:
