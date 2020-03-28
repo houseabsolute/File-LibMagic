@@ -11,7 +11,7 @@ use File::LibMagic::Constants qw ( constants );
 use Scalar::Util qw( reftype );
 use XSLoader;
 
-our $VERSION = '1.18';
+our $VERSION = '1.19';
 
 XSLoader::load( __PACKAGE__, $VERSION );
 
