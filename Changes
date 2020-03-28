@@ -1,12 +1,16 @@
 {{$NEXT}}
 
+- Fix tests that still mistakenly assumed that all limit parameter constants
+  should be exported by File::LibMagic. Reported by Slaven Rezić. GH #22.
+
+
 1.18     2020-03-28 (TRIAL RELEASE)
 
 - Not all versions of libmagic support setting processing limits, and those
   that do may not support all the limit parameters that the most recent
   version supports. This release fixes compilation and runtime issues that
   would occur with older libmagic versions that don't support the same options
-  as the version I have installed locally. Reported by Slaven Rezić.
+  as the version I have installed locally. Reported by Slaven Rezić. GH #22.
 
 
 1.17     2020-03-28 (TRIAL RELEASE)

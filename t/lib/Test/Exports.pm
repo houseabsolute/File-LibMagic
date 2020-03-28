@@ -44,7 +44,7 @@ sub test_complete {
 sub _test_constants {
     my $package = shift;
 
-    foreach my $const ( constants() ) {
+    foreach my $const ( grep { !/_MAX$/ } constants() ) {
         ## no critic (Variables::RequireInitializationForLocalVars)
         local $@;
         ## no critic (BuiltinFunctions::ProhibitStringyEval)
