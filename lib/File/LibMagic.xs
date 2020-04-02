@@ -209,6 +209,25 @@ IV _magic_setparam(m, param, value)
     OUTPUT:
         RETVAL
 
+IV _magic_param_exists(m, param, value)
+    magic_t m
+    int param
+    size_t value
+    PREINIT:
+        int ret;
+    CODE:
+#ifdef HAVE_MAGIC_GETPARAM
+        if ( !m ) {
+            croak( "magic_getparam requires a defined magic handle" );
+        }
+        ret = magic_getparam(m, param, &value);
+        RETVAL = !ret;
+#else
+        croak( "your libmagic library does not provide magic_getparam" );
+#endif
+    OUTPUT:
+        RETVAL
+
 SV *magic_buffer_offset(m, buffer, offset, BuffLen)
     magic_t m
     char *buffer

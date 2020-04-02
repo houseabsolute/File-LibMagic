@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Add two class methods that provide introspection on the available limit
+  processing parameters, max_param_constant() and
+  limit_key_is_supported(). Based on a PR from Paul Wise. GH #24.
+
+
 1.20     2020-03-28 (TRIAL RELEASE)
 
 - Fix one last test that assumed a limit parameter was available. Reported by

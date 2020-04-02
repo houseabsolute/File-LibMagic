@@ -8,6 +8,7 @@ use warnings;
 use Carp;
 use Exporter qw( import );
 use File::LibMagic::Constants qw ( constants );
+use List::Util qw( max );
 use Scalar::Util qw( reftype );
 use XSLoader;
 
@@ -64,6 +65,13 @@ my @all_params = qw(
     max_bytes
 );
 
+## no critic ( Subroutines::ProhibitUnusedPrivateSubroutines)
+#
+# This exists so we can have an author test that checks that all known keys
+# are supported by the local libmagic.
+sub _all_limit_params {@all_params}
+## use critic ( Subroutines::ProhibitUnusedPrivateSubroutines)
+
 # Since these params were introduced in different libmagic releases, we need
 # to check that they exist, rather than just assuming they're all defined in
 # the libmagic we've linked against.
@@ -92,7 +100,7 @@ sub new {
     # We need to call this even if $magic_paths is undef
     magic_load( $m, $magic_paths );
 
-    foreach my $param ( keys %magic_params ) {
+    for my $param ( keys %magic_params ) {
         my $value = $magic_params{$param}[1];
         unless ( _magic_setparam( $m, $param, $value ) ) {
             my $desc = $magic_params{$param}[0];
@@ -215,6 +223,53 @@ sub _mime_handle {
     return $self->{magic};
 }
 
+# To find the maximum value for magic_setparam we first check the next 10
+# values after the highest known param constant. We expect this to be
+# sufficient in nearly every case. But just in case we'll also continue
+# checking up to 0xFFFF if there are more than 10 values we don't know about.
+{
+    my $Max;
+
+    sub max_param_constant {
+        return $Max if defined $Max;
+
+        my $m = magic_open(0);
+
+        return $Max = 0
+            unless keys %magic_param_map;
+
+        my $value = 0;
+        my $min   = max values %magic_param_map;
+        my $max   = $min + 10;
+
+        for my $param ( $min .. $max ) {
+            unless ( _magic_param_exists( $m, $param, $value ) ) {
+                magic_close($m);
+                return $Max = $param - 1;
+            }
+        }
+
+        $min = $max;
+        $max = 0xFFFF;
+        while ( $min <= $max ) {
+            my $mid = int( ( $min + $max ) / 2 );
+            if ( _magic_param_exists( $m, $mid, $value ) ) {
+                $min = $mid + 1;
+            }
+            else {
+                $max = $mid - 1;
+            }
+        }
+        magic_close($m);
+
+        return $Max = $min - 1;
+    }
+}
+
+sub limit_key_is_supported {
+    return exists $magic_param_map{ $_[1] };
+}
+
 1;
 
 # ABSTRACT: Determine MIME types of data or files using libmagic
@@ -325,7 +380,7 @@ Newer versions of the libmagic library have a number of limits order to
 prevent malformed or malicious files from causing resource exhaustion or other
 errors.
 
-If your libmagic support its, you can set the following limits through
+If your libmagic support it, you can set the following limits through
 constructor parameters. If your version does not support setting these limits,
 passing these options will cause the constructor to croak. In addition, the
 specific limits were introduced over a number of libmagic releases, and your
@@ -421,6 +476,25 @@ The return value is the same as that of C<< $mime->info_from_filename >>.
 This method returns info about the contents read from the given filehandle. It
 will read data starting from the handle's current position, and leave the
 handle at that same position after reading.
+
+=head2 File::LibMagic->max_param_constant
+
+This method returns the maximum value that can be passed as a processing limit
+parameter to the constructor. You can use this to determine if passing a
+particular value in the C<max_future_compat> constructor parameter will work.
+
+This may include constant values that do not have corresponding C<max_X>
+constructor keys if your version of libmagic is newer than the one used to
+build this distribution.
+
+Conversely, if your version is older than it's possible that not all of the
+defined keys will be supported.
+
+=head2 File::LibMagic->limit_key_is_supported($key)
+
+This method takes a processing limit key like C<max_indir> or C<max_name> and
+returns a boolean indicating whether the linked version of libmagic supports
+that processing limit.
 
 =head1 DISCOURAGED APIS
 
