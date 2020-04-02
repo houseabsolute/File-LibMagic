@@ -8,6 +8,7 @@ use warnings;
 use Carp;
 use Exporter qw( import );
 use File::LibMagic::Constants qw ( constants );
+use List::Util qw( max );
 use Scalar::Util qw( reftype );
 use XSLoader;
 
@@ -74,6 +75,36 @@ for my $param (@all_params) {
         or next;
 
     $magic_param_map{$param} = $const->();
+}
+
+# To find the maximum value for magic_setparam we
+# first check the next 10 values, most will be there,
+# then bisect larger integers to avoid brute force.
+sub max_future_compat {
+    my $m     = magic_open(0);
+    my $value = 0;
+    my $min   = max values %magic_param_map;
+    my $max   = $min + 10;
+    foreach my $param ( $min .. $max ) {
+        my $ret = _magic_getparam( $m, $param, $value );
+        unless ( _magic_getparam( $m, $param, $value ) ) {
+            magic_close($m);
+            return $param - 1;
+        }
+    }
+    $min = $max;
+    $max = 0xFFFF;
+    while ( $min <= $max ) {
+        my $mid = int( ( $min + $max ) / 2 );
+        if ( _magic_getparam( $m, $mid, $value ) ) {
+            $min = $mid + 1;
+        }
+        else {
+            $max = $mid - 1;
+        }
+    }
+    magic_close($m);
+    return $min - 1;
 }
 
 sub new {

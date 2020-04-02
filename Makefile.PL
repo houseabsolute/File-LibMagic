@@ -123,6 +123,8 @@ sub _defines {
             if $ac->check_lib( 'magic', 'magic_version' );
     push @defs, '-DHAVE_MAGIC_SETPARAM'
             if $ac->check_lib( 'magic', 'magic_setparam' );
+    push @defs, '-DHAVE_MAGIC_GETPARAM'
+            if $ac->check_lib( 'magic', 'magic_getparam' );
 
     return q{} unless @defs;
     return q{ } . join q{ }, @defs;
