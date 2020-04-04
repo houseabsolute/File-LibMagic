@@ -35,6 +35,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Carp" => 0,
     "Exporter" => 0,
+    "List::Util" => 0,
     "Scalar::Util" => 0,
     "XSLoader" => 0,
     "strict" => 0,
@@ -75,6 +76,7 @@ my %FallbackPrereqs = (
   "File::Spec" => 0,
   "File::Temp" => 0,
   "FindBin" => 0,
+  "List::Util" => 0,
   "Scalar::Util" => 0,
   "Test::Fatal" => 0,
   "Test::More" => "0.96",
@@ -123,6 +125,8 @@ sub _defines {
             if $ac->check_lib( 'magic', 'magic_version' );
     push @defs, '-DHAVE_MAGIC_SETPARAM'
             if $ac->check_lib( 'magic', 'magic_setparam' );
+    push @defs, '-DHAVE_MAGIC_GETPARAM'
+            if $ac->check_lib( 'magic', 'magic_getparam' );
 
     return q{} unless @defs;
     return q{ } . join q{ }, @defs;

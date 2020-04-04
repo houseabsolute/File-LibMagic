@@ -4,7 +4,7 @@ File::LibMagic - Determine MIME types of data or files using libmagic
 
 # VERSION
 
-version 1.20
+version 1.21
 
 # SYNOPSIS
 
@@ -106,7 +106,7 @@ This method takes the following named parameters:
     prevent malformed or malicious files from causing resource exhaustion or other
     errors.
 
-    If your libmagic support its, you can set the following limits through
+    If your libmagic support it, you can set the following limits through
     constructor parameters. If your version does not support setting these limits,
     passing these options will cause the constructor to croak. In addition, the
     specific limits were introduced over a number of libmagic releases, and your
@@ -192,6 +192,25 @@ The return value is the same as that of `$mime->info_from_filename`.
 This method returns info about the contents read from the given filehandle. It
 will read data starting from the handle's current position, and leave the
 handle at that same position after reading.
+
+## File::LibMagic->max\_param\_constant
+
+This method returns the maximum value that can be passed as a processing limit
+parameter to the constructor. You can use this to determine if passing a
+particular value in the `max_future_compat` constructor parameter will work.
+
+This may include constant values that do not have corresponding `max_X`
+constructor keys if your version of libmagic is newer than the one used to
+build this distribution.
+
+Conversely, if your version is older than it's possible that not all of the
+defined keys will be supported.
+
+## File::LibMagic->limit\_key\_is\_supported($key)
+
+This method takes a processing limit key like `max_indir` or `max_name` and
+returns a boolean indicating whether the linked version of libmagic supports
+that processing limit.
 
 # DISCOURAGED APIS
 

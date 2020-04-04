@@ -3,6 +3,7 @@
 
 requires "Carp" => "0";
 requires "Exporter" => "0";
+requires "List::Util" => "0";
 requires "Scalar::Util" => "0";
 requires "XSLoader" => "0";
 requires "perl" => "5.008";
