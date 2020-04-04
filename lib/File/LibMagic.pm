@@ -12,7 +12,7 @@ use List::Util qw( max );
 use Scalar::Util qw( reftype );
 use XSLoader;
 
-our $VERSION = '1.21';
+our $VERSION = '1.22';
 
 XSLoader::load( __PACKAGE__, $VERSION );
 
