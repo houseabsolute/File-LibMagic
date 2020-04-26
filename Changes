@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- This is a stable release with the same changes as 1.21. See the change logs
+  for 1.17 and 1.21 for details of what's new.
+
+
 1.21     2020-04-04 (TRIAL RELEASE)
 
 - Add two class methods that provide introspection on the available limit
