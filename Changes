@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.22     2020-04-26
+
 - This is a stable release with the same changes as 1.21. See the change logs
   for 1.17 and 1.21 for details of what's new.
 
