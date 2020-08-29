@@ -54,6 +54,10 @@ SKIP:
     skip 'Could not find the standard magic file', 1
         unless $standard_file;
 
+    skip
+        'Something weird and broken is happening when using the homebrew libmagic in Azure'
+        if $^O eq 'darwin' && $ENV{CI_WORKSPACE_DIRECTORY};
+
     my %custom = (
         'foo.foo' => [
             'A foo file',
