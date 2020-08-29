@@ -14,7 +14,7 @@
 
 MODULE = File::LibMagic     PACKAGE = File::LibMagic
 
-INCLUDE: ../../const/inc.xs
+INCLUDE: ./const/inc.xs
 
 PROTOTYPES: ENABLE
 
