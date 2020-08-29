@@ -119,7 +119,7 @@ sub _constructor_params {
     my $class = shift;
 
     if ( @_ == 1 ) {
-        return ( $_[0], undef, () );
+        return ( $_[0], MAGIC_NONE(), () );
     }
 
     my %p = @_;
