@@ -63,7 +63,7 @@ On some systems, you may need to pass additional lib and include directories
 to the Makefile.PL. You can do this with the `--lib` and `--include`
 parameters:
 
-    perl Makefile.PL --lib /usr/local/include --include /usr/local/include
+    perl Makefile.PL --lib /usr/local/lib --include /usr/local/include
 
 You can pass these parameters multiple times to specify more than one
 location.
