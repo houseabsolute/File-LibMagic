@@ -19,7 +19,7 @@ override _build_WriteMakefile_args => sub {
     my $args = super();
 
     $args->{PM} = {
-        'lib/File/LibMagic.pm' => '$(INST_LIB)/File/LibMagic.pm',
+        'lib/File/LibMagic.pm'           => '$(INST_LIB)/File/LibMagic.pm',
         'lib/File/LibMagic/Constants.pm' =>
             '$(INST_LIB)/File/LibMagic/Constants.pm',
     };

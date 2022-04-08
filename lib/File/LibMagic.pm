@@ -46,7 +46,7 @@ our %EXPORT_TAGS = (
             magic_file
             magic_load
             magic_open
-            )
+        )
     ]
 );
 
@@ -322,14 +322,12 @@ On Mac you can use homebrew (https://brew.sh/):
 
 =head2 Specifying lib and/or include directories
 
-On some systems, you may need to pass additional lib and include directories
-to the Makefile.PL. You can do this with the `--lib` and `--include`
-parameters:
+On some systems, you may need to pass additional lib and include directories to
+the Makefile.PL. You can do this with the `--lib` and `--include` parameters:
 
     perl Makefile.PL --lib /usr/local/lib --include /usr/local/include
 
-You can pass these parameters multiple times to specify more than one
-location.
+You can pass these parameters multiple times to specify more than one location.
 
 =head1 API
 
@@ -343,8 +341,8 @@ Using the object oriented interface only opens the magic database once, which
 is probably most efficient for repeated uses.
 
 Each C<File::LibMagic> object loads the magic database independently of other
-C<File::LibMagic> objects, so you may want to share a single object across
-many modules.
+C<File::LibMagic> objects, so you may want to share a single object across many
+modules.
 
 This method takes the following named parameters:
 
@@ -371,14 +369,13 @@ symlinks to the real file.
 =item * C<uncompress>
 
 If this is true, then compressed files (such as gzip files) will be
-uncompressed, and the various C<< info_from_* >> methods will return info
-about the uncompressed file.
+uncompressed, and the various C<< info_from_* >> methods will return info about
+the uncompressed file.
 
 =item * Processing limits
 
-Newer versions of the libmagic library have a number of limits order to
-prevent malformed or malicious files from causing resource exhaustion or other
-errors.
+Newer versions of the libmagic library have a number of limits order to prevent
+malformed or malicious files from causing resource exhaustion or other errors.
 
 If your libmagic support it, you can set the following limits through
 constructor parameters. If your version does not support setting these limits,
@@ -391,8 +388,8 @@ not supported by your libmagic will also cause the constructor to cloak.
 
 =item * C<max_indir>
 
-This limits recursion for indirection when processing entries in the
-magic file.
+This limits recursion for indirection when processing entries in the magic
+file.
 
 =item * C<max_name>
 
@@ -432,8 +429,8 @@ The values of these parameters should be integer limits.
 
 For compatibility with future additions to the libmagic processing limit
 parameters, you can pass a C<max_future_compat> parameter. This is a hash
-reference where the keys are constant values (integers defined by libmagic,
-not names) and the values are the limit you want to set.
+reference where the keys are constant values (integers defined by libmagic, not
+names) and the values are the limit you want to set.
 
 =back
 
@@ -458,16 +455,16 @@ Just the character encoding, like "us-ascii".
 
 =item * C<mime_with_encoding>
 
-The MIME type with a character encoding, like "text/x-c;
-charset=us-ascii". Note that if no encoding was found, this will be the same
-as the C<mime_type> key.
+The MIME type with a character encoding, like "text/x-c; charset=us-ascii".
+Note that if no encoding was found, this will be the same as the C<mime_type>
+key.
 
 =back
 
 =head2 $magic->info_from_string($string)
 
-This method returns info about the contents of the given string. The string
-can be passed as a reference to save memory.
+This method returns info about the contents of the given string. The string can
+be passed as a reference to save memory.
 
 The return value is the same as that of C<< $mime->info_from_filename >>.
 
@@ -498,14 +495,14 @@ that processing limit.
 
 =head1 DISCOURAGED APIS
 
-This module offers two different procedural APIs based on optional exports,
-the "easy" and "complete" interfaces. There is also an older OO API still
+This module offers two different procedural APIs based on optional exports, the
+"easy" and "complete" interfaces. There is also an older OO API still
 available. All of these APIs are discouraged, but will not be removed in the
 near future, nor will using them cause any warnings.
 
 I strongly recommend you use the new OO API. It's simpler than the complete
-interface, more efficient than the easy interface, and more featureful than
-the old OO API.
+interface, more efficient than the easy interface, and more featureful than the
+old OO API.
 
 =head2 The Old OO API
 
@@ -620,9 +617,9 @@ bug-file-libmagic@rt.cpan.org.
 =head1 BUGS
 
 This module is totally dependent on the version of file on your system. It's
-possible that the tests will fail because of this. Please report these
-failures so I can make the tests smarter. Please make sure to report the
-version of file on your system as well!
+possible that the tests will fail because of this. Please report these failures
+so I can make the tests smarter. Please make sure to report the version of file
+on your system as well!
 
 =head1 DEPENDENCIES/PREREQUISITES
 
@@ -631,16 +628,16 @@ and headers (https://darwinsys.com/file/).
 
 =head1 RELATED MODULES
 
-Andreas created File::LibMagic because he wanted to use libmagic (from
-file 4.x) L<File::MMagic> only worked with file 3.x.
+Andreas created File::LibMagic because he wanted to use libmagic (from file
+4.x) L<File::MMagic> only worked with file 3.x.
 
 L<File::MimeInfo::Magic> uses the magic file from freedesktop.org which is
 encoded in XML, and is thus not the fastest approach. See
 L<https://mail.gnome.org/archives/nautilus-list/2003-December/msg00260.html>
 for a discussion of this issue.
 
-L<File::Type> uses a relatively small magic file, which is directly hacked
-into the module code. It is quite fast but the database is quite small
-relative to the file package.
+L<File::Type> uses a relatively small magic file, which is directly hacked into
+the module code. It is quite fast but the database is quite small relative to
+the file package.
 
 =cut
