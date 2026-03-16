@@ -63,6 +63,8 @@ my @all_params = qw(
     max_elf_notes
     max_regex
     max_bytes
+    max_encoding
+    max_elf_shsize
 );
 
 ## no critic ( Subroutines::ProhibitUnusedPrivateSubroutines)

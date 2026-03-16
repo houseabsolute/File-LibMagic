@@ -166,7 +166,7 @@ constant (pTHX_ const char *name, STRLEN len, IV *iv_return) {
      Regenerate these constant functions by feeding this entire source file to
      perl -x
 
-#!/home/autarch/perl5/perlbrew/perls/perl-5.30.1/bin/perl -w
+#!/home/autarch/perl5/perlbrew/perls/perl-5.40.2/bin/perl -w
 use ExtUtils::Constant qw (constant_types C_constant XS_constant);
 
 my $types = {map {($_, 1)} qw(IV)};
@@ -174,6 +174,7 @@ my @names = (qw(MAGIC_CHECK MAGIC_COMPRESS MAGIC_CONTINUE MAGIC_DEBUG
 	       MAGIC_DEVICES MAGIC_ERROR MAGIC_MIME MAGIC_NONE
 	       MAGIC_PARAM_BYTES_MAX MAGIC_PARAM_ELF_NOTES_MAX
 	       MAGIC_PARAM_ELF_PHNUM_MAX MAGIC_PARAM_ELF_SHNUM_MAX
+	       MAGIC_PARAM_ELF_SHSIZE_MAX MAGIC_PARAM_ENCODING_MAX
 	       MAGIC_PARAM_INDIR_MAX MAGIC_PARAM_NAME_MAX MAGIC_PARAM_REGEX_MAX
 	       MAGIC_PRESERVE_ATIME MAGIC_RAW MAGIC_SYMLINK));
 
@@ -319,8 +320,28 @@ __END__
   case 21:
     return constant_21 (aTHX_ name, iv_return);
     break;
+  case 24:
+    if (memEQ(name, "MAGIC_PARAM_ENCODING_MAX", 24)) {
+#ifdef MAGIC_PARAM_ENCODING_MAX
+      *iv_return = MAGIC_PARAM_ENCODING_MAX;
+      return PERL_constant_ISIV;
+#else
+      return PERL_constant_NOTDEF;
+#endif
+    }
+    break;
   case 25:
     return constant_25 (aTHX_ name, iv_return);
+    break;
+  case 26:
+    if (memEQ(name, "MAGIC_PARAM_ELF_SHSIZE_MAX", 26)) {
+#ifdef MAGIC_PARAM_ELF_SHSIZE_MAX
+      *iv_return = MAGIC_PARAM_ELF_SHSIZE_MAX;
+      return PERL_constant_ISIV;
+#else
+      return PERL_constant_NOTDEF;
+#endif
+    }
     break;
   }
   return PERL_constant_NOTFOUND;

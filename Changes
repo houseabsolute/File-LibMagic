@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Added support for two new limit params added in more recent file versions, max_encoding and
+  max_elf_shsize.
+
+
 1.23     2020-08-28
 
 - Fixed a bug with the Makefile.PL that caused every call to "make" to

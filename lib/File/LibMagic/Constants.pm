@@ -29,6 +29,8 @@ sub constants {
         MAGIC_PARAM_ELF_NOTES_MAX
         MAGIC_PARAM_REGEX_MAX
         MAGIC_PARAM_BYTES_MAX
+        MAGIC_PARAM_ENCODING_MAX
+        MAGIC_PARAM_ELF_SHSIZE_MAX
     );
 }
 
