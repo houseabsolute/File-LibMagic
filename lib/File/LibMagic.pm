@@ -6,10 +6,10 @@ use strict;
 use warnings;
 
 use Carp;
-use Exporter qw( import );
+use Exporter                  qw( import );
 use File::LibMagic::Constants qw ( constants );
-use List::Util qw( max );
-use Scalar::Util qw( reftype );
+use List::Util                qw( max );
+use Scalar::Util              qw( reftype );
 use XSLoader;
 
 our $VERSION = '1.24';

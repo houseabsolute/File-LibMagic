@@ -7,7 +7,7 @@ use Test::AnyOf;
 use Test::Fatal;
 use Test::More 0.96;
 
-use Exporter qw( import );
+use Exporter                  qw( import );
 use File::LibMagic::Constants qw( constants );
 
 our @EXPORT_OK = qw( test_complete test_easy );

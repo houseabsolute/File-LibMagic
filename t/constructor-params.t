@@ -4,7 +4,7 @@ use warnings;
 use FindBin qw( $Bin );
 use lib "$Bin/lib";
 
-use Cwd qw( abs_path );
+use Cwd        qw( abs_path );
 use File::Temp qw( tempdir );
 use Test::AnyOf;
 use Test::More 0.96;
