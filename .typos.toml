@@ -1,0 +1,21 @@
+# Per-file allow lists, so the rest of these files stays spell-checked. Globs are
+# matched against the file name, not the directory it lives in. This file gets
+# its own type because it quotes the words it allows.
+
+[type.typos-config]
+extend-glob = [".typos.toml"]
+[type.typos-config.extend-words]
+fetchs = "fetchs"
+MERCHANTIBILITY = "MERCHANTIBILITY"
+
+# hv_fetchs is a Perl C API macro.
+[type.xs]
+extend-glob = ["**/LibMagic.xs"]
+[type.xs.extend-words]
+fetchs = "fetchs"
+
+# Verbatim Artistic License text, which must not be edited.
+[type.license]
+extend-glob = ["LICENSE"]
+[type.license.extend-words]
+MERCHANTIBILITY = "MERCHANTIBILITY"
