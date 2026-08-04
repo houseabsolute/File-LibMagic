@@ -54,9 +54,12 @@ SKIP:
     skip 'Could not find the standard magic file', 1
         unless $standard_file;
 
+    # This was originally keyed on an Azure Pipelines variable. GitHub Actions
+    # does not set that, so the skip silently stopped applying when CI moved.
+    # $ENV{CI} is set by both.
     skip
-        'Something weird and broken is happening when using the homebrew libmagic in Azure'
-        if $^O eq 'darwin' && $ENV{CI_WORKSPACE_DIRECTORY};
+        'Something weird and broken is happening when using the homebrew libmagic in CI'
+        if $^O eq 'darwin' && $ENV{CI};
 
     my %custom = (
         'foo.foo' => [
