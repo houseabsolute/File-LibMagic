@@ -12,3 +12,9 @@ jobs:
       with-threads: true
       ref: v0
       additional-modules: Config::AutoConf
+      # This dist is a binding for libmagic, so it cannot build without the
+      # headers. There is no reasonable way to get libmagic on Windows, which
+      # is why this dist never had a Windows stage under Azure either.
+      apt-packages: libmagic-dev
+      brew-packages: libmagic
+      with-windows: false
